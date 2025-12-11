@@ -209,54 +209,130 @@ function updateCharts(monthData) {
     
     const ctx1 = document.getElementById('fillRateChart').getContext('2d');
     
+    // Create point styles - stars for 100%, circles otherwise
+    const rate4PointStyle = monthData.map(d => d.rate4 === 100 ? 'star' : 'circle');
+    const rate7PointStyle = monthData.map(d => d.rate7 === 100 ? 'star' : 'circle');
+    const rate4PointRadius = monthData.map(d => d.rate4 === 100 ? 8 : 4);
+    const rate7PointRadius = monthData.map(d => d.rate7 === 100 ? 8 : 4);
+    
     fillRateChart = new Chart(ctx1, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: '4 Day Fill Rate',
-                    data: monthData.map(d => d.rate4),
-                    backgroundColor: '#d2b48c',
-                    borderWidth: 0,
-                    borderRadius: 4,
-                    barPercentage: 0.4,
-                    categoryPercentage: 0.8
+                    label: '7 Day Fill Rate (Target: 95%)',
+                    data: monthData.map(d => d.rate7),
+                    borderColor: '#8b7355',
+                    backgroundColor: 'rgba(139, 115, 85, 0.15)',
+                    tension: 0.3,
+                    fill: true,
+                    borderWidth: 3,
+                    pointStyle: rate7PointStyle,
+                    pointRadius: rate7PointRadius,
+                    pointHoverRadius: 10,
+                    pointBackgroundColor: '#8b7355',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    order: 1
                 },
                 {
-                    label: '7 Day Fill Rate',
-                    data: monthData.map(d => d.rate7),
-                    backgroundColor: '#8b7355',
-                    borderWidth: 0,
-                    borderRadius: 4,
-                    barPercentage: 0.4,
-                    categoryPercentage: 0.8
+                    label: '4 Day Fill Rate (Target: 85%)',
+                    data: monthData.map(d => d.rate4),
+                    borderColor: '#d2b48c',
+                    backgroundColor: 'rgba(210, 180, 140, 0.15)',
+                    tension: 0.3,
+                    fill: true,
+                    borderWidth: 3,
+                    pointStyle: rate4PointStyle,
+                    pointRadius: rate4PointRadius,
+                    pointHoverRadius: 10,
+                    pointBackgroundColor: '#d2b48c',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    order: 2
+                },
+                {
+                    label: '95% Target Line',
+                    data: Array(labels.length).fill(95),
+                    borderColor: '#5a8c5a',
+                    borderWidth: 2,
+                    borderDash: [8, 4],
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    fill: false,
+                    order: 3
+                },
+                {
+                    label: '85% Target Line',
+                    data: Array(labels.length).fill(85),
+                    borderColor: '#d4a05c',
+                    borderWidth: 2,
+                    borderDash: [8, 4],
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    fill: false,
+                    order: 4
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: { 
                     display: true,
                     labels: { 
                         color: '#8b7355', 
-                        font: { size: 11 }
+                        font: { size: 11 },
+                        usePointStyle: true,
+                        padding: 12,
+                        boxWidth: 15,
+                        filter: function(item) {
+                            // Show legend for all items
+                            return true;
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label && !label.includes('Target Line')) {
+                                label += ': ' + context.parsed.y.toFixed(1) + '%';
+                                if (context.parsed.y === 100) {
+                                    label += ' ⭐';
+                                }
+                            }
+                            return label;
+                        }
                     }
                 }
             },
             scales: {
                 y: {
-                    beginAtZero: true,
-                    max: 100,
+                    min: 0,
+                    max: 105,
                     ticks: { 
                         callback: v => v + '%',
-                        color: '#a0906f'
+                        color: '#a0906f',
+                        stepSize: 10
+                    },
+                    grid: {
+                        color: 'rgba(210, 180, 140, 0.1)'
                     }
                 },
                 x: {
-                    ticks: { color: '#a0906f' }
+                    ticks: { 
+                        color: '#a0906f'
+                    },
+                    grid: {
+                        color: 'rgba(210, 180, 140, 0.1)'
+                    }
                 }
             }
         }
