@@ -11,9 +11,9 @@
       --bg-end:#e8e4d9;
       --tan-light:#d2b48c;
       --tan-dark:#8b7355;
-      --gold:#ffd700;
-      --silver:#c0c0c0;
-      --bronze:#cd7f32;
+      --first-place: linear-gradient(135deg, #c4a57b 0%, #b8a68f 100%);
+      --second-place: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+      --third-place: linear-gradient(135deg, #e8dcc8 0%, #d2b48c 100%);
       --row-light:#f8f9fa;
       --row-dark:#eef1f3;
       --card-bg: rgba(255,255,255,0.98);
@@ -101,7 +101,35 @@
       overflow-wrap:break-word;
     }
     
-    .medal-gold td, .medal-silver td, .medal-bronze td{border-bottom:none}
+    .medal-gold td, .medal-silver td, .medal-bronze td{
+      border-bottom:none;
+      font-weight:700;
+      position:relative;
+    }
+    
+    .medal-gold td{
+      background:var(--first-place) !important;
+      color:#fff;
+      box-shadow:inset 0 1px 3px rgba(255,255,255,0.3);
+    }
+    
+    .medal-silver td{
+      background:var(--second-place) !important;
+      color:#fff;
+      box-shadow:inset 0 1px 3px rgba(255,255,255,0.2);
+    }
+    
+    .medal-bronze td{
+      background:var(--third-place) !important;
+      color:#6b5d4f;
+      box-shadow:inset 0 1px 2px rgba(255,255,255,0.15);
+    }
+    
+    .medal-gold .col-rank::before{
+      content: '👑 ';
+      font-size: 1.2em;
+    }
+    
     .col-rank{font-size:clamp(13px, 1.4vw, 17px);font-weight:700;width:10%}
     .col-employee{
       text-align:center;
@@ -120,10 +148,6 @@
 
     .body-table tbody tr:nth-child(odd) td{background:#ffffff}
     .body-table tbody tr:nth-child(even) td{background:#faf8f5}
-
-    .medal-gold td{background:var(--gold) !important;color:#000;font-weight:700}
-    .medal-silver td{background:var(--silver) !important;color:#000;font-weight:700}
-    .medal-bronze td{background:var(--bronze) !important;color:#000;font-weight:700}
 
     .empty{color:#b8a68f;padding:20px;text-align:center;font-style:italic}
 
