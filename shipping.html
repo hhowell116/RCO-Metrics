@@ -1,1 +1,245 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daily ShipStation Leaderboard</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .shipping-header {
+      background: linear-gradient(90deg, var(--tan-dark), var(--tan-darker));
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: var(--shadow-xl);
+      color: white;
+      margin-bottom: 30px;
+    }
+    
+    .shipping-title {
+      font-size: 2.5em;
+      margin: 0;
+      text-transform: capitalize;
+    }
+    
+    .shipping-meta {
+      font-size: 1.2em;
+      color: rgba(255,255,255,0.95);
+      margin-top: 10px;
+    }
+    
+    .boards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-top: 25px;
+    }
+    
+    .leaderboard-card {
+      background: linear-gradient(135deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .leaderboard-header {
+      background: var(--tan-light);
+      color: white;
+      padding: 15px;
+      font-weight: 700;
+      text-align: center;
+      font-size: 1.2em;
+    }
+    
+    .leaderboard-table-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+    
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .leaderboard-table th {
+      position: sticky;
+      top: 0;
+      background: var(--tan-darker);
+      color: white;
+      padding: 12px 8px;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+    
+    .leaderboard-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border-light);
+      text-align: center;
+    }
+    
+    .leaderboard-table tr:nth-child(even) {
+      background: rgba(210, 180, 140, 0.05);
+    }
+    
+    .rank-1 { background: var(--gold) !important; color: #333; font-weight: 700; }
+    .rank-2 { background: var(--silver) !important; color: #333; font-weight: 700; }
+    .rank-3 { background: var(--bronze) !important; color: #333; font-weight: 700; }
+    
+    @media (max-width: 768px) {
+      .boards-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .leaderboard-card {
+        height: 500px;
+      }
+      
+      .shipping-title {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container p-4">
+    <div class="shipping-header text-center">
+      <h1 class="shipping-title">Today's Shipping Leaderboard</h1>
+      <div id="weekRange" class="shipping-meta">Week: loading…</div>
+    </div>
+
+    <div id="boards" class="boards-grid">
+      <div class="loading">Loading data...</div>
+    </div>
+  </div>
+  
+  <script>
+    (async function(){
+      const SHEET_ID = '1-S1OU7nw_085IXVbfiOY5qDPuRcPx2RqQJg8pnOqU9I';
+      const GID = '165470098';
+      const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+      
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+        
+        return lines.slice(1).map(line => {
+          const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+          const obj = {};
+          headers.forEach((h, i) => {
+            obj[h] = values[i] || '';
+          });
+          return obj;
+        });
+      }
+      
+      function getWeekDates(row) {
+        const weekStart = row['Week Start Date'] || '';
+        const weekEnd = row['Week End Date'] || '';
+        return `${weekStart} - ${weekEnd}`;
+      }
+      
+      function buildLeaderboardHTML(title, rows, valueKey) {
+        if (!rows || rows.length === 0) {
+          return `
+            <div class="leaderboard-card">
+              <div class="leaderboard-header">${title}</div>
+              <div style="padding: 20px; text-align: center; color: var(--text-secondary);">
+                No data available
+              </div>
+            </div>
+          `;
+        }
+        
+        const sorted = [...rows]
+          .map(r => ({
+            name: r.Name || 'Unknown',
+            value: parseInt(r[valueKey] || 0)
+          }))
+          .filter(r => r.value > 0)
+          .sort((a, b) => b.value - a.value);
+        
+        let tableHTML = `
+          <div class="leaderboard-card">
+            <div class="leaderboard-header">${title}</div>
+            <div class="leaderboard-table-container">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        sorted.forEach((person, idx) => {
+          const rank = idx + 1;
+          const rankClass = rank <= 3 ? `rank-${rank}` : '';
+          tableHTML += `
+            <tr class="${rankClass}">
+              <td>${rank}</td>
+              <td>${person.name}</td>
+              <td>${person.value.toLocaleString()}</td>
+            </tr>
+          `;
+        });
+        
+        tableHTML += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        
+        return tableHTML;
+      }
+      
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        
+        const text = await response.text();
+        const data = parseCSV(text);
+        
+        if (data.length === 0) {
+          document.getElementById('boards').innerHTML = '<div class="loading">No data found in spreadsheet</div>';
+          return;
+        }
+        
+        const weekDates = getWeekDates(data[0]);
+        document.getElementById('weekRange').textContent = `Week: ${weekDates}`;
+        
+        const boardsHTML = `
+          ${buildLeaderboardHTML('📦 Daily Orders Shipped', data, 'Daily Orders Shipped')}
+          ${buildLeaderboardHTML('🎯 Daily Items Shipped', data, 'Daily Items Shipped')}
+          ${buildLeaderboardHTML('📊 Weekly Orders Shipped', data, 'Weekly Orders Shipped')}
+          ${buildLeaderboardHTML('📈 Weekly Items Shipped', data, 'Weekly Items Shipped')}
+        `;
+        
+        document.getElementById('boards').innerHTML = boardsHTML;
+        
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        document.getElementById('boards').innerHTML = `
+          <div class="loading">
+            <p>Error loading data: ${error.message}</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Please check:</p>
+            <ul style="text-align: left; display: inline-block; font-size: 0.85em;">
+              <li>Google Sheet is published to web</li>
+              <li>Sheet ID is correct</li>
+              <li>GID matches the tab</li>
+            </ul>
+          </div>
+        `;
+      }
+    })();
+  </script>
+</body>
+</html>
