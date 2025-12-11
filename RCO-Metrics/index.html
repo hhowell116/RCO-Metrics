@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCO Metrics Dashboard</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -18,20 +18,36 @@
             <button class="nav-tab" data-tab="orders">📦 Orders Overview</button>
             <button class="nav-tab" data-tab="fulfillment">⚡ Fulfillment KPI</button>
         </div>
-        <!-- Login placeholder (for Firebase later) -->
-        <div class="nav-user">
-            <button class="login-btn">Sign in with Google</button>
-        </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main class="dashboard-container">
-        <div id="dashboard-content" class="dashboard-content">
-            <!-- Dashboards will be loaded here -->
-        </div>
-    </main>
+    <!-- Dashboard iframes -->
+    <div id="shipping-frame" class="iframe-wrapper active">
+        <iframe src="dashboards/shipping.html" frameborder="0"></iframe>
+    </div>
+    
+    <div id="orders-frame" class="iframe-wrapper">
+        <iframe src="dashboards/orders.html" frameborder="0"></iframe>
+    </div>
+    
+    <div id="fulfillment-frame" class="iframe-wrapper">
+        <iframe src="dashboards/fulfillment.html" frameborder="0"></iframe>
+    </div>
 
-    <!-- Main JavaScript -->
-    <script src="scripts/main.js"></script>
+    <script>
+        // Simple tab switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active iframe
+                document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.remove('active'));
+                document.getElementById(`${targetTab}-frame`).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
