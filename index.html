@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCO Metrics Dashboard</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <h1>📊 RCO Metrics</h1>
+            <p>Operational Dashboards</p>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="shipping">🚚 Shipping Leaderboard</button>
+            <button class="nav-tab" data-tab="orders">📦 Orders Overview</button>
+            <button class="nav-tab" data-tab="fulfillment">⚡ Fulfillment KPI</button>
+        </div>
+    </nav>
+
+    <!-- Dashboard iframes -->
+    <div id="shipping-frame" class="iframe-wrapper active">
+        <iframe src="dashboards/shipping.html" frameborder="0"></iframe>
+    </div>
+    
+    <div id="orders-frame" class="iframe-wrapper">
+        <iframe src="dashboards/orders.html" frameborder="0"></iframe>
+    </div>
+    
+    <div id="fulfillment-frame" class="iframe-wrapper">
+        <iframe src="dashboards/fulfillment.html" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        // Simple tab switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active iframe
+                document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.remove('active'));
+                document.getElementById(`${targetTab}-frame`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
