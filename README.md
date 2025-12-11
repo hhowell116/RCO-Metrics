@@ -9,14 +9,23 @@ Simple dashboard with tabs that switch between three views:
 
 ```
 RCO-Metrics/
-├── index.html                 # Main page with tab navigation
+├── index.html                 # Main page with navigation
+├── styles/
+│   ├── main.css              # Global styles (navigation, layout)
+│   ├── shipping.css          # Shipping dashboard styles
+│   ├── orders.css           # Orders dashboard styles
+│   └── fulfillment.css      # Fulfillment dashboard styles
+├── scripts/
+│   ├── main.js              # Dashboard switching logic
+│   ├── shipping.js          # Shipping dashboard logic
+│   ├── orders.js           # Orders dashboard logic
+│   └── fulfillment.js      # Fulfillment dashboard logic
 ├── dashboards/
-│   ├── shipping.html         # Pulls from Google Sheets
-│   ├── orders.html           # Pulls from Google Sheets
-│   └── fulfillment.html      # Uses js/data.js
-└── js/
-    ├── data.js               # Static fulfillment data
-    └── fulfillment.js        # Fulfillment dashboard logic
+│   ├── shipping.html        # Shipping HTML (body content only)
+│   ├── orders.html         # Orders HTML (body content only)
+│   └── fulfillment.html    # Fulfillment HTML (body content only)
+└── assets/
+    └── data.js             # For fulfillment dashboard
 ```
 
 ## 🔒 Security
