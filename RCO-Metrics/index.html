@@ -4,158 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCO Metrics Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
-            min-height: 100vh;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f0e8 100%);
-            padding: 20px 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            border-bottom: 1px solid rgba(210, 180, 140, 0.2);
-        }
-
-        .header h1 {
-            color: #8b7355;
-            font-size: 1.8em;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs {
-            background: white;
-            padding: 0 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            gap: 5px;
-            border-bottom: 2px solid rgba(210, 180, 140, 0.2);
-        }
-
-        .nav-tab {
-            padding: 18px 30px;
-            background: transparent;
-            border: none;
-            color: #a0906f;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-        }
-
-        .nav-tab:hover {
-            color: #8b7355;
-            background: rgba(210, 180, 140, 0.05);
-        }
-
-        .nav-tab.active {
-            color: #8b7355;
-            border-bottom-color: #d2b48c;
-            background: rgba(210, 180, 140, 0.08);
-        }
-
-        /* Dashboard Content */
-        .dashboard-content {
-            display: none;
-        }
-
-        .dashboard-content.active {
-            display: block;
-        }
-
-        .iframe-container {
-            width: 100%;
-            height: calc(100vh - 140px);
-            background: white;
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 1.4em;
-            }
-
-            .nav-tabs {
-                padding: 0 15px;
-                overflow-x: auto;
-            }
-
-            .nav-tab {
-                padding: 15px 20px;
-                white-space: nowrap;
-                font-size: 0.9em;
-            }
-
-            .iframe-container {
-                height: calc(100vh - 120px);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <div class="header">
-        <h1>📊 RCO Metrics Dashboard</h1>
-    </div>
-
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="shipping">Shipping Leaderboard</button>
-        <button class="nav-tab" data-tab="orders">Orders Overview</button>
-        <button class="nav-tab" data-tab="fulfillment">Fulfillment KPIs</button>
-    </div>
-
-    <div id="shippingTab" class="dashboard-content active">
-        <div class="iframe-container">
-            <iframe src="dashboards/shipping.html"></iframe>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <h1>📊 RCO Metrics</h1>
+            <p>Operational Dashboards</p>
         </div>
-    </div>
-
-    <div id="ordersTab" class="dashboard-content">
-        <div class="iframe-container">
-            <iframe src="dashboards/orders.html"></iframe>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="shipping">🚚 Shipping Leaderboard</button>
+            <button class="nav-tab" data-tab="orders">📦 Orders Overview</button>
+            <button class="nav-tab" data-tab="fulfillment">⚡ Fulfillment KPI</button>
         </div>
-    </div>
-
-    <div id="fulfillmentTab" class="dashboard-content">
-        <div class="iframe-container">
-            <iframe src="dashboards/fulfillment.html"></iframe>
+        <!-- Login placeholder (for Firebase later) -->
+        <div class="nav-user">
+            <button class="login-btn">Sign in with Google</button>
         </div>
-    </div>
+    </nav>
 
-    <script>
-        // Simple tab switching - no external JS needed
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.dataset.tab;
-                
-                // Update active tab button
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Update active content
-                document.querySelectorAll('.dashboard-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(tabName + 'Tab').classList.add('active');
-            });
-        });
-    </script>
+    <!-- Main Content Area -->
+    <main class="dashboard-container">
+        <div id="dashboard-content" class="dashboard-content">
+            <!-- Dashboards will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Main JavaScript -->
+    <script src="scripts/main.js"></script>
 </body>
 </html>
