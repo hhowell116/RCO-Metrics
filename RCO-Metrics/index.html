@@ -17,129 +17,19 @@
             min-height: 100vh;
         }
 
-        /* Auth Screen */
-        .auth-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f0e8 100%);
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-            border: 1px solid rgba(210, 180, 140, 0.3);
-        }
-
-        .auth-card h1 {
-            color: #8b7355;
-            font-size: 2.5em;
-            margin-bottom: 15px;
-        }
-
-        .auth-card p {
-            color: #a0906f;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-
-        .sign-in-btn {
-            background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(210, 180, 140, 0.3);
-        }
-
-        .sign-in-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(210, 180, 140, 0.4);
-        }
-
-        .error-message {
-            color: #c67b7b;
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(198, 123, 123, 0.1);
-            border-radius: 8px;
-            display: none;
-        }
-
-        /* Main Dashboard */
-        .dashboard {
-            display: none;
-        }
-
-        .dashboard.active {
-            display: block;
-        }
-
         /* Header */
         .header {
             background: linear-gradient(135deg, #ffffff 0%, #f5f0e8 100%);
             padding: 20px 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             border-bottom: 1px solid rgba(210, 180, 140, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .header-left h1 {
+        .header h1 {
             color: #8b7355;
             font-size: 1.8em;
             font-weight: 600;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #d2b48c;
-        }
-
-        .user-name {
-            color: #8b7355;
-            font-weight: 600;
-        }
-
-        .sign-out-btn {
-            background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .sign-out-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(210, 180, 140, 0.3);
+            text-align: center;
         }
 
         /* Navigation Tabs */
@@ -162,7 +52,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
-            position: relative;
         }
 
         .nav-tab:hover {
@@ -197,33 +86,13 @@
             border: none;
         }
 
-        /* Loading spinner */
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #8b7355;
-        }
-
-        .spinner {
-            border: 4px solid rgba(210, 180, 140, 0.3);
-            border-top: 4px solid #d2b48c;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-                gap: 15px;
                 padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
             }
 
             .nav-tabs {
@@ -234,156 +103,51 @@
             .nav-tab {
                 padding: 15px 20px;
                 white-space: nowrap;
+                font-size: 0.9em;
             }
 
             .iframe-container {
-                height: calc(100vh - 200px);
+                height: calc(100vh - 120px);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Auth Screen -->
-    <div id="authScreen" class="auth-container">
-        <div class="auth-card">
-            <h1>📊 RCO Metrics</h1>
-            <p>Sign in with your Rowe Casa Organics Google account</p>
-            <button id="signInBtn" class="sign-in-btn">Sign In with Google</button>
-            <div id="errorMessage" class="error-message"></div>
+    <div class="header">
+        <h1>📊 RCO Metrics Dashboard</h1>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="shipping">Shipping Leaderboard</button>
+        <button class="nav-tab" data-tab="orders">Orders Overview</button>
+        <button class="nav-tab" data-tab="fulfillment">Fulfillment KPIs</button>
+    </div>
+
+    <div id="shippingTab" class="dashboard-content active">
+        <div class="iframe-container">
+            <iframe src="dashboards/shipping.html"></iframe>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
-    <div id="mainDashboard" class="dashboard">
-        <div class="header">
-            <div class="header-left">
-                <h1>📊 RCO Metrics Dashboard</h1>
-            </div>
-            <div class="header-right">
-                <div class="user-info">
-                    <img id="userAvatar" class="user-avatar" src="" alt="User">
-                    <span id="userName" class="user-name"></span>
-                </div>
-                <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
-            </div>
-        </div>
-
-        <div class="nav-tabs">
-            <button class="nav-tab active" data-tab="shipping">Shipping Leaderboard</button>
-            <button class="nav-tab" data-tab="orders">Orders Overview</button>
-            <button class="nav-tab" data-tab="fulfillment">Fulfillment KPIs</button>
-        </div>
-
-        <div id="shippingTab" class="dashboard-content active">
-            <div class="iframe-container">
-                <iframe src="dashboards/shipping.html"></iframe>
-            </div>
-        </div>
-
-        <div id="ordersTab" class="dashboard-content">
-            <div class="iframe-container">
-                <iframe src="dashboards/orders.html"></iframe>
-            </div>
-        </div>
-
-        <div id="fulfillmentTab" class="dashboard-content">
-            <div class="iframe-container">
-                <iframe src="dashboards/fulfillment.html"></iframe>
-            </div>
+    <div id="ordersTab" class="dashboard-content">
+        <div class="iframe-container">
+            <iframe src="dashboards/orders.html"></iframe>
         </div>
     </div>
 
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="auth-container" style="display: none;">
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Loading...</p>
+    <div id="fulfillmentTab" class="dashboard-content">
+        <div class="iframe-container">
+            <iframe src="dashboards/fulfillment.html"></iframe>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-
-        // TODO: Replace with your Firebase config
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        
-        // Restrict to rowecasaorganics.com domain
-        provider.setCustomParameters({
-            hd: 'rowecasaorganics.com'
-        });
-
-        const authScreen = document.getElementById('authScreen');
-        const mainDashboard = document.getElementById('mainDashboard');
-        const loadingScreen = document.getElementById('loadingScreen');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Check auth state
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Check if email is from allowed domain
-                if (user.email.endsWith('@rowecasaorganics.com')) {
-                    showDashboard(user);
-                } else {
-                    showError('Access denied. Only @rowecasaorganics.com accounts are allowed.');
-                    signOut(auth);
-                }
-            } else {
-                showAuthScreen();
-            }
-        });
-
-        // Sign in
-        document.getElementById('signInBtn').addEventListener('click', async () => {
-            try {
-                loadingScreen.style.display = 'flex';
-                authScreen.style.display = 'none';
-                
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-
-                // Verify domain
-                if (!user.email.endsWith('@rowecasaorganics.com')) {
-                    await signOut(auth);
-                    showError('Access denied. Only @rowecasaorganics.com accounts are allowed.');
-                    return;
-                }
-
-            } catch (error) {
-                console.error('Sign in error:', error);
-                showError('Sign in failed: ' + error.message);
-            } finally {
-                loadingScreen.style.display = 'none';
-            }
-        });
-
-        // Sign out
-        document.getElementById('signOutBtn').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                console.error('Sign out error:', error);
-            }
-        });
-
-        // Tab switching
+    <script>
+        // Simple tab switching - no external JS needed
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const tabName = tab.dataset.tab;
                 
-                // Update active tab
+                // Update active tab button
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 
@@ -392,29 +156,6 @@
                 document.getElementById(tabName + 'Tab').classList.add('active');
             });
         });
-
-        function showAuthScreen() {
-            authScreen.style.display = 'flex';
-            mainDashboard.classList.remove('active');
-            loadingScreen.style.display = 'none';
-        }
-
-        function showDashboard(user) {
-            authScreen.style.display = 'none';
-            mainDashboard.classList.add('active');
-            loadingScreen.style.display = 'none';
-            
-            // Set user info
-            document.getElementById('userName').textContent = user.displayName || user.email;
-            document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/40';
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            authScreen.style.display = 'flex';
-            loadingScreen.style.display = 'none';
-        }
     </script>
 </body>
 </html>
