@@ -1,5 +1,28 @@
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+// Find the most recent month with data
+function getMostRecentDataMonth() {
+    if (!fullData || fullData.length === 0) {
+        return { month: new Date().getMonth(), year: new Date().getFullYear() };
+    }
+    
+    // Sort data by date to find the most recent
+    const sortedData = [...fullData].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB - dateA;
+    });
+    
+    // Get the most recent date
+    const mostRecent = parseDate(sortedData[0].date);
+    return {
+        month: mostRecent.getMonth(),
+        year: mostRecent.getFullYear()
+    };
+}
+
+// Initialize with most recent data month
+const recentData = getMostRecentDataMonth();
+let currentMonth = recentData.month;
+let currentYear = recentData.year;
 let currentView = 'monthly';
 let fillRateChart, ordersChart;
 
@@ -341,7 +364,7 @@ document.getElementById('monthSelect').addEventListener('change', e => {
     updateDashboard();
 });
 
-// Initialize with current month
+// Initialize with most recent data month
 document.getElementById('monthSelect').value = currentMonth.toString();
 document.getElementById('yearSelect').value = currentYear.toString();
 updateDashboard();
