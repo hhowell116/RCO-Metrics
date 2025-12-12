@@ -305,7 +305,7 @@ function updateCharts(monthData) {
             scales: {
                 y: {
                     min: 0,
-                    max: 100,
+                    max: 105,
                     ticks: { 
                         callback: v => v + '%',
                         color: '#a0906f',
