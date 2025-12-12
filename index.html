@@ -15,7 +15,7 @@ body {
 }
 
 /* =========================
-   HEADER SHELL
+   HEADER
 ========================= */
 .main-nav {
     position: sticky;
@@ -24,39 +24,37 @@ body {
     background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
     border-bottom: 3px solid #c4a57b;
     overflow: hidden;
+    transition: padding 0.4s ease;
+}
+
+/* Expanded spacing */
+.main-nav.expanded {
+    padding: 16px 0 24px;
+}
+
+/* Collapsed spacing (keeps space above separator) */
+.main-nav.collapsed {
+    padding: 20px 0 28px;
 }
 
 /* =========================
-   HEADER GRID (HEIGHT DEFINER)
+   CONTENT WRAPPER
 ========================= */
-.header-bar {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 20px;
-    padding: 14px 24px 10px;
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    transition: transform 0.45s ease, opacity 0.35s ease;
+}
+
+/* Slide content out */
+.main-nav.collapsed .header-content {
+    transform: translateY(-40px);
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* =========================
-   LEFT LOGO (SCALES)
-========================= */
-.logo-wrap {
-    display: flex;
-    align-items: center;
-}
-
-.logo-wrap img {
-    height: 64px;
-    width: auto;
-    transition: height 0.4s ease;
-}
-
-.main-nav.expanded .logo-wrap img {
-    height: 96px;
-}
-
-/* =========================
-   CENTER TITLES
+   TITLES
 ========================= */
 .title-wrap {
     text-align: center;
@@ -75,36 +73,30 @@ body {
     margin-top: 2px;
 }
 
-.main-nav.collapsed .title-wrap h2 {
-    display: none;
-}
-
 /* =========================
-   RIGHT ACTION AREA
+   DASHBOARD BUTTONS
 ========================= */
-.right-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-/* Dashboard buttons (default center row) */
 .nav-tabs {
     display: flex;
-    gap: 10px;
     justify-content: center;
-    padding-bottom: 18px;
-    transition: transform 0.4s ease;
+    gap: 12px;
+    margin-top: 10px;
 }
 
 .nav-tab {
     background: white;
     color: #8b7355;
     border: 2px solid #d2b48c;
-    padding: 10px 22px;
+    padding: 12px 26px;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.nav-tab:hover {
+    background: #faf8f5;
+    transform: translateY(-2px);
 }
 
 .nav-tab.active {
@@ -112,24 +104,15 @@ body {
     color: white;
 }
 
-/* When collapsed, buttons move right */
-.main-nav.collapsed .nav-tabs {
-    position: absolute;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 0;
-}
-
 /* =========================
-   MEDIA LAYER (ABSOLUTE)
+   MEDIA LAYER (ABSOLUTE, CLIPPED)
 ========================= */
 .media-layer {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 3px; /* aligns with separator */
-    height: 180px;
+    bottom: 3px;
+    height: 160px;
     pointer-events: none;
 }
 
@@ -137,54 +120,59 @@ body {
     display: none;
 }
 
+/* Logo */
+.logo-media {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-380px);
+    bottom: 0;
+}
+
+.logo-media img {
+    height: 120px;
+    width: auto;
+}
+
 /* Product */
 .product-media {
     position: absolute;
-    right: 48px;
+    left: 50%;
+    transform: translateX(380px);
     bottom: 0;
     text-align: center;
 }
 
 .product-media span {
+    display: block;
     font-size: 0.8em;
     font-weight: 600;
     color: #8b7355;
-    display: block;
     margin-bottom: 6px;
 }
 
 .product-media img {
-    height: 140px;
-    width: auto;
-}
-
-/* Logo large */
-.logo-media {
-    position: absolute;
-    left: 48px;
-    bottom: 0;
-}
-
-.logo-media img {
-    height: 140px;
+    height: 120px;
     width: auto;
 }
 
 /* =========================
-   TOGGLE ARROW
+   TOGGLE ARROW (FULLY VISIBLE)
 ========================= */
 .nav-toggle {
     position: absolute;
     left: 50%;
-    bottom: -12px;
+    bottom: -10px;
     transform: translateX(-50%);
     cursor: pointer;
 
     width: 0;
     height: 0;
+
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
     border-bottom: 18px solid #c4a57b;
+
+    animation: bounce 2.4s infinite;
 }
 
 .nav-toggle::after {
@@ -192,13 +180,21 @@ body {
     position: absolute;
     left: -12px;
     top: 3px;
+
     border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
+    border-right: 12px assume 12px solid transparent;
     border-bottom: 14px solid white;
 }
 
+/* Flip arrow when collapsed */
 .main-nav.collapsed .nav-toggle {
     transform: translateX(-50%) rotate(180deg);
+}
+
+/* Bounce */
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
 }
 
 /* =========================
@@ -206,14 +202,18 @@ body {
 ========================= */
 .iframe-wrapper {
     display: none;
-    height: calc(100vh - 140px);
+    height: calc(100vh - 160px);
 }
 
 .iframe-wrapper.active {
     display: block;
 }
 
-iframe { width: 100%; height: 100%; border: none; }
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 </style>
 </head>
 
@@ -221,37 +221,32 @@ iframe { width: 100%; height: 100%; border: none; }
 
 <nav class="main-nav expanded" id="nav">
 
-    <div class="header-bar">
-        <div class="logo-wrap">
-            <img src="logo.png" alt="RCO Logo">
-        </div>
-
+    <div class="header-content">
         <div class="title-wrap">
             <h1>Rowe Casa Organics Metrics</h1>
             <h2>Operational Dashboards</h2>
         </div>
 
-        <div class="right-wrap"></div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="orders">Orders Overview</button>
+            <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
+            <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
+        </div>
     </div>
 
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="orders">Orders Overview</button>
-        <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
-        <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
-    </div>
-
-    <!-- Media layer -->
+    <!-- Media -->
     <div class="media-layer">
         <div class="logo-media">
-            <img src="logo.png" alt="">
+            <img src="logo.png" alt="Logo">
         </div>
 
         <div class="product-media">
             <span>Top Products</span>
-            <img id="productImage" src="tartcherry.png" alt="">
+            <img id="productImage" src="tartcherry.png" alt="Product">
         </div>
     </div>
 
+    <!-- Toggle -->
     <div class="nav-toggle" onclick="toggleHeader()"></div>
 </nav>
 
@@ -275,7 +270,7 @@ function toggleHeader() {
     nav.classList.toggle("expanded");
 }
 
-/* Product rotation */
+/* Product carousel */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
 setInterval(() => {
