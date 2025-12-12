@@ -1,199 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RCO Metrics Dashboard</title>
 
 <style>
 /* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* BODY */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
 
 /* =========================
    HEADER
 ========================= */
 .main-nav {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
-    border-bottom: 3px solid #c4a57b;
-    box-shadow: 0 5px 20px rgba(139,115,85,0.15);
-    transition: height 0.45s ease, transform 0.45s ease;
-    overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+  overflow: hidden;
+
+  /* Divider handled by a pseudo element so we can fade it */
+  border-bottom: none;
+
+  /* Smooth shrinking */
+  transition: height 0.45s ease;
 }
 
-/* FULL vs SHRUNK */
-.main-nav.full {
-    height: 220px;
+/* Divider line that can fade */
+.main-nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #c4a57b;
+  opacity: 1;
+  transition: opacity 0.35s ease;
 }
 
-.main-nav.shrunk {
-    height: 110px;
+/* Divider fade on shrink */
+.main-nav.shrunk::after {
+  opacity: 0.45;
 }
+
+/* Shadow ONLY when scrolling */
+.main-nav.scrolled {
+  box-shadow: 0 5px 20px rgba(139, 115, 85, 0.15);
+}
+
+/* Heights */
+.main-nav.full { height: 260px; }
+.main-nav.shrunk { height: 140px; }
 
 /* =========================
    TOP GRID
 ========================= */
 .nav-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    align-items: center;
-    height: 100%;
-    padding: 20px;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  height: calc(100% - 64px); /* leave space for tabs row */
+  padding: 18px 20px 8px;
+  gap: 20px;
 }
 
-/* LOGO */
 .nav-logo,
 .product-carousel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .nav-logo img {
-    max-height: 140px;
-    width: auto;
-    transition: max-height 0.45s ease;
+  max-height: 140px;
+  width: auto;
+  object-fit: contain;
+  transition: max-height 0.45s ease;
 }
 
-.main-nav.shrunk .nav-logo img {
-    max-height: 80px;
+.product-carousel img {
+  max-height: 140px;
+  width: auto;
+  object-fit: contain;
+  transition: max-height 0.45s ease;
 }
 
-/* CENTER TITLE */
-.nav-center {
-    text-align: center;
-}
+.main-nav.shrunk .nav-logo img { max-height: 80px; }
+.main-nav.shrunk .product-carousel img { max-height: 80px; }
+
+.nav-center { text-align: center; }
 
 .nav-center h1 {
-    color: #8b7355;
-    font-size: 1.9em;
-    font-weight: 700;
+  color: #8b7355;
+  font-size: 1.9em;
+  font-weight: 700;
 }
 
 .nav-center h2 {
-    font-size: 1em;
-    font-weight: 600;
-    color: #b8a68f;
-    margin-top: 4px;
-    letter-spacing: 0.5px;
-}
-
-/* PRODUCT */
-.product-carousel img {
-    max-height: 140px;
-    width: auto;
-    transition: max-height 0.45s ease;
-}
-
-.main-nav.shrunk .product-carousel img {
-    max-height: 80px;
+  font-size: 1em;
+  font-weight: 600;
+  color: #b8a68f;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
 }
 
 /* =========================
    NAV BUTTONS
 ========================= */
 .nav-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0 30px; /* extra bottom space so toggle never crowds */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.main-nav.shrunk .nav-tabs {
+  opacity: 0.9;
+  transform: scale(0.97);
 }
 
 .nav-tab {
-    background: white;
-    color: #8b7355;
-    border: 2px solid #d2b48c;
-    padding: 12px 26px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background: white;
+  color: #8b7355;
+  border: 2px solid #d2b48c;
+  padding: 12px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .nav-tab:hover {
-    background: #faf8f5;
-    transform: translateY(-2px);
+  background: #faf8f5;
+  border-color: #c4a57b;
+  transform: translateY(-2px);
 }
 
 .nav-tab.active {
-    background: linear-gradient(135deg, #c4a57b, #b8a68f);
-    color: white;
+  background: linear-gradient(135deg, #c4a57b, #b8a68f);
+  color: white;
+  border-color: #b8a68f;
 }
 
 /* =========================
-   TOGGLE ARROW
+   TOGGLE (Arrow morph, keyboard accessible)
 ========================= */
+/* The button wrapper */
 .nav-toggle {
-    position: absolute;
-    bottom: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 48px;
-    height: 36px;
-    background: white;
-    border: 3px solid #c4a57b;
-    border-top: none;
-    border-radius: 0 0 22px 22px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: bounce 2.5s infinite;
+  position: absolute;
+  left: 50%;
+  bottom: 8px;            /* inside header, above divider */
+  transform: translateX(-50%);
+  width: 44px;
+  height: 34px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+
+  /* bounce hint */
+  animation: bounce 2.5s infinite;
 }
 
-.toggle-arrow {
-    font-size: 20px;
-    color: #c4a57b;
-    transition: transform 0.45s ease;
+/* Focus ring for keyboard users */
+.nav-toggle:focus-visible {
+  outline: 3px solid rgba(196, 165, 123, 0.55);
+  outline-offset: 4px;
+  border-radius: 10px;
 }
 
-.main-nav.shrunk .toggle-arrow {
-    transform: rotate(180deg);
+/* Pause bounce on hover/focus (feels nicer) */
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+  animation-play-state: paused;
+}
+
+/* Chevron (tan outline) built from borders; white fill via ::after */
+.chevron {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  transform-origin: center;
+}
+
+/* Down chevron outline (tan) */
+.chevron::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-right: 4px solid #c4a57b;
+  border-bottom: 4px solid #c4a57b;
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
+/* Inner white chevron (slightly smaller) */
+.chevron::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-right: 3px solid white;
+  border-bottom: 3px solid white;
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
+/* MORPH animation: down ⇄ up */
+.main-nav.full .chevron {
+  transform: rotate(0deg);
+  transition: transform 0.38s cubic-bezier(.2,.9,.2,1);
+}
+
+.main-nav.shrunk .chevron {
+  transform: rotate(180deg);
+  transition: transform 0.38s cubic-bezier(.2,.9,.2,1);
 }
 
 /* Bounce */
 @keyframes bounce {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, 6px); }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(6px); }
 }
 
 /* =========================
    IFRAMES
 ========================= */
 .iframe-wrapper {
-    display: none;
-    height: calc(100vh - var(--nav-height));
+  display: none;
+  height: calc(100vh - var(--nav-height));
 }
 
-.iframe-wrapper.active {
-    display: block;
-}
+.iframe-wrapper.active { display: block; }
 
 iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* MOBILE */
 @media (max-width: 768px) {
-    .nav-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
+  .nav-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding-bottom: 0;
+  }
+
+  .main-nav.full { height: 340px; }
+  .main-nav.shrunk { height: 190px; }
+
+  .nav-tabs { flex-wrap: wrap; padding-bottom: 34px; }
 }
 </style>
 </head>
@@ -201,91 +267,128 @@ iframe {
 <body>
 
 <nav class="main-nav full" id="nav">
-    <div class="nav-grid">
-        <div class="nav-logo">
-            <img src="logo.png" alt="Logo">
-        </div>
-
-        <div class="nav-center">
-            <h1>Rowe Casa Organics Metrics</h1>
-            <h2>Operational Dashboards</h2>
-        </div>
-
-        <div class="product-carousel">
-            <img id="productImage" src="tartcherry.png" alt="Product">
-        </div>
+  <div class="nav-grid">
+    <div class="nav-logo">
+      <img src="logo.png" alt="Rowe Casa Organics Logo">
     </div>
 
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="orders">Orders Overview</button>
-        <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
-        <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
+    <div class="nav-center">
+      <h1>Rowe Casa Organics Metrics</h1>
+      <h2>Operational Dashboards</h2>
     </div>
 
-    <div class="nav-toggle" onclick="toggleNav()">
-        <span class="toggle-arrow">⌃</span>
+    <div class="product-carousel">
+      <img id="productImage" src="tartcherry.png" alt="Top Product">
     </div>
+  </div>
+
+  <div class="nav-tabs" role="navigation" aria-label="Dashboards">
+    <button class="nav-tab active" data-tab="orders">Orders Overview</button>
+    <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
+    <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
+  </div>
+
+  <!-- Keyboard accessible toggle -->
+  <button
+    class="nav-toggle"
+    id="navToggle"
+    type="button"
+    aria-label="Toggle header size"
+    aria-controls="nav"
+    aria-expanded="true"
+  >
+    <span class="chevron" aria-hidden="true"></span>
+  </button>
 </nav>
 
+<!-- IFRAMES -->
 <div id="orders-frame" class="iframe-wrapper active">
-    <iframe src="orders.html"></iframe>
+  <iframe src="orders.html" title="Orders Overview"></iframe>
 </div>
 
 <div id="shipping-frame" class="iframe-wrapper">
-    <iframe src="shipping.html"></iframe>
+  <iframe src="shipping.html" title="Shipping Leaderboard"></iframe>
 </div>
 
 <div id="fulfillment-frame" class="iframe-wrapper">
-    <iframe src="fulfillment.html"></iframe>
+  <iframe src="fulfillment.html" title="Fulfillment KPI"></iframe>
 </div>
 
 <script>
-/* Dynamic height variable */
+/* ========= Dynamic header height (no hardcoded body padding) ========= */
 const nav = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+
 function updateNavHeight() {
-    document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+  document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
 }
 updateNavHeight();
 window.addEventListener('resize', updateNavHeight);
 
-/* Toggle */
-function toggleNav() {
-    nav.classList.toggle('shrunk');
-    nav.classList.toggle('full');
-    updateNavHeight();
+/* ========= Toggle shrink/expand (click + keyboard) ========= */
+function setNavState(isFull) {
+  nav.classList.toggle('full', isFull);
+  nav.classList.toggle('shrunk', !isFull);
+  navToggle.setAttribute('aria-expanded', String(isFull));
+  updateNavHeight();
 }
 
-/* Auto-hide on scroll */
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-    const current = window.scrollY;
-    if (current > lastScroll && current > 100) {
-        nav.classList.add('shrunk');
-        nav.classList.remove('full');
-    } else {
-        nav.classList.add('full');
-        nav.classList.remove('shrunk');
-    }
-    lastScroll = current;
-    updateNavHeight();
+function toggleNav() {
+  const isCurrentlyFull = nav.classList.contains('full');
+  setNavState(!isCurrentlyFull);
+}
+
+navToggle.addEventListener('click', toggleNav);
+
+/* Space/Enter support (button already does Enter by default, but we ensure Space works consistently) */
+navToggle.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    toggleNav();
+  }
 });
 
-/* Product rotation */
-const products = ['tartcherry.png','elderberry.png','hairspritz.png'];
+/* ========= Shadow only when scrolling ========= */
+function updateScrolledShadow() {
+  nav.classList.toggle('scrolled', window.scrollY > 2);
+}
+updateScrolledShadow();
+window.addEventListener('scroll', updateScrolledShadow, { passive: true });
+
+/* ========= Auto-hide on scroll: shrink when scrolling down, expand on scroll up ========= */
+let lastScroll = window.scrollY;
+
+window.addEventListener('scroll', () => {
+  const current = window.scrollY;
+
+  if (current > lastScroll && current > 90) {
+    // scrolling down
+    setNavState(false);
+  } else if (current < lastScroll) {
+    // scrolling up
+    setNavState(true);
+  }
+
+  lastScroll = current;
+}, { passive: true });
+
+/* ========= Product rotation ========= */
+const products = ['tartcherry.png', 'elderberry.png', 'hairspritz.png'];
 let idx = 0;
 setInterval(() => {
-    idx = (idx + 1) % products.length;
-    document.getElementById('productImage').src = products[idx];
+  idx = (idx + 1) % products.length;
+  document.getElementById('productImage').src = products[idx];
 }, 5000);
 
-/* Tabs */
+/* ========= Tabs ========= */
 document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.onclick = () => {
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.remove('active'));
-        document.getElementById(`${tab.dataset.tab}-frame`).classList.add('active');
-    };
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.remove('active'));
+    document.getElementById(`${tab.dataset.tab}-frame`).classList.add('active');
+  });
 });
 </script>
 
