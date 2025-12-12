@@ -67,7 +67,10 @@ function updateDashboard() {
         document.getElementById('fillRate7Day').textContent = avg7Day.toFixed(0) + '%';
         document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
         document.getElementById('avgOrders').textContent = Math.round(totalOrders / validData.length).toLocaleString();
-        document.getElementById('periodLabel').textContent = 'year';
+        document.getElementById('periodLabel').textContent = currentYear + ' Year';
+        document.getElementById('periodLabel2').textContent = currentYear + ' Year';
+        document.getElementById('periodLabel3').textContent = 'year';
+        document.getElementById('periodLabel4').textContent = currentYear + ' Year';
     } else {
         const monthData = getMonthData(currentYear, currentMonth);
         
@@ -82,7 +85,10 @@ function updateDashboard() {
             
             document.getElementById('dataTable').innerHTML = '<tr><td colspan="6" style="text-align: center;">No data available for this month</td></tr>';
             
-            document.getElementById('periodLabel').textContent = 'month';
+            document.getElementById('periodLabel').textContent = 'Month';
+            document.getElementById('periodLabel2').textContent = 'Month';
+            document.getElementById('periodLabel3').textContent = 'month';
+            document.getElementById('periodLabel4').textContent = 'Month';
             return;
         }
         
@@ -94,7 +100,10 @@ function updateDashboard() {
         document.getElementById('fillRate7Day').textContent = avg7Day.toFixed(0) + '%';
         document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
         document.getElementById('avgOrders').textContent = Math.round(totalOrders / monthData.length).toLocaleString();
-        document.getElementById('periodLabel').textContent = 'month';
+        document.getElementById('periodLabel').textContent = 'Month';
+        document.getElementById('periodLabel2').textContent = 'Month';
+        document.getElementById('periodLabel3').textContent = 'month';
+        document.getElementById('periodLabel4').textContent = 'Month';
         
         updateCharts(monthData);
         updateTable(monthData);
