@@ -127,7 +127,7 @@
     .medal-bronze td{
       background:transparent;
       color:#6b5d4f;
-      border-top:3px solid #e8dcc8;
+      border-top:3px solid #d2b48c;
       border-bottom:3px solid #e8dcc8;
       border-left:none;
       border-right:none;
@@ -431,10 +431,13 @@
     setTimeout(() => {
       document.querySelectorAll('.scroll-wrapper').forEach(wrapper => {
         const scrollContent = wrapper.querySelector('.scroll-content');
-        if (!scrollContent) return;
+        if (!scrollContent) {
+          log('No scroll content found');
+          return;
+        }
         
-        const wrapperHeight = wrapper.clientHeight;
-        const contentHeight = scrollContent.scrollHeight;
+        const wrapperHeight = wrapper.getBoundingClientRect().height;
+        const contentHeight = scrollContent.getBoundingClientRect().height;
         
         log(`Scroll setup: wrapper=${wrapperHeight}px, content=${contentHeight}px`);
         
@@ -445,12 +448,13 @@
         
         let position = 0;
         let direction = 1;
-        const scrollSpeed = 25;
+        const scrollSpeed = 30;
         const maxScroll = contentHeight - wrapperHeight;
-        const pauseDuration = 3000;
+        const pauseDuration = 2500;
         let lastTime = performance.now();
         let isPaused = false;
         let pauseStartTime = 0;
+        let animationId = null;
         
         function animate(currentTime) {
           if(isPaused) {
@@ -459,7 +463,7 @@
               isPaused = false;
               lastTime = currentTime;
             } else {
-              requestAnimationFrame(animate);
+              animationId = requestAnimationFrame(animate);
               return;
             }
           }
@@ -483,13 +487,13 @@
           
           scrollContent.style.transform = `translateY(-${position}px)`;
           
-          requestAnimationFrame(animate);
+          animationId = requestAnimationFrame(animate);
         }
         
-        log('Starting ping-pong animation with pauses');
-        requestAnimationFrame(animate);
+        log(`Starting animation: maxScroll=${maxScroll}px`);
+        animationId = requestAnimationFrame(animate);
       });
-    }, 500);
+    }, 1000);
 
     log('✓ Dashboard loaded successfully!');
 
