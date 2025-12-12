@@ -28,11 +28,11 @@ index c0272aeefbd3f69551dd67b92c75a3f52557bd01..24c161230607926b22d19b053974922c
      });
  }
  
-+function setDashboardView(view) {
-+    document.body.classList.remove('view-monthly', 'view-calendar');
-+    document.body.classList.add(`view-${view}`);
-+}
-+
+ function setDashboardView(view) {
+     document.body.classList.remove('view-monthly', 'view-calendar');
+     document.body.classList.add(`view-${view}`);
+ }
+
  function updateDashboard() {
      if (currentView === 'calendar') {
          renderCalendarView();
@@ -84,18 +84,7 @@ index c0272aeefbd3f69551dd67b92c75a3f52557bd01..24c161230607926b22d19b053974922c
              
              currentView = btn.dataset.view;
              
--            const monthlyView = document.querySelector('.monthly-view');
--            const calendarView = document.querySelector('.calendar-view');
--            
--            monthlyView.classList.remove('active');
--            calendarView.classList.remove('active');
--            
--            if (currentView === 'monthly') {
--                monthlyView.classList.add('active');
--            } else {
--                calendarView.classList.add('active');
--            }
-+            setDashboardView(currentView);
+             setDashboardView(currentView);
              
              document.getElementById('monthSelect').disabled = currentView === 'calendar';
              
@@ -117,5 +106,5 @@ index c0272aeefbd3f69551dd67b92c75a3f52557bd01..24c161230607926b22d19b053974922c
  // Initialize with most recent data month
  document.getElementById('monthSelect').value = currentMonth.toString();
  document.getElementById('yearSelect').value = currentYear.toString();
-+setDashboardView(currentView);
+ setDashboardView(currentView);
  updateDashboard();
