@@ -101,33 +101,37 @@
       overflow-wrap:break-word;
     }
     
-    .medal-gold td, .medal-silver td, .medal-bronze td{
+    .medal-gold, .medal-silver, .medal-bronze{
       border-bottom:none;
       font-weight:700;
       position:relative;
     }
     
-    .medal-gold td{
+    .medal-gold{
       background:var(--first-place) !important;
+    }
+    
+    .medal-gold td{
+      background:transparent !important;
       color:#fff;
-      box-shadow:inset 0 1px 3px rgba(255,255,255,0.3);
+    }
+    
+    .medal-silver{
+      background:var(--second-place) !important;
     }
     
     .medal-silver td{
-      background:var(--second-place) !important;
+      background:transparent !important;
       color:#fff;
-      box-shadow:inset 0 1px 3px rgba(255,255,255,0.2);
+    }
+    
+    .medal-bronze{
+      background:var(--third-place) !important;
     }
     
     .medal-bronze td{
-      background:var(--third-place) !important;
+      background:transparent !important;
       color:#6b5d4f;
-      box-shadow:inset 0 1px 2px rgba(255,255,255,0.15);
-    }
-    
-    .medal-gold .col-rank::before{
-      content: '👑 ';
-      font-size: 1.2em;
     }
     
     .col-rank{font-size:clamp(13px, 1.4vw, 17px);font-weight:700;width:10%}
