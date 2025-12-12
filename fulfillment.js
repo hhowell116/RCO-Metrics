@@ -454,8 +454,14 @@ document.querySelectorAll('[data-view]').forEach(btn => {
             const monthlyView = document.querySelector('.monthly-view');
             const calendarView = document.querySelector('.calendar-view');
             
-            if (monthlyView) monthlyView.classList.toggle('active', currentView === 'monthly');
-            if (calendarView) calendarView.classList.toggle('active', currentView === 'calendar');
+            monthlyView.classList.remove('active');
+            calendarView.classList.remove('active');
+            
+            if (currentView === 'monthly') {
+                monthlyView.classList.add('active');
+            } else {
+                calendarView.classList.add('active');
+            }
             
             document.getElementById('monthSelect').disabled = currentView === 'calendar';
             
