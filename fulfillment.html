@@ -194,6 +194,26 @@
             gap: 10px;
         }
         
+        .tv-view-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(139, 115, 85, 0.2);
+        }
+        
+        .tv-view-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+        }
+        
         @media (max-width: 768px) {
             .chart-wrapper {
                 height: 300px;
@@ -202,14 +222,24 @@
             .calendar-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .tv-view-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="card kpi-header">
-            <h1>📦 RCO Fulfillment Dashboard</h1>
-            <p class="text-secondary">Real-time order fulfillment analytics and KPIs</p>
+            <div style="position: relative;">
+                <h1>📦 RCO Fulfillment Dashboard</h1>
+                <p class="text-secondary">Real-time order fulfillment analytics and KPIs</p>
+                <button id="tvViewBtn" class="tv-view-btn">
+                    TV View
+                </button>
+            </div>
         </header>
 
         <div class="kpi-controls">
@@ -310,5 +340,28 @@
 
     <script src="data.js"></script>
     <script src="fulfillment.js"></script>
+    <script>
+        // TV View toggle
+        const tvViewBtn = document.getElementById('tvViewBtn');
+        tvViewBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                tvViewBtn.textContent = 'Exit TV View';
+                tvViewBtn.style.background = 'linear-gradient(135deg, #c67b7b 0%, #a06060 100%)';
+            } else {
+                document.exitFullscreen();
+                tvViewBtn.textContent = 'TV View';
+                tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
+            }
+        });
+
+        // Update button text if user exits fullscreen via ESC key
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                tvViewBtn.textContent = 'TV View';
+                tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
+            }
+        });
+    </script>
 </body>
 </html>
