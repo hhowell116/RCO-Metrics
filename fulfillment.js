@@ -51,8 +51,6 @@ function updateDashboard() {
         const yearData = getYearData(currentYear);
         const validData = yearData.filter(d => d.orders > 0);
         
-        document.getElementById('viewLabel').textContent = 'Metrics for the Selected Year';
-        
         if (validData.length === 0) {
             document.getElementById('fillRate4Day').textContent = 'N/A';
             document.getElementById('fillRate7Day').textContent = 'N/A';
@@ -71,8 +69,6 @@ function updateDashboard() {
         document.getElementById('avgOrders').textContent = Math.round(totalOrders / validData.length).toLocaleString();
         document.getElementById('periodLabel').textContent = 'year';
     } else {
-        document.getElementById('viewLabel').textContent = '';
-        
         const monthData = getMonthData(currentYear, currentMonth);
         
         if (monthData.length === 0) {
