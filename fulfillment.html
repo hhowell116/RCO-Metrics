@@ -29,6 +29,18 @@
             flex-wrap: wrap;
         }
         
+        .view-label {
+            flex: 1;
+            text-align: center;
+            color: #8b7355;
+            font-weight: 600;
+            font-size: 1.05em;
+            padding: 8px 16px;
+            border: 2px solid #d2b48c;
+            border-radius: 8px;
+            background: #faf8f5;
+        }
+        
         .kpi-stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -202,6 +214,11 @@
             .calendar-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .view-label {
+                font-size: 0.9em;
+                padding: 6px 12px;
+            }
         }
     </style>
 </head>
@@ -232,7 +249,7 @@
                 <option value="11">December</option>
             </select>
             <div style="flex: 1; text-align: center;">
-                <span id="viewLabel" style="color: #8b7355; font-weight: 600; font-size: 0.9em;"></span>
+                <span id="viewLabel" class="view-label"></span>
             </div>
             <div class="view-toggle">
                 <button class="btn-secondary active" data-view="monthly">Monthly</button>
