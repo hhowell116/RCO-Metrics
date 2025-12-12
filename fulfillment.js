@@ -209,12 +209,6 @@ function updateCharts(monthData) {
     
     const ctx1 = document.getElementById('fillRateChart').getContext('2d');
     
-    // Create point styles - stars for 100%, circles otherwise
-    const rate4PointStyle = monthData.map(d => d.rate4 === 100 ? 'star' : 'circle');
-    const rate7PointStyle = monthData.map(d => d.rate7 === 100 ? 'star' : 'circle');
-    const rate4PointRadius = monthData.map(d => d.rate4 === 100 ? 8 : 4);
-    const rate7PointRadius = monthData.map(d => d.rate7 === 100 ? 8 : 4);
-    
     fillRateChart = new Chart(ctx1, {
         type: 'line',
         data: {
@@ -224,13 +218,12 @@ function updateCharts(monthData) {
                     label: '7 Day Fill Rate (Target: 95%)',
                     data: monthData.map(d => d.rate7),
                     borderColor: '#8b7355',
-                    backgroundColor: 'rgba(139, 115, 85, 0.15)',
+                    backgroundColor: 'rgba(139, 115, 85, 0.1)',
                     tension: 0.3,
                     fill: true,
                     borderWidth: 3,
-                    pointStyle: rate7PointStyle,
-                    pointRadius: rate7PointRadius,
-                    pointHoverRadius: 10,
+                    pointRadius: 4,
+                    pointHoverRadius: 8,
                     pointBackgroundColor: '#8b7355',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
@@ -240,13 +233,12 @@ function updateCharts(monthData) {
                     label: '4 Day Fill Rate (Target: 85%)',
                     data: monthData.map(d => d.rate4),
                     borderColor: '#d2b48c',
-                    backgroundColor: 'rgba(210, 180, 140, 0.15)',
+                    backgroundColor: 'rgba(210, 180, 140, 0.1)',
                     tension: 0.3,
                     fill: true,
                     borderWidth: 3,
-                    pointStyle: rate4PointStyle,
-                    pointRadius: rate4PointRadius,
-                    pointHoverRadius: 10,
+                    pointRadius: 4,
+                    pointHoverRadius: 8,
                     pointBackgroundColor: '#d2b48c',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
@@ -291,11 +283,7 @@ function updateCharts(monthData) {
                         font: { size: 11 },
                         usePointStyle: true,
                         padding: 12,
-                        boxWidth: 15,
-                        filter: function(item) {
-                            // Show legend for all items
-                            return true;
-                        }
+                        boxWidth: 15
                     }
                 },
                 tooltip: {
@@ -304,9 +292,6 @@ function updateCharts(monthData) {
                             let label = context.dataset.label || '';
                             if (label && !label.includes('Target Line')) {
                                 label += ': ' + context.parsed.y.toFixed(1) + '%';
-                                if (context.parsed.y === 100) {
-                                    label += ' ⭐';
-                                }
                             }
                             return label;
                         }
@@ -351,28 +336,77 @@ function updateCharts(monthData) {
                 borderColor: '#d2b48c',
                 backgroundColor: 'rgba(210, 180, 140, 0.1)',
                 tension: 0.3,
-                fill: true
+                fill: true,
+                borderWidth: 3,
+                pointRadius: 4,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#d2b48c',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
             }, {
                 label: 'Orders Remaining (7 Day)',
                 data: monthData.map(d => d.rem7),
                 borderColor: '#8b7355',
                 backgroundColor: 'rgba(139, 115, 85, 0.1)',
                 tension: 0.3,
-                fill: true
+                fill: true,
+                borderWidth: 3,
+                pointRadius: 4,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#8b7355',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: { 
                     display: true,
-                    labels: { color: '#8b7355' }
+                    labels: { 
+                        color: '#8b7355',
+                        font: { size: 11 },
+                        usePointStyle: true,
+                        padding: 12,
+                        boxWidth: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ' + context.parsed.y.toLocaleString();
+                            }
+                            return label;
+                        }
+                    }
                 }
             },
             scales: {
-                y: { beginAtZero: true, ticks: { color: '#a0906f' } },
-                x: { ticks: { color: '#a0906f' } }
+                y: { 
+                    beginAtZero: true, 
+                    ticks: { 
+                        color: '#a0906f',
+                        callback: function(value) {
+                            return value.toLocaleString();
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(210, 180, 140, 0.1)'
+                    }
+                },
+                x: { 
+                    ticks: { color: '#a0906f' },
+                    grid: {
+                        color: 'rgba(210, 180, 140, 0.1)'
+                    }
+                }
             }
         }
     });
