@@ -7,11 +7,7 @@
 
 <style>
 /* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -31,106 +27,84 @@ body {
 }
 
 /* =========================
-   TITLES ROW (defines height)
+   HEADER GRID (HEIGHT DEFINER)
 ========================= */
-.titles-row {
+.header-bar {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    align-items: start;
-    padding: 16px 24px 4px;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 24px 10px;
 }
 
-.title-center {
+/* =========================
+   LEFT LOGO (SCALES)
+========================= */
+.logo-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.logo-wrap img {
+    height: 64px;
+    width: auto;
+    transition: height 0.4s ease;
+}
+
+.main-nav.expanded .logo-wrap img {
+    height: 96px;
+}
+
+/* =========================
+   CENTER TITLES
+========================= */
+.title-wrap {
     text-align: center;
 }
 
-.title-center h1 {
+.title-wrap h1 {
     color: #8b7355;
     font-size: 1.9em;
     font-weight: 700;
 }
 
-.title-center h2 {
+.title-wrap h2 {
     color: #b8a68f;
     font-size: 1em;
     font-weight: 600;
     margin-top: 2px;
 }
 
-.title-right {
-    text-align: center;
-    font-size: 0.85em;
-    font-weight: 600;
-    color: #8b7355;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.main-nav.collapsed .title-wrap h2 {
+    display: none;
 }
 
 /* =========================
-   MEDIA ROW (slides)
+   RIGHT ACTION AREA
 ========================= */
-.media-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    align-items: end;
-    height: 170px; /* FIXED – images adapt to this */
-    padding: 0 24px 6px;
-    transition: height 0.45s ease, transform 0.45s ease;
-}
-
-/* Collapsed = slide up */
-.main-nav.collapsed .media-row {
-    height: 0;
-    transform: translateY(-100%);
-}
-
-/* Logo / product */
-.media-left,
-.media-right {
+.right-wrap {
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 100%;
+    align-items: center;
+    gap: 14px;
 }
 
-.media-left img,
-.media-right img {
-    max-height: 100%;
-    width: auto;
-    transition: max-height 0.45s ease;
-}
-
-/* =========================
-   NAV BUTTONS (define height)
-========================= */
+/* Dashboard buttons (default center row) */
 .nav-tabs {
     display: flex;
+    gap: 10px;
     justify-content: center;
-    gap: 12px;
-    padding: 10px 0 28px;
-    transition: transform 0.45s ease;
+    padding-bottom: 18px;
+    transition: transform 0.4s ease;
 }
 
-.main-nav.collapsed .nav-tabs {
-    transform: translateY(-100%);
-}
-
-/* Buttons styling restored */
 .nav-tab {
     background: white;
     color: #8b7355;
     border: 2px solid #d2b48c;
-    padding: 12px 26px;
+    padding: 10px 22px;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.nav-tab:hover {
-    background: #faf8f5;
-    border-color: #c4a57b;
-    transform: translateY(-2px);
 }
 
 .nav-tab.active {
@@ -138,8 +112,66 @@ body {
     color: white;
 }
 
+/* When collapsed, buttons move right */
+.main-nav.collapsed .nav-tabs {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+}
+
 /* =========================
-   TOGGLE ARROW (ON SEPARATOR)
+   MEDIA LAYER (ABSOLUTE)
+========================= */
+.media-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 3px; /* aligns with separator */
+    height: 180px;
+    pointer-events: none;
+}
+
+.main-nav.collapsed .media-layer {
+    display: none;
+}
+
+/* Product */
+.product-media {
+    position: absolute;
+    right: 48px;
+    bottom: 0;
+    text-align: center;
+}
+
+.product-media span {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #8b7355;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.product-media img {
+    height: 140px;
+    width: auto;
+}
+
+/* Logo large */
+.logo-media {
+    position: absolute;
+    left: 48px;
+    bottom: 0;
+}
+
+.logo-media img {
+    height: 140px;
+    width: auto;
+}
+
+/* =========================
+   TOGGLE ARROW
 ========================= */
 .nav-toggle {
     position: absolute;
@@ -165,7 +197,6 @@ body {
     border-bottom: 14px solid white;
 }
 
-/* Arrow flips */
 .main-nav.collapsed .nav-toggle {
     transform: translateX(-50%) rotate(180deg);
 }
@@ -182,55 +213,48 @@ body {
     display: block;
 }
 
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+iframe { width: 100%; height: 100%; border: none; }
 </style>
 </head>
 
 <body>
 
-<nav class="main-nav" id="nav">
+<nav class="main-nav expanded" id="nav">
 
-    <!-- TITLES -->
-    <div class="titles-row">
-        <div></div>
+    <div class="header-bar">
+        <div class="logo-wrap">
+            <img src="logo.png" alt="RCO Logo">
+        </div>
 
-        <div class="title-center">
+        <div class="title-wrap">
             <h1>Rowe Casa Organics Metrics</h1>
             <h2>Operational Dashboards</h2>
         </div>
 
-        <div class="title-right">Top Products</div>
+        <div class="right-wrap"></div>
     </div>
 
-    <!-- MEDIA -->
-    <div class="media-row">
-        <div class="media-left">
-            <img src="logo.png" alt="Logo">
-        </div>
-
-        <div></div>
-
-        <div class="media-right">
-            <img id="productImage" src="tartcherry.png" alt="Product">
-        </div>
-    </div>
-
-    <!-- NAV BUTTONS -->
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="orders">Orders Overview</button>
         <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
         <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
     </div>
 
-    <!-- TOGGLE -->
-    <div class="nav-toggle" onclick="toggleHeader()" aria-label="Toggle header"></div>
+    <!-- Media layer -->
+    <div class="media-layer">
+        <div class="logo-media">
+            <img src="logo.png" alt="">
+        </div>
+
+        <div class="product-media">
+            <span>Top Products</span>
+            <img id="productImage" src="tartcherry.png" alt="">
+        </div>
+    </div>
+
+    <div class="nav-toggle" onclick="toggleHeader()"></div>
 </nav>
 
-<!-- IFRAMES -->
 <div id="orders-frame" class="iframe-wrapper active">
     <iframe src="orders.html"></iframe>
 </div>
@@ -248,9 +272,10 @@ const nav = document.getElementById("nav");
 
 function toggleHeader() {
     nav.classList.toggle("collapsed");
+    nav.classList.toggle("expanded");
 }
 
-/* Product carousel */
+/* Product rotation */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
 setInterval(() => {
