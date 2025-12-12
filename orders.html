@@ -616,12 +616,45 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
+    
+    .tv-view-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(139, 115, 85, 0.2);
+      font-size: 0.9em;
+    }
+    
+    .tv-view-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+      .tv-view-btn {
+        padding: 8px 14px;
+        font-size: 0.8em;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Rowe Casa Organics Orders Overview</h1>
+      <div style="position: relative;">
+        <h1>Rowe Casa Organics Orders Overview</h1>
+        <button id="tvViewBtn" class="tv-view-btn">
+          TV View
+        </button>
+      </div>
     </div>
 
     <div class="controls">
@@ -1034,6 +1067,28 @@
       `;
       document.getElementById('loading').style.display = 'block';
     }
+    
+    // TV View toggle
+    const tvViewBtn = document.getElementById('tvViewBtn');
+    tvViewBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        tvViewBtn.textContent = 'Exit TV View';
+        tvViewBtn.style.background = 'linear-gradient(135deg, #c67b7b 0%, #a06060 100%)';
+      } else {
+        document.exitFullscreen();
+        tvViewBtn.textContent = 'TV View';
+        tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
+      }
+    });
+
+    // Update button text if user exits fullscreen via ESC key
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        tvViewBtn.textContent = 'TV View';
+        tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
+      }
+    });
   </script>
 </body>
 </html>
