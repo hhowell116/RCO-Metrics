@@ -51,6 +51,8 @@ function updateDashboard() {
         const yearData = getYearData(currentYear);
         const validData = yearData.filter(d => d.orders > 0);
         
+        document.getElementById('viewLabel').textContent = 'Metrics for the Selected Year';
+        
         if (validData.length === 0) {
             document.getElementById('fillRate4Day').textContent = 'N/A';
             document.getElementById('fillRate7Day').textContent = 'N/A';
@@ -67,11 +69,10 @@ function updateDashboard() {
         document.getElementById('fillRate7Day').textContent = avg7Day.toFixed(0) + '%';
         document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
         document.getElementById('avgOrders').textContent = Math.round(totalOrders / validData.length).toLocaleString();
-        document.getElementById('periodLabel').textContent = currentYear + ' Year';
-        document.getElementById('periodLabel2').textContent = currentYear + ' Year';
-        document.getElementById('periodLabel3').textContent = 'year';
-        document.getElementById('periodLabel4').textContent = currentYear + ' Year';
+        document.getElementById('periodLabel').textContent = 'year';
     } else {
+        document.getElementById('viewLabel').textContent = '';
+        
         const monthData = getMonthData(currentYear, currentMonth);
         
         if (monthData.length === 0) {
@@ -85,10 +86,7 @@ function updateDashboard() {
             
             document.getElementById('dataTable').innerHTML = '<tr><td colspan="6" style="text-align: center;">No data available for this month</td></tr>';
             
-            document.getElementById('periodLabel').textContent = 'Month';
-            document.getElementById('periodLabel2').textContent = 'Month';
-            document.getElementById('periodLabel3').textContent = 'month';
-            document.getElementById('periodLabel4').textContent = 'Month';
+            document.getElementById('periodLabel').textContent = 'month';
             return;
         }
         
@@ -100,10 +98,7 @@ function updateDashboard() {
         document.getElementById('fillRate7Day').textContent = avg7Day.toFixed(0) + '%';
         document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
         document.getElementById('avgOrders').textContent = Math.round(totalOrders / monthData.length).toLocaleString();
-        document.getElementById('periodLabel').textContent = 'Month';
-        document.getElementById('periodLabel2').textContent = 'Month';
-        document.getElementById('periodLabel3').textContent = 'month';
-        document.getElementById('periodLabel4').textContent = 'Month';
+        document.getElementById('periodLabel').textContent = 'month';
         
         updateCharts(monthData);
         updateTable(monthData);
@@ -310,7 +305,7 @@ function updateCharts(monthData) {
             scales: {
                 y: {
                     min: 0,
-                    max: 105,
+                    max: 100,
                     ticks: { 
                         callback: v => v + '%',
                         color: '#a0906f',
