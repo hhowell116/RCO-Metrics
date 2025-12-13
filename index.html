@@ -33,10 +33,19 @@ body {
 
 /* Collapsed: NO background, NO line */
 .main-nav.collapsed {
-  padding: 18px 0 10px;      /* just enough for arrow */
+  height: 0;
+  padding: 0;
   background: transparent;
   border-bottom: none;
+  overflow: hidden;
 }
+
+  .main-nav.collapsed .nav-toggle-wrap {
+  position: fixed;
+  top: 12px;
+  bottom: auto;
+}
+
 
 /* =========================
    CENTER CONTENT
