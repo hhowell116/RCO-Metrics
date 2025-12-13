@@ -9,94 +9,61 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <style>
-
-    /* VIEW TOGGLING */
-.monthly-view,
-.calendar-view {
-  display: none;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-.monthly-view.active,
-.calendar-view.active {
-  display: block;
-}
-
-    
-    body {
-    margin: 0;
-    padding: 0;        /* ✅ removes the extra right-side space */
-    min-height: 100vh;
-}
-/* ====== LAYOUT ====== */
+/* ===== LAYOUT ===== */
 .container {
-    width: 100%;
-    max-width: none;         /* ✅ critical */
-    margin: 0 auto;
-    padding: 20px 45px 45px;           /* ✅ your requested spacing */
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 20px 45px 45px;
 }
 
-/* ====== HEADER ====== */
+/* ===== HEADER ===== */
 .kpi-header {
-    position: relative;
-    padding: 22px 20px;
-    margin-bottom: 16px;
-    text-align: center;
+  background: white;
+  padding: 18px 22px;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(139,115,85,0.15);
+  margin-bottom: 16px;
+  border: 1px solid rgba(210,180,140,0.3);
 }
-
-.kpi-header h1 {
-    margin: 0;
-    font-size: 2em;
-    font-weight: 600;
-    color: var(--tan-dark);
-}
-
-.fulfillment-header {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 22px;
-    position: relative;
-}
-
 
 .header-bar {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-}
-
-/* CENTER */
-.header-center {
-    text-align: center;
-}
-
-.header-center h1 {
-    margin: 0;
-    font-size: 1.8em;
-    font-weight: 600;
-    color: var(--tan-dark);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
 }
 
 .header-left,
 .header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Remove unused background spacing */
-.kpi-controls {
-    display: none;
+.header-center {
+  text-align: center;
+}
+
+.header-center h1 {
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #8b7355;
 }
 
 .view-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
 }
 
-/* ====== FULLSCREEN BUTTON (MATCHES ORDERS) ====== */
+/* ===== FULLSCREEN BUTTON ===== */
 .fullscreen-btn {
   width: 36px;
   height: 36px;
@@ -107,11 +74,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
 }
 
-/* ICON */
 .fullscreen-icon {
   position: relative;
   width: 18px;
@@ -119,7 +84,6 @@
   transition: transform 0.25s ease;
 }
 
-/* TOP-LEFT ARROW */
 .fullscreen-icon::before,
 .fullscreen-icon::after {
   content: "";
@@ -129,7 +93,6 @@
   border: 2px solid #fff;
 }
 
-/* ↖ arrow */
 .fullscreen-icon::before {
   top: 0;
   left: 0;
@@ -137,7 +100,6 @@
   border-bottom: none;
 }
 
-/* ↘ arrow */
 .fullscreen-icon::after {
   bottom: 0;
   right: 0;
@@ -145,120 +107,107 @@
   border-top: none;
 }
 
-/* EXIT FULLSCREEN = INVERT ARROWS */
 .fullscreen-btn.exit .fullscreen-icon {
   transform: rotate(180deg);
 }
 
-
-/* ====== CONTROLS ====== */
-.kpi-controls {
-    background: white;
-    padding: 16px;
-    border-radius: 15px;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 24px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* ====== KPI CARDS (SHORTER HEIGHT) ====== */
+/* ===== KPI CARDS ===== */
 .kpi-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .stat-card {
-    padding: 14px 16px;
+  background: white;
+  padding: 14px 16px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(139,115,85,0.08);
 }
 
-.stat-label {
-    font-size: 0.75em;
+/* ===== VIEWS ===== */
+.monthly-view,
+.calendar-view {
+  display: none;
 }
 
-.stat-value {
-    font-size: 1.6em;
-    margin-top: 4px;
+.monthly-view.active,
+.calendar-view.active {
+  display: block;
 }
 
-.stat-subtitle {
-    font-size: 0.7em;
+/* ===== CALENDAR ===== */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
 }
 
-/* ====== CHARTS ====== */
-.chart-container {
-    background: white;
-    padding: 24px;
-    border-radius: 15px;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 20px;
+.month-calendar {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 6px 20px rgba(139,115,85,0.12);
 }
 
-.chart-wrapper {
-    position: relative;
-    height: 350px;
+.month-header {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #8b7355;
 }
 
-@media (max-width: 768px) {
-    .chart-wrapper {
-        height: 300px;
-    }
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
 }
 
-/* FORCE Year/Month selects to display text */
-#yearSelect, #monthSelect {
-  color: #8b7355 !important;
-  background: #ffffff !important;
-  font-size: 14px !important;
-  line-height: 1.2 !important;
-  padding: 10px 36px 10px 14px !important; /* room for arrow */
-  min-width: 140px;
-  border: 2px solid #d2b48c !important;
-  border-radius: 10px !important;
-  appearance: auto;              /* undo any "custom select" hiding */
-  -webkit-appearance: menulist;  /* safari/chrome */
-  -moz-appearance: menulist;
+.day-label {
+  font-size: 0.7em;
+  text-align: center;
+  color: #a0906f;
 }
 
-/* make sure option text is visible too */
-#yearSelect option, #monthSelect option {
-  color: #111 !important;
+.calendar-day {
+  text-align: center;
+  font-size: 0.75em;
+  padding: 6px 0;
+  border-radius: 6px;
 }
 
-    
+.cal-rate-excellent { background:#c4a57b; color:white; }
+.cal-rate-good { background:#d2b48c; }
+.cal-rate-warning { background:#f0cfa0; }
+.cal-rate-poor { background:#e6b8b8; }
+.cal-rate-none { background:#faf8f5; }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-    <!-- HEADER -->
-   <header class="card kpi-header">
+<header class="kpi-header">
   <div class="header-bar">
 
-    <!-- LEFT -->
     <div class="header-left">
-      <select id="yearSelect" class="btn-secondary"></select>
-      <select id="monthSelect" class="btn-secondary"></select>
+      <select id="yearSelect"></select>
+      <select id="monthSelect"></select>
     </div>
 
-    <!-- CENTER -->
     <div class="header-center">
       <h1>📦 RCO Fulfillment KPI</h1>
     </div>
 
-    <!-- RIGHT -->
     <div class="header-right">
       <div class="view-toggle">
         <button class="btn-secondary active" data-view="monthly">Monthly</button>
         <button class="btn-secondary" data-view="calendar">Calendar</button>
       </div>
 
-      <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+      <button id="fullscreenBtn" class="fullscreen-btn">
         <div class="fullscreen-icon"></div>
       </button>
     </div>
@@ -266,93 +215,41 @@
   </div>
 </header>
 
-    <!-- KPI CARDS -->
-    <div class="kpi-stats-grid">
-        <div class="stat-card">
-            <div class="stat-label">Monthly Fill Rate (4 Day)</div>
-            <div class="stat-value" id="fillRate4Day">-</div>
-            <div class="stat-subtitle">Target: 85%</div>
-        </div>
+<div class="kpi-stats-grid">
+  <div class="stat-card"><strong id="fillRate4Day">-</strong><br>4-Day Rate</div>
+  <div class="stat-card"><strong id="fillRate7Day">-</strong><br>7-Day Rate</div>
+  <div class="stat-card"><strong id="totalOrders">-</strong><br>Total Orders</div>
+  <div class="stat-card"><strong id="avgOrders">-</strong><br>Avg Daily</div>
+</div>
 
-        <div class="stat-card">
-            <div class="stat-label">Monthly Fill Rate (7 Day)</div>
-            <div class="stat-value" id="fillRate7Day">-</div>
-            <div class="stat-subtitle">Target: 95%</div>
-        </div>
+<div class="monthly-view active" data-view="monthly">
+  <canvas id="fillRateChart" height="120"></canvas>
+  <canvas id="ordersChart" height="120"></canvas>
+  <table>
+    <tbody id="dataTable"></tbody>
+  </table>
+</div>
 
-        <div class="stat-card">
-            <div class="stat-label">Total Orders Processed</div>
-            <div class="stat-value" id="totalOrders">-</div>
-            <div class="stat-subtitle">This <span id="periodLabel">month</span></div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-label">Average Daily Orders</div>
-            <div class="stat-value" id="avgOrders">-</div>
-            <div class="stat-subtitle">Per day</div>
-        </div>
-    </div>
-
-    <!-- MONTHLY VIEW -->
-    <div class="monthly-view active" data-view="monthly">
-        <div class="chart-container">
-            <h2 class="chart-title">Daily Fill Rate Performance</h2>
-            <p class="chart-subtitle">Target lines: 95% (7-day) • 85% (4-day)</p>
-            <div class="chart-wrapper">
-                <canvas id="fillRateChart"></canvas>
-            </div>
-        </div>
-
-        <div class="chart-container">
-            <h2 class="chart-title">Orders Remaining</h2>
-            <div class="chart-wrapper">
-                <canvas id="ordersChart"></canvas>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Orders Received</th>
-                        <th>Remaining (4 Day)</th>
-                        <th>Remaining (7 Day)</th>
-                        <th>Fill Rate (4 Day)</th>
-                        <th>Fill Rate (7 Day)</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTable"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- CALENDAR VIEW -->
-    <div class="calendar-view" data-view="calendar">
-        <div class="calendar-grid" id="calendarGrid"></div>
-    </div>
+<div class="calendar-view" data-view="calendar">
+  <div id="calendarGrid" class="calendar-grid"></div>
+</div>
 
 </div>
 
-
-
+<script src="data.js"></script>
+<script src="fulfillment.js"></script>
 
 <script>
 const fullscreenBtn = document.getElementById('fullscreenBtn');
-
-fullscreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
-});
-
-document.addEventListener('fullscreenchange', () => {
-    fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement);
-});
+fullscreenBtn.onclick = () => {
+  document.fullscreenElement
+    ? document.exitFullscreen()
+    : document.documentElement.requestFullscreen();
+};
+document.addEventListener('fullscreenchange', () =>
+  fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement)
+);
 </script>
-<script src="data.js"></script>
-<script src="fulfillment.js" defer></script>
+
 </body>
 </html>
