@@ -6,7 +6,6 @@
 <title>RCO Metrics Dashboard</title>
 
 <style>
-/* RESET */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -29,13 +28,13 @@ body {
 
 /* Expanded vs collapsed height */
 .main-nav.expanded {
-    padding: 18px 0 30px;
-    max-height: 420px;
+    padding: 18px 0 34px;
+    max-height: 440px;
 }
 
 .main-nav.collapsed {
     padding: 26px 0 26px;
-    max-height: 80px;
+    max-height: 90px;
 }
 
 /* =========================
@@ -66,6 +65,7 @@ body {
     font-size: 1em;
     font-weight: 600;
     margin-top: 2px;
+    margin-bottom: 6px; /* MORE SPACE ABOVE BUTTONS */
 }
 
 /* Buttons */
@@ -73,7 +73,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 12px;
-    margin-top: 10px;
+    margin-top: 6px; /* slight extra spacing */
 }
 
 .nav-tab {
@@ -97,10 +97,10 @@ body {
 .media-layer {
     position: absolute;
     left: 50%;
-    bottom: 3px; /* sits on separator */
+    bottom: 3px; /* aligns with separator */
     transform: translateX(-50%);
     width: 1200px;
-    height: 180px;
+    height: 200px; /* MORE ROOM FOR BIGGER IMAGES */
     pointer-events: none;
 }
 
@@ -124,15 +124,15 @@ body {
 }
 
 .logo-media img {
-    height: 150px;
+    height: 160px; /* unchanged */
     width: auto;
 }
 
 /* PRODUCT */
 .product-media {
-    right: 0;
+    right: -40px; /* MOVED RIGHT */
     align-items: center;
-    gap: 14px;
+    gap: 16px;
 }
 
 .product-label {
@@ -144,19 +144,19 @@ body {
 }
 
 .product-media img {
-    height: 150px;
+    height: 180px; /* BIGGER IMAGE */
     width: auto;
 }
 
 /* =========================
-   TOGGLE ARROW
+   TOGGLE ARROW (ON TOP OF SEPARATOR)
 ========================= */
 .nav-toggle-wrap {
     position: absolute;
     left: 50%;
-    bottom: -9px; /* overlaps separator */
+    bottom: 0; /* ON TOP OF SEPARATOR */
     transform: translateX(-50%);
-    z-index: 10;
+    z-index: 20; /* ABOVE BORDER */
     cursor: pointer;
 }
 
@@ -195,7 +195,7 @@ body {
 ========================= */
 .iframe-wrapper {
     display: none;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 180px);
 }
 
 .iframe-wrapper.active {
