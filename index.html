@@ -16,49 +16,52 @@ body {
 /* =========================
    HEADER
 ========================= */
-.main-nav{
+.main-nav {
   position: sticky;
   top: 0;
   z-index: 1000;
   background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
   border-bottom: 3px solid #c4a57b;
   overflow: visible;
-  transition: max-height 0.45s ease, padding 0.45s ease;
+  transition: padding 0.45s ease;
 }
 
-.main-nav.expanded{
+/* Expanded */
+.main-nav.expanded {
   padding: 18px 0 44px;
-  max-height: 420px;
 }
 
-.main-nav.collapsed{
-  padding: 10px 0 22px;
-  max-height: 56px;
+/* Collapsed: NO background, NO line */
+.main-nav.collapsed {
+  padding: 18px 0 10px;      /* just enough for arrow */
+  background: transparent;
+  border-bottom: none;
 }
 
 /* =========================
    CENTER CONTENT
 ========================= */
-.header-content{
+.header-content {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
   transition: transform 0.45s ease, opacity 0.35s ease;
 }
 
-.main-nav.collapsed .header-content{
-  transform: translateY(-48px);
+.main-nav.collapsed .header-content {
+  transform: translateY(-60px);
   opacity: 0;
   pointer-events: none;
 }
 
-.title-wrap h1{
+/* Titles */
+.title-wrap h1 {
   color: #8b7355;
   font-size: 1.9em;
   font-weight: 700;
 }
 
-.title-wrap h2{
+.title-wrap h2 {
   color: #b8a68f;
   font-size: 1em;
   font-weight: 600;
@@ -69,13 +72,13 @@ body {
 /* =========================
    NAV BUTTONS
 ========================= */
-.nav-tabs{
+.nav-tabs {
   display: flex;
   justify-content: center;
   gap: 12px;
 }
 
-.nav-tab{
+.nav-tab {
   background: white;
   color: #8b7355;
   border: 2px solid #d2b48c;
@@ -86,13 +89,13 @@ body {
   transition: all 0.25s ease;
 }
 
-.nav-tab:hover{
+.nav-tab:hover {
   background: #faf8f5;
   border-color: #c4a57b;
   transform: translateY(-2px);
 }
 
-.nav-tab.active{
+.nav-tab.active {
   background: linear-gradient(135deg, #c4a57b, #b8a68f);
   color: white;
 }
@@ -100,22 +103,22 @@ body {
 /* =========================
    MEDIA CONTAINER
 ========================= */
-.media-layer{
+.media-layer {
   position: absolute;
   left: 50%;
   top: 0;
-  bottom: 0;                 /* fills header vertically */
+  bottom: 0;
   transform: translateX(-50%);
   width: 1200px;
   pointer-events: none;
 }
 
-.main-nav.collapsed .media-layer{
+.main-nav.collapsed .media-layer {
   display: none;
 }
 
 /* LOGO */
-.logo-media{
+.logo-media {
   position: absolute;
   left: 0;
   top: 0;
@@ -124,13 +127,13 @@ body {
   align-items: center;
 }
 
-.logo-media img{
+.logo-media img {
   max-height: 90%;
   width: auto;
 }
 
 /* PRODUCT */
-.product-media{
+.product-media {
   position: absolute;
   right: -60px;
   top: 0;
@@ -140,7 +143,7 @@ body {
   gap: 16px;
 }
 
-.product-label{
+.product-label {
   font-size: 0.85em;
   font-weight: 600;
   color: #8b7355;
@@ -148,21 +151,21 @@ body {
   white-space: nowrap;
 }
 
-.product-media img{
+.product-media img {
   max-height: 100%;
   width: auto;
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.product-media img.fade-out{
+.product-media img.fade-out {
   opacity: 0;
   transform: scale(0.95);
 }
 
 /* =========================
-   TOGGLE ARROW (original triangle)
+   TOGGLE ARROW (ALWAYS SAME)
 ========================= */
-.nav-toggle-wrap{
+.nav-toggle-wrap {
   position: absolute;
   left: 50%;
   bottom: 0;
@@ -171,20 +174,7 @@ body {
   cursor: pointer;
 }
 
-/* NEW: a wrapper that ONLY becomes a box in collapsed state */
-.nav-toggle-box{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;                 /* expanded: no box */
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  transition: all 0.25s ease;
-}
-
-/* the actual arrow triangle */
-.nav-toggle{
+.nav-toggle {
   width: 0;
   height: 0;
   border-left: 16px solid transparent;
@@ -194,7 +184,7 @@ body {
   position: relative;
 }
 
-.nav-toggle::after{
+.nav-toggle::after {
   content: "";
   position: absolute;
   left: -12px;
@@ -204,21 +194,13 @@ body {
   border-bottom: 14px solid white;
 }
 
-/* invert arrow on collapse */
-.main-nav.collapsed .nav-toggle-wrap{
+/* Flip arrow */
+.main-nav.collapsed .nav-toggle-wrap {
   transform: translateX(-50%) translateY(-70%) rotate(180deg);
 }
 
-/* ✅ ONLY when collapsed: show border around arrow (without touching triangle) */
-.main-nav.collapsed .nav-toggle-box{
-  padding: 6px 8px;
-  background: white;
-  border: 3px solid #c4a57b;
-  border-radius: 12px;
-}
-
-/* bounce */
-@keyframes bounce{
+/* Bounce */
+@keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
 }
@@ -226,16 +208,16 @@ body {
 /* =========================
    IFRAMES
 ========================= */
-.iframe-wrapper{
+.iframe-wrapper {
   display: none;
   height: calc(100vh - 150px);
 }
 
-.iframe-wrapper.active{
+.iframe-wrapper.active {
   display: block;
 }
 
-iframe{
+iframe {
   width: 100%;
   height: 100%;
   border: none;
@@ -271,11 +253,9 @@ iframe{
     </div>
   </div>
 
-  <!-- Arrow (unchanged), with a collapsed-only box wrapper -->
+  <!-- ARROW -->
   <div class="nav-toggle-wrap" onclick="toggleHeader()">
-    <div class="nav-toggle-box">
-      <div class="nav-toggle"></div>
-    </div>
+    <div class="nav-toggle"></div>
   </div>
 
 </nav>
@@ -301,7 +281,7 @@ function toggleHeader() {
   nav.classList.toggle("expanded");
 }
 
-/* Product carousel with fade/scale animation */
+/* Product carousel animation */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
 
@@ -313,16 +293,6 @@ setInterval(() => {
     productImage.classList.remove("fade-out");
   }, 200);
 }, 5000);
-
-/* Tabs */
-document.querySelectorAll(".nav-tab").forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    document.querySelectorAll(".iframe-wrapper").forEach(w => w.classList.remove("active"));
-    document.getElementById(`${tab.dataset.tab}-frame`).classList.add("active");
-  };
-});
 </script>
 
 </body>
