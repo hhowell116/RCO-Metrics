@@ -21,20 +21,32 @@ body {
     top: 0;
     z-index: 1000;
     background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
-    border-bottom: 3px solid #c4a57b;
     overflow: hidden;
     transition: padding 0.45s ease, max-height 0.45s ease;
 }
 
-/* Expanded vs collapsed height */
+/* Expanded / collapsed heights — REAL collapse */
 .main-nav.expanded {
-    padding: 18px 0 34px;
-    max-height: 440px;
+    padding: 18px 0 46px;
+    max-height: 420px;
 }
 
 .main-nav.collapsed {
-    padding: 26px 0 26px;
-    max-height: 90px;
+    padding: 22px 0 30px;
+    max-height: 72px;
+}
+
+/* =========================
+   SEPARATOR LINE (NOT AT BOTTOM)
+========================= */
+.separator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 26px;          /* moved UP */
+    height: 3px;
+    background: #c4a57b;
+    z-index: 5;
 }
 
 /* =========================
@@ -64,8 +76,8 @@ body {
     color: #b8a68f;
     font-size: 1em;
     font-weight: 600;
-    margin-top: 2px;
-    margin-bottom: 6px; /* MORE SPACE ABOVE BUTTONS */
+    margin-top: 4px;
+    margin-bottom: 14px; /* MORE SPACE ABOVE BUTTONS */
 }
 
 /* Buttons */
@@ -73,7 +85,6 @@ body {
     display: flex;
     justify-content: center;
     gap: 12px;
-    margin-top: 6px; /* slight extra spacing */
 }
 
 .nav-tab {
@@ -97,10 +108,10 @@ body {
 .media-layer {
     position: absolute;
     left: 50%;
-    bottom: 3px; /* aligns with separator */
+    bottom: 26px; /* aligns with separator */
     transform: translateX(-50%);
     width: 1200px;
-    height: 200px; /* MORE ROOM FOR BIGGER IMAGES */
+    height: 240px;
     pointer-events: none;
 }
 
@@ -108,29 +119,24 @@ body {
     display: none;
 }
 
-/* Shared vertical bounds */
-.logo-media,
-.product-media {
-    position: absolute;
-    bottom: 0;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-}
-
 /* LOGO */
 .logo-media {
+    position: absolute;
     left: 0;
+    bottom: 0;
 }
 
 .logo-media img {
-    height: 160px; /* unchanged */
+    height: 170px;
     width: auto;
 }
 
 /* PRODUCT */
 .product-media {
-    right: -40px; /* MOVED RIGHT */
+    position: absolute;
+    right: -70px; /* moved further right */
+    bottom: -10px; /* moved DOWN */
+    display: flex;
     align-items: center;
     gap: 16px;
 }
@@ -144,19 +150,19 @@ body {
 }
 
 .product-media img {
-    height: 180px; /* BIGGER IMAGE */
+    height: 200px; /* BIGGER */
     width: auto;
 }
 
 /* =========================
-   TOGGLE ARROW (ON TOP OF SEPARATOR)
+   TOGGLE ARROW (ON TOP OF LINE)
 ========================= */
 .nav-toggle-wrap {
     position: absolute;
     left: 50%;
-    bottom: 0; /* ON TOP OF SEPARATOR */
+    bottom: 0; /* REAL bottom */
     transform: translateX(-50%);
-    z-index: 20; /* ABOVE BORDER */
+    z-index: 10;
     cursor: pointer;
 }
 
@@ -195,7 +201,7 @@ body {
 ========================= */
 .iframe-wrapper {
     display: none;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 160px);
 }
 
 .iframe-wrapper.active {
@@ -227,7 +233,7 @@ iframe {
         </div>
     </div>
 
-    <!-- IMAGES -->
+    <!-- MEDIA -->
     <div class="media-layer">
         <div class="logo-media">
             <img src="logo.png" alt="Rowe Casa Organics Logo">
@@ -238,6 +244,9 @@ iframe {
             <img id="productImage" src="tartcherry.png" alt="Top Product">
         </div>
     </div>
+
+    <!-- SEPARATOR -->
+    <div class="separator"></div>
 
     <!-- ARROW -->
     <div class="nav-toggle-wrap" onclick="toggleHeader()">
