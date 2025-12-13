@@ -259,9 +259,6 @@
 
     /* Fullscreen icon button — MATCHES ORDERS DASHBOARD */
 .fullscreen-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -273,32 +270,27 @@
   justify-content: center;
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
-  z-index: 5;
-}
-
-.fullscreen-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 14px rgba(139,115,85,0.35);
 }
 
 /* ICON */
 .fullscreen-icon {
-  width: 16px;
-  height: 16px;
   position: relative;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
 }
 
-/* BASE CORNERS */
+/* TOP-LEFT ARROW */
 .fullscreen-icon::before,
 .fullscreen-icon::after {
   content: "";
   position: absolute;
-  width: 7px;               /* slightly bigger */
+  width: 7px;
   height: 7px;
-  border: 2px solid #ffffff;
+  border: 2px solid #fff;
 }
 
-/* ENTER FULLSCREEN ICON (OUTWARD) */
+/* ↖ arrow */
 .fullscreen-icon::before {
   top: 0;
   left: 0;
@@ -306,6 +298,7 @@
   border-bottom: none;
 }
 
+/* ↘ arrow */
 .fullscreen-icon::after {
   bottom: 0;
   right: 0;
@@ -313,17 +306,10 @@
   border-top: none;
 }
 
-/* EXIT FULLSCREEN ICON (INWARD — FIXED) */
-.fullscreen-btn.exit .fullscreen-icon::before {
-  top: 3px;
-  left: 3px;
+/* EXIT FULLSCREEN = INVERT ARROWS */
+.fullscreen-btn.exit .fullscreen-icon {
+  transform: rotate(180deg);
 }
-
-.fullscreen-btn.exit .fullscreen-icon::after {
-  bottom: 3px;
-  right: 3px;
-}
-
 
     
   </style>
