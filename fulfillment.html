@@ -7,6 +7,71 @@
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
+
+        /* Fullscreen icon button (Fulfillment dashboard) */
+.fullscreen-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+    border: 2px solid rgba(139,115,85,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(139,115,85,0.25);
+    z-index: 10;
+}
+
+.fullscreen-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(139,115,85,0.35);
+}
+
+.fullscreen-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+.fullscreen-icon::before,
+.fullscreen-icon::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border: 3px solid #fff;
+}
+
+.fullscreen-icon::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.fullscreen-icon::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.fullscreen-btn.exit .fullscreen-icon::before {
+    top: 4px;
+    left: 4px;
+}
+
+.fullscreen-btn.exit .fullscreen-icon::after {
+    bottom: 4px;
+    right: 4px;
+}
+
+        
         /* KPI-specific styles */
         .kpi-header {
             padding: 30px;
@@ -194,25 +259,7 @@
             gap: 10px;
         }
         
-        .tv-view-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(139, 115, 85, 0.2);
-        }
         
-        .tv-view-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
-        }
         
         @media (max-width: 768px) {
             .chart-wrapper {
@@ -236,9 +283,9 @@
             <div style="position: relative;">
                 <h1>📦 RCO Fulfillment Dashboard</h1>
                 <p class="text-secondary">Real-time order fulfillment analytics and KPIs</p>
-                <button id="tvViewBtn" class="tv-view-btn">
-                    TV View
-                </button>
+                <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+    <div class="fullscreen-icon"></div>
+</button>
             </div>
         </header>
 
@@ -341,27 +388,25 @@
     <script src="data.js"></script>
     <script src="fulfillment.js"></script>
     <script>
-        // TV View toggle
-        const tvViewBtn = document.getElementById('tvViewBtn');
-        tvViewBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-                tvViewBtn.textContent = 'Exit TV View';
-                tvViewBtn.style.background = 'linear-gradient(135deg, #c67b7b 0%, #a06060 100%)';
-            } else {
-                document.exitFullscreen();
-                tvViewBtn.textContent = 'TV View';
-                tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
-            }
-        });
 
-        // Update button text if user exits fullscreen via ESC key
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                tvViewBtn.textContent = 'TV View';
-                tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
-            }
-        });
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+});
+
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+        fullscreenBtn.classList.add('exit');
+    } else {
+        fullscreenBtn.classList.remove('exit');
+    }
+});
+        
     </script>
 </body>
 </html>
