@@ -102,8 +102,14 @@ function updateDashboard() {
         updateTable(monthData);
     }
 }
+function forceHideTooltip() {
+  const tooltip = document.getElementById('tooltip');
+  if (!tooltip) return;
+  tooltip.classList.remove('show');
+}
 
 function renderCalendarView() {
+    forceHideTooltip();
     const grid = document.getElementById('calendarGrid');
     grid.innerHTML = '';
     
