@@ -77,7 +77,12 @@
     display: none;
 }
 
-    
+.view-toggle {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 /* ====== FULLSCREEN BUTTON (MATCHES ORDERS) ====== */
 .fullscreen-btn {
     position: absolute;
@@ -248,33 +253,6 @@
 </header>
 
 
-    <!-- CONTROLS -->
-    <div class="kpi-controls">
-        <select id="yearSelect" class="btn-secondary">
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-        </select>
-
-        <select id="monthSelect" class="btn-secondary">
-            <option value="0">January</option>
-            <option value="1">February</option>
-            <option value="2">March</option>
-            <option value="3">April</option>
-            <option value="4">May</option>
-            <option value="5">June</option>
-            <option value="6">July</option>
-            <option value="7">August</option>
-            <option value="8">September</option>
-            <option value="9">October</option>
-            <option value="10">November</option>
-            <option value="11">December</option>
-        </select>
-
-        <div class="view-toggle" style="margin-left:auto;">
-            <button class="btn-secondary active" data-view="monthly">Monthly</button>
-            <button class="btn-secondary" data-view="calendar">Calendar</button>
-        </div>
-    </div>
 
     <!-- KPI CARDS -->
     <div class="kpi-stats-grid">
