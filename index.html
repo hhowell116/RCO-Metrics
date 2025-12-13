@@ -6,7 +6,6 @@
 <title>RCO Metrics Dashboard</title>
 
 <style>
-/* RESET */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -27,37 +26,28 @@ body {
     transition: padding 0.4s ease;
 }
 
-/* Expanded spacing */
 .main-nav.expanded {
-    padding: 16px 0 24px;
+    padding: 16px 0 32px;
 }
 
-/* Collapsed spacing (keeps space above separator) */
 .main-nav.collapsed {
-    padding: 20px 0 28px;
+    padding: 22px 0 32px;
 }
 
 /* =========================
-   CONTENT WRAPPER
+   CONTENT
 ========================= */
 .header-content {
     max-width: 1200px;
     margin: 0 auto;
+    text-align: center;
     transition: transform 0.45s ease, opacity 0.35s ease;
 }
 
-/* Slide content out */
 .main-nav.collapsed .header-content {
     transform: translateY(-40px);
     opacity: 0;
     pointer-events: none;
-}
-
-/* =========================
-   TITLES
-========================= */
-.title-wrap {
-    text-align: center;
 }
 
 .title-wrap h1 {
@@ -74,7 +64,7 @@ body {
 }
 
 /* =========================
-   DASHBOARD BUTTONS
+   NAV BUTTONS
 ========================= */
 .nav-tabs {
     display: flex;
@@ -91,12 +81,6 @@ body {
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.nav-tab:hover {
-    background: #faf8f5;
-    transform: translateY(-2px);
 }
 
 .nav-tab.active {
@@ -105,13 +89,14 @@ body {
 }
 
 /* =========================
-   MEDIA LAYER (ABSOLUTE, CLIPPED)
+   MEDIA LAYER
 ========================= */
 .media-layer {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
     bottom: 3px;
+    width: 1200px;
+    transform: translateX(-50%);
     height: 160px;
     pointer-events: none;
 }
@@ -120,24 +105,24 @@ body {
     display: none;
 }
 
-/* Logo */
+/* Logo — pushed LEFT */
 .logo-media {
     position: absolute;
     left: 50%;
-    transform: translateX(-380px);
+    transform: translateX(-520px);
     bottom: 0;
 }
 
 .logo-media img {
-    height: 120px;
+    height: 110px;
     width: auto;
 }
 
-/* Product */
+/* Product — pushed RIGHT */
 .product-media {
     position: absolute;
     left: 50%;
-    transform: translateX(380px);
+    transform: translateX(520px);
     bottom: 0;
     text-align: center;
 }
@@ -151,20 +136,22 @@ body {
 }
 
 .product-media img {
-    height: 120px;
+    height: 110px;
     width: auto;
 }
 
 /* =========================
-   TOGGLE ARROW (FULLY VISIBLE)
+   TOGGLE ARROW (FIXED)
 ========================= */
-.nav-toggle {
+.nav-toggle-wrap {
     position: absolute;
     left: 50%;
-    bottom: -10px;
+    bottom: 6px; /* ABOVE separator */
     transform: translateX(-50%);
     cursor: pointer;
+}
 
+.nav-toggle {
     width: 0;
     height: 0;
 
@@ -182,19 +169,19 @@ body {
     top: 3px;
 
     border-left: 12px solid transparent;
-    border-right: 12px assume 12px solid transparent;
+    border-right: 12px solid transparent;
     border-bottom: 14px solid white;
 }
 
-/* Flip arrow when collapsed */
-.main-nav.collapsed .nav-toggle {
+/* INVERT ARROW PROPERLY */
+.main-nav.collapsed .nav-toggle-wrap {
     transform: translateX(-50%) rotate(180deg);
 }
 
 /* Bounce */
 @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
 }
 
 /* =========================
@@ -234,7 +221,7 @@ iframe {
         </div>
     </div>
 
-    <!-- Media -->
+    <!-- MEDIA -->
     <div class="media-layer">
         <div class="logo-media">
             <img src="logo.png" alt="Logo">
@@ -246,8 +233,10 @@ iframe {
         </div>
     </div>
 
-    <!-- Toggle -->
-    <div class="nav-toggle" onclick="toggleHeader()"></div>
+    <!-- TOGGLE -->
+    <div class="nav-toggle-wrap" onclick="toggleHeader()">
+        <div class="nav-toggle"></div>
+    </div>
 </nav>
 
 <div id="orders-frame" class="iframe-wrapper active">
@@ -270,7 +259,7 @@ function toggleHeader() {
     nav.classList.toggle("expanded");
 }
 
-/* Product carousel */
+/* Product rotation */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
 setInterval(() => {
