@@ -38,6 +38,46 @@
     color: var(--tan-dark);
 }
 
+.fulfillment-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 22px;
+    position: relative;
+}
+
+/* LEFT */
+.header-left {
+    display: flex;
+    gap: 10px;
+}
+
+/* CENTER */
+.header-center {
+    text-align: center;
+}
+
+.header-center h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    color: var(--tan-dark);
+}
+
+/* RIGHT */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Remove unused background spacing */
+.kpi-controls {
+    display: none;
+}
+
+    
 /* ====== FULLSCREEN BUTTON (MATCHES ORDERS) ====== */
 .fullscreen-btn {
     position: absolute;
@@ -165,13 +205,48 @@
 <div class="container">
 
     <!-- HEADER -->
-    <header class="card kpi-header">
+    <header class="card kpi-header fulfillment-header">
+    <!-- LEFT: Year / Month -->
+    <div class="header-left">
+        <select id="yearSelect" class="btn-secondary">
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+        </select>
+
+        <select id="monthSelect" class="btn-secondary">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+    </div>
+
+    <!-- CENTER: Title -->
+    <div class="header-center">
         <h1>📦 RCO Fulfillment Dashboard</h1>
+    </div>
+
+    <!-- RIGHT: View toggle + Fullscreen -->
+    <div class="header-right">
+        <div class="view-toggle">
+            <button class="btn-secondary active" data-view="monthly">Monthly</button>
+            <button class="btn-secondary" data-view="calendar">Calendar</button>
+        </div>
 
         <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
             <div class="fullscreen-icon"></div>
         </button>
-    </header>
+    </div>
+</header>
+
 
     <!-- CONTROLS -->
     <div class="kpi-controls">
