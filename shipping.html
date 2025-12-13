@@ -43,13 +43,22 @@
   pointer-events: none;    /* prevents accidental interaction */
 }
 
-    .title{font-weight:800;letter-spacing:1.5px;font-size:44px;margin:0;padding:0;text-transform:capitalize}
-    .meta{
-  font-size:26px;
-  color:#a0906f;
-  margin-top:10px;
-  font-weight:600;
+    .title{
+  font-weight:600;              /* ✅ match Orders */
+  letter-spacing:0.5px;         /* cleaner, same feel */
+  font-size:44px;
+  margin:0;
+  padding:0;
+  text-transform:capitalize;
 }
+
+.meta{
+  font-size:26px;
+  color:rgba(255,255,255,0.95);
+  margin-top:10px;
+  font-weight:600;              /* already correct */
+}
+
 
 
     .boards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
