@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', () => {
+
 // Find the most recent month with data
 function getMostRecentDataMonth() {
     if (!fullData || fullData.length === 0) {
@@ -484,3 +486,4 @@ document.getElementById('monthSelect').addEventListener('change', e => {
 document.getElementById('monthSelect').value = currentMonth.toString();
 document.getElementById('yearSelect').value = currentYear.toString();
 updateDashboard();
+});
