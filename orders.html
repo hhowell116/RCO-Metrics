@@ -25,180 +25,120 @@
     }
 
     @media (min-width: 1200px) {
-    .container {
+      .container {
         padding: 32px;
+      }
     }
-}
 
     .container {
-  width: 100%;
-  margin: 0;
-  padding: 30px;
-}
-
+      width: 100%;
+      margin: 0;
+      padding: 30px;
+    }
 
     .header {
       position: relative;
-      background: #ffffff;
-      padding: 20px;
+      background: white;
+      padding: 18px 22px;
       border-radius: 15px;
       box-shadow: 0 10px 40px rgba(139,115,85,0.15);
-      margin-bottom: 20px;
-      text-align: center;
+      margin-bottom: 30px;
       border: 1px solid rgba(210,180,140,0.3);
     }
 
-    @media (min-width: 768px) {
-      .header {
-        padding: 30px;
-        margin-bottom: 30px;
-      }
-    }
-
-    .header h1 {
-      color: #8b7355;
-      font-size: 1.5em;
-      margin-bottom: 8px;
-      line-height: 1.2;
-      font-weight: 600;
-    }
-
-    @media (min-width: 768px) {
-      .header h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-      }
-    }
-
-    .controls {
-      background: white;
-      padding: 15px;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(139,115,85,0.1);
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
+    .header-bar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      flex-wrap: wrap;
-      border: 1px solid rgba(210,180,140,0.2);
+      gap: 20px;
     }
 
-    @media (min-width: 768px) {
-      .controls {
-        padding: 20px;
-        margin-bottom: 25px;
-        gap: 15px;
-      }
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .controls label {
+    .header-center {
+      text-align: center;
+    }
+
+    .header-center h1 {
+      margin: 0;
+      font-size: 1.8em;
       font-weight: 600;
       color: #8b7355;
-      font-size: 0.9em;
-      width: 100%;
     }
 
-    @media (min-width: 768px) {
-      .controls label {
-        width: auto;
-        font-size: 1em;
-      }
-    }
-
-    .controls select, .controls button {
-      padding: 10px 15px;
+    .header select {
+      background: #ffffff;
+      color: #8b7355;
+      font-size: 14px;
+      padding: 10px 36px 10px 14px;
+      min-width: 140px;
       border: 2px solid #d2b48c;
       border-radius: 10px;
-      font-size: 0.9em;
+      appearance: auto;
+      -webkit-appearance: menulist;
+      -moz-appearance: menulist;
       cursor: pointer;
       transition: all 0.3s ease;
-      flex: 1;
-      min-width: 120px;
       font-weight: 600;
     }
 
-    @media (min-width: 768px) {
-      .controls select, .controls button {
-        padding: 12px 24px;
-        font-size: 1em;
-        flex: 0;
-        min-width: auto;
-      }
-    }
-
-    .controls select {
-      background: white;
-      color: #8b7355;
-    }
-
-    .controls select:hover {
+    .header select:hover {
       border-color: #a0906f;
       box-shadow: 0 2px 10px rgba(210,180,140,0.2);
     }
 
-    .controls button {
+    .header button {
       background: white;
       color: #8b7355;
       border: 2px solid #d2b48c;
-    }
-
-    .controls button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(210,180,140,0.3);
-      background: #faf8f5;
-    }
-
-    .controls button:active {
-      transform: translateY(0);
-    }
-
-    .view-toggle {
-      width: 100%;
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .view-toggle {
-        margin-left: auto;
-        margin-top: 0;
-        width: auto;
-      }
-    }
-
-    .view-btn {
-      padding: 10px 15px;
-      background: white;
-      border: 2px solid #d2b48c;
-      color: #8b7355;
+      padding: 10px 20px;
       border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-weight: 600;
-      flex: 1;
-      font-size: 0.9em;
     }
 
-    @media (min-width: 768px) {
-      .view-btn {
-        padding: 12px 24px;
-        flex: 0;
-        font-size: 1em;
-      }
-    }
-
-    .view-btn:hover {
+    .header button:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(210,180,140,0.3);
       background: #faf8f5;
+      border-color: #c4a57b;
     }
 
-    .view-btn.active {
+    .header button.active {
       background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
       color: white;
       border-color: #c4a57b;
       box-shadow: 0 4px 15px rgba(210,180,140,0.3);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .header-bar {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .header-left,
+      .header-right {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .header-center h1 {
+        font-size: 1.5em;
+      }
     }
 
     .stats-grid {
@@ -626,113 +566,99 @@
       50% { transform: scale(1.05); }
     }
     
-    /* Fullscreen icon button (Orders dashboard) */
-/* Fullscreen icon button — MATCHES SHIPPING DASHBOARD */
-.fullscreen-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
-    border: 2px solid rgba(139,115,85,0.35);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 3px 8px rgba(139,115,85,0.25);
-    z-index: 5;
-}
-
-.fullscreen-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 14px rgba(139,115,85,0.35);
-}
-
-
-
-
-.fullscreen-icon {
-    width: 16px;
-    height: 16px;
-    position: relative;
-}
-
-.fullscreen-icon::before,
-.fullscreen-icon::after {
-  content: "";
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border: 2px solid #ffffff;   /* THIS is why it was invisible */
-}
-
-
-
-.fullscreen-icon::before {
-  top: 0;
-  left: 0;
-  border-right: none;
-  border-bottom: none;
-}
-
-.fullscreen-icon::after {
-  bottom: 0;
-  right: 0;
-  border-left: none;
-  border-top: none;
-}
-
-.fullscreen-btn.exit .fullscreen-icon::before {
-  top: 4px;
-  left: 4px;
-}
-
-.fullscreen-btn.exit .fullscreen-icon::after {
-  bottom: 4px;
-  right: 4px;
-}
-
-    
-    .tv-view-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+    .fullscreen-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+      border: 2px solid rgba(139,115,85,0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(139,115,85,0.25);
+      z-index: 5;
     }
-    
-    @media (max-width: 768px) {
-      .tv-view-btn {
-        padding: 8px 14px;
-        font-size: 0.8em;
-      }
+
+    .fullscreen-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 14px rgba(139,115,85,0.35);
+    }
+
+    .fullscreen-icon {
+      width: 16px;
+      height: 16px;
+      position: relative;
+    }
+
+    .fullscreen-icon::before,
+    .fullscreen-icon::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border: 2px solid #ffffff;
+    }
+
+    .fullscreen-icon::before {
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .fullscreen-icon::after {
+      bottom: 0;
+      right: 0;
+      border-left: none;
+      border-top: none;
+    }
+
+    .fullscreen-btn.exit .fullscreen-icon::before {
+      top: 4px;
+      left: 4px;
+    }
+
+    .fullscreen-btn.exit .fullscreen-icon::after {
+      bottom: 4px;
+      right: 4px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-  <h1>Rowe Casa Organics Orders Overview</h1>
+    <header class="header">
+      <div class="header-bar">
+        <!-- LEFT -->
+        <div class="header-left">
+          <select id="yearFilter">
+            <option value="all">All Years</option>
+          </select>
+          <button onclick="jumpToCurrentMonth()">Current Month</button>
+        </div>
 
-  <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-    <div class="fullscreen-icon"></div>
-  </button>
-</div>
+        <!-- CENTER -->
+        <div class="header-center">
+          <h1>📦 Orders Overview</h1>
+        </div>
 
+        <!-- RIGHT -->
+        <div class="header-right">
+          <div class="view-toggle">
+            <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
+            <button class="view-btn" onclick="switchView('chart')">Chart</button>
+          </div>
 
-    <div class="controls">
-      <label>View Year:</label>
-      <select id="yearFilter">
-        <option value="all">All Years</option>
-      </select>
-      
-      <button onclick="jumpToCurrentMonth()">Current Month</button>
-      
-      <div class="view-toggle">
-        <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
-        <button class="view-btn" onclick="switchView('chart')">Chart</button>
+          <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+            <div class="fullscreen-icon"></div>
+          </button>
+        </div>
       </div>
-    </div>
+    </header>
 
     <div id="loading" class="loading">Loading data</div>
 
@@ -1130,26 +1056,23 @@
       document.getElementById('loading').style.display = 'block';
     }
     
-    // TV View toggle
-    // Fullscreen icon toggle (Orders dashboard)
-const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-fullscreenBtn.addEventListener('click', () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-});
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
 
-document.addEventListener('fullscreenchange', () => {
-  if (document.fullscreenElement) {
-    fullscreenBtn.classList.add('exit');
-  } else {
-    fullscreenBtn.classList.remove('exit');
-  }
-});
-
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement) {
+        fullscreenBtn.classList.add('exit');
+      } else {
+        fullscreenBtn.classList.remove('exit');
+      }
+    });
   </script>
 </body>
 </html>
