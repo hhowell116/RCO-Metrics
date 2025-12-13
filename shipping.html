@@ -510,7 +510,7 @@ wrapper.addEventListener('wheel', e => {
 
 
     function animate(currentTime) {
-      if (isPaused) {
+      if (isPaused || userInteracting) {
         if (currentTime - pauseStartTime >= pauseDuration) {
           isPaused = false;
           lastTime = currentTime;
