@@ -219,6 +219,69 @@
       transform:translateY(-2px);
       box-shadow:0 5px 15px rgba(139,115,85,0.3);
     }
+
+    /* Fullscreen icon button */
+.fullscreen-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.55);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.fullscreen-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
+}
+
+.fullscreen-icon {
+  width: 22px;
+  height: 22px;
+  position: relative;
+}
+
+.fullscreen-icon::before,
+.fullscreen-icon::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 3px solid #fff;
+}
+
+.fullscreen-icon::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.fullscreen-icon::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.fullscreen-btn.exit .fullscreen-icon::before {
+  top: 4px;
+  left: 4px;
+}
+
+.fullscreen-btn.exit .fullscreen-icon::after {
+  bottom: 4px;
+  right: 4px;
+}
+
+    
   </style>
 </head>
 <body>
@@ -229,9 +292,10 @@
         <div class="title">Today's Shipping Leaderboard</div>
         <div id="weekRange" class="meta">Week: loading…</div>
       </div>
-      <button id="tvViewBtn" class="tv-view-btn">
-        TV View
-      </button>
+      <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+  <div class="fullscreen-icon"></div>
+</button>
+
     </div>
 
     <div id="boards" class="boards" aria-live="polite" style="margin-top:18px">
