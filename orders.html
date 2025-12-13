@@ -662,10 +662,13 @@
 
 .fullscreen-icon::before,
 .fullscreen-icon::after {
-    width: 6px;
-    height: 6px;
-    border-width: 2px;
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 2px solid #ffffff;   /* THIS is why it was invisible */
 }
+
 
 
 .fullscreen-icon::before {
