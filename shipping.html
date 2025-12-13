@@ -520,6 +520,8 @@
 
 
     log('✓ Dashboard loaded successfully!');
+    requestAnimationFrame(startAutoScrollWhenReady);
+
 
   } catch(err){
     log(`ERROR: ${err.message}`, true);
