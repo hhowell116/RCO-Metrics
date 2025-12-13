@@ -413,6 +413,40 @@ function updateCharts(monthData) {
         }
     });
 }
+const yearSelect = document.getElementById('yearSelect');
+const monthSelect = document.getElementById('monthSelect');
+
+function populateYearMonthSelectors() {
+    // YEARS
+    yearSelect.innerHTML = '';
+    const years = [2025, 2026]; // adjust if needed
+
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    });
+
+    // MONTHS
+    monthSelect.innerHTML = '';
+    const months = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+    ];
+
+    months.forEach((month, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = month;
+        monthSelect.appendChild(option);
+    });
+
+    // Defaults
+    const now = new Date();
+    yearSelect.value = now.getFullYear();
+    monthSelect.value = now.getMonth();
+}
 
 function updateTable(monthData) {
     const tbody = document.getElementById('dataTable');
