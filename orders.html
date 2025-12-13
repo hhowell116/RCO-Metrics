@@ -651,6 +651,57 @@
     box-shadow: 0 5px 14px rgba(139,115,85,0.35);
 }
 
+/* HEADER LAYOUT */
+.header {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* CENTER */
+.header-center {
+  text-align: center;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* HEADER CONTROLS */
+.header-select {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid #d2b48c;
+  font-weight: 600;
+  color: #8b7355;
+  background: white;
+}
+
+.header-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid #d2b48c;
+  background: white;
+  color: #8b7355;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.header-btn:hover {
+  background: #faf8f5;
+}
 
 
 
@@ -712,27 +763,29 @@
 <body>
   <div class="container">
     <div class="header">
-  <h1>Rowe Casa Organics Orders Overview</h1>
+  <!-- LEFT -->
+  <div class="header-left">
+    <select id="yearFilter" class="header-select"></select>
+    <button class="header-btn" onclick="jumpToCurrentMonth()">Current Month</button>
+  </div>
 
-  <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-    <div class="fullscreen-icon"></div>
-  </button>
-</div>
+  <!-- CENTER -->
+  <div class="header-center">
+    <h1>Rowe Casa Organics Orders Overview</h1>
+  </div>
 
-
-    <div class="controls">
-      <label>View Year:</label>
-      <select id="yearFilter">
-        <option value="all">All Years</option>
-      </select>
-      
-      <button onclick="jumpToCurrentMonth()">Current Month</button>
-      
-      <div class="view-toggle">
-        <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
-        <button class="view-btn" onclick="switchView('chart')">Chart</button>
-      </div>
+  <!-- RIGHT -->
+  <div class="header-right">
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
+      <button class="view-btn" onclick="switchView('chart')">Chart</button>
     </div>
+
+    <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+      <div class="fullscreen-icon"></div>
+    </button>
+  </div>
+</div>
 
     <div id="loading" class="loading">Loading data</div>
 
