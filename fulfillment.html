@@ -189,23 +189,28 @@
 }
 
 /* ===== Tooltip ===== */
+/* ===== Tooltip ===== */
 
 .tooltip {
   position: fixed;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.85em;
+  background: linear-gradient(135deg, #5c4a35 0%, #3f3326 100%);
+  color: #f5f0e8;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  line-height: 1.5;
   pointer-events: none;
   z-index: 1000;
   display: none;
-  max-width: 250px;
+  max-width: 260px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  border: 1px solid rgba(210, 180, 140, 0.25);
 }
 
 .tooltip.show {
   display: block;
 }
+
 /* ====== FULLSCREEN BUTTON (MATCHES ORDERS) ====== */
 .fullscreen-btn {
     width: 36px;
