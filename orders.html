@@ -534,43 +534,47 @@
     }
 
     .fullscreen-icon {
-      width: 16px;
-      height: 16px;
-      position: relative;
-    }
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
 
-    .fullscreen-icon::before,
-    .fullscreen-icon::after {
-      content: "";
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border: 2px solid #fff;
-    }
+/* BASE CORNERS */
+.fullscreen-icon::before,
+.fullscreen-icon::after {
+  content: "";
+  position: absolute;
+  width: 7px;               /* slightly bigger */
+  height: 7px;
+  border: 2px solid #ffffff;
+}
 
-    .fullscreen-icon::before {
-      top: 0;
-      left: 0;
-      border-right: none;
-      border-bottom: none;
-    }
+/* ENTER FULLSCREEN ICON (OUTWARD) */
+.fullscreen-icon::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
 
-    .fullscreen-icon::after {
-      bottom: 0;
-      right: 0;
-      border-left: none;
-      border-top: none;
-    }
+.fullscreen-icon::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
 
-    .fullscreen-btn.exit .fullscreen-icon::before {
-      top: 4px;
-      left: 4px;
-    }
+/* EXIT FULLSCREEN ICON (INWARD — FIXED) */
+.fullscreen-btn.exit .fullscreen-icon::before {
+  top: 3px;
+  left: 3px;
+}
 
-    .fullscreen-btn.exit .fullscreen-icon::after {
-      bottom: 4px;
-      right: 4px;
-    }
+.fullscreen-btn.exit .fullscreen-icon::after {
+  bottom: 3px;
+  right: 3px;
+}
+
   </style>
 </head>
 <body>
