@@ -259,6 +259,10 @@
 
     /* Fullscreen icon button — MATCHES ORDERS DASHBOARD */
 .fullscreen-btn {
+  position: absolute;      /* ✅ THIS is the key */
+  top: 12px;
+  right: 12px;
+
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -270,7 +274,9 @@
   justify-content: center;
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
+  z-index: 10;
 }
+
 
 /* ICON */
 .fullscreen-icon {
