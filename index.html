@@ -21,19 +21,19 @@ body {
     top: 0;
     z-index: 1000;
     background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
-    border-bottom: 3px solid #c4a57b; /* REAL separator */
-    overflow: visible; /* REQUIRED for arrow overlay */
+    border-bottom: 3px solid #c4a57b;
+    overflow: visible;
     transition: max-height 0.45s ease, padding 0.45s ease;
 }
 
 .main-nav.expanded {
-    padding: 18px 0 36px;
+    padding: 18px 0 44px; /* more space below for arrow */
     max-height: 420px;
 }
 
 .main-nav.collapsed {
-    padding: 22px 0 28px;
-    max-height: 72px;
+    padding: 10px 0 22px; /* MUCH tighter */
+    max-height: 56px;     /* removes blank space */
 }
 
 /* =========================
@@ -47,7 +47,7 @@ body {
 }
 
 .main-nav.collapsed .header-content {
-    transform: translateY(-40px);
+    transform: translateY(-48px);
     opacity: 0;
     pointer-events: none;
 }
@@ -64,7 +64,7 @@ body {
     font-size: 1em;
     font-weight: 600;
     margin-top: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 18px; /* MORE space above buttons */
 }
 
 /* Buttons */
@@ -90,13 +90,13 @@ body {
 }
 
 /* =========================
-   MEDIA CONTAINER (CONSTRAINED)
+   MEDIA CONTAINER
 ========================= */
 .media-layer {
     position: absolute;
     left: 50%;
     top: 0;
-    bottom: 0;          /* fills header vertically */
+    bottom: 0;
     transform: translateX(-50%);
     width: 1200px;
     pointer-events: none;
@@ -106,7 +106,7 @@ body {
     display: none;
 }
 
-/* Logo */
+/* LOGO */
 .logo-media {
     position: absolute;
     left: 0;
@@ -117,11 +117,11 @@ body {
 }
 
 .logo-media img {
-    max-height: 100%;
+    max-height: 95%; /* ~5% smaller */
     width: auto;
 }
 
-/* Product */
+/* PRODUCT */
 .product-media {
     position: absolute;
     right: -60px;
@@ -146,14 +146,14 @@ body {
 }
 
 /* =========================
-   TOGGLE ARROW (ON TOP OF LINE)
+   TOGGLE ARROW
 ========================= */
 .nav-toggle-wrap {
     position: absolute;
     left: 50%;
-    bottom: 0; /* EXACTLY on separator */
-    transform: translateX(-50%) translateY(-50%); /* pull above line */
-    z-index: 2000; /* ABOVE separator */
+    bottom: 0; /* sits on line */
+    transform: translateX(-50%) translateY(-70%); /* more gap from line */
+    z-index: 2000;
     cursor: pointer;
 }
 
@@ -178,7 +178,7 @@ body {
 
 /* Invert */
 .main-nav.collapsed .nav-toggle-wrap {
-    transform: translateX(-50%) translateY(-50%) rotate(180deg);
+    transform: translateX(-50%) translateY(-70%) rotate(180deg);
 }
 
 /* Bounce */
@@ -192,7 +192,7 @@ body {
 ========================= */
 .iframe-wrapper {
     display: none;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 150px);
 }
 
 .iframe-wrapper.active {
