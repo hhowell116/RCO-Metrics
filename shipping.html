@@ -475,6 +475,39 @@
     let lastTime = performance.now();
     let isPaused = false;
     let pauseStartTime = 0;
+    let userInteracting = false;
+    let resumeTimeout = null;
+
+    // Pause on hover
+wrapper.addEventListener('mouseenter', () => {
+  userInteracting = true;
+});
+
+wrapper.addEventListener('mouseleave', () => {
+  userInteracting = false;
+  pauseStartTime = performance.now();
+  isPaused = true;
+});
+
+// Mouse wheel manual scroll
+wrapper.addEventListener('wheel', e => {
+  e.preventDefault();
+
+  userInteracting = true;
+  clearTimeout(resumeTimeout);
+
+  position += e.deltaY;
+  position = Math.max(0, Math.min(maxScroll, position));
+  scrollContent.style.transform = `translateY(-${position}px)`;
+
+  // Resume auto-scroll after user stops scrolling
+  resumeTimeout = setTimeout(() => {
+    userInteracting = false;
+    isPaused = true;
+    pauseStartTime = performance.now();
+  }, 1500);
+}, { passive: false });
+
 
     function animate(currentTime) {
       if (isPaused) {
