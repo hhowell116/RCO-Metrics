@@ -21,19 +21,21 @@ body {
     top: 0;
     z-index: 1000;
     background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
-    border-bottom: 3px solid #c4a57b;
     overflow: visible;
-    transition: max-height 0.45s ease, padding 0.45s ease;
+    transition: padding 0.45s ease;
 }
 
+/* Expanded */
 .main-nav.expanded {
-    padding: 18px 0 44px; /* more space below for arrow */
-    max-height: 420px;
+    padding: 18px 0 44px;
+    border-bottom: 3px solid #c4a57b;
 }
 
+/* Collapsed = NO footer */
 .main-nav.collapsed {
-    padding: 10px 0 22px; /* MUCH tighter */
-    max-height: 56px;     /* removes blank space */
+    padding: 14px 0;
+    border-bottom: none;
+    background: transparent;
 }
 
 /* =========================
@@ -47,7 +49,7 @@ body {
 }
 
 .main-nav.collapsed .header-content {
-    transform: translateY(-48px);
+    transform: translateY(-60px);
     opacity: 0;
     pointer-events: none;
 }
@@ -64,7 +66,7 @@ body {
     font-size: 1em;
     font-weight: 600;
     margin-top: 4px;
-    margin-bottom: 18px; /* MORE space above buttons */
+    margin-bottom: 18px;
 }
 
 /* Buttons */
@@ -90,7 +92,7 @@ body {
 }
 
 /* =========================
-   MEDIA CONTAINER
+   MEDIA LAYER
 ========================= */
 .media-layer {
     position: absolute;
@@ -106,7 +108,7 @@ body {
     display: none;
 }
 
-/* LOGO */
+/* LOGO (shrunk another ~5%) */
 .logo-media {
     position: absolute;
     left: 0;
@@ -117,7 +119,7 @@ body {
 }
 
 .logo-media img {
-    max-height: 95%; /* ~5% smaller */
+    max-height: 90%;
     width: auto;
 }
 
@@ -140,51 +142,60 @@ body {
     white-space: nowrap;
 }
 
+/* Product image animation */
 .product-media img {
     max-height: 100%;
     width: auto;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.product-media img.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
 }
 
 /* =========================
-   TOGGLE ARROW
+   TOGGLE BUTTON (BOXED)
 ========================= */
 .nav-toggle-wrap {
-    position: absolute;
-    left: 50%;
-    bottom: 0; /* sits on line */
-    transform: translateX(-50%) translateY(-70%); /* more gap from line */
-    z-index: 2000;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
 }
 
 .nav-toggle {
-    width: 0;
-    height: 0;
-    border-left: 16px solid transparent;
-    border-right: 16px solid transparent;
-    border-bottom: 18px solid #c4a57b;
+    width: 44px;
+    height: 36px;
+    background: white;
+    border: 3px solid #c4a57b;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     animation: bounce 2.4s infinite;
 }
 
-.nav-toggle::after {
+/* Arrow */
+.nav-toggle::before {
     content: "";
-    position: absolute;
-    left: -12px;
-    top: 3px;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 14px solid white;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid #c4a57b;
+    transition: transform 0.4s ease;
 }
 
-/* Invert */
-.main-nav.collapsed .nav-toggle-wrap {
-    transform: translateX(-50%) translateY(-70%) rotate(180deg);
+/* Invert arrow */
+.main-nav.collapsed .nav-toggle::before {
+    transform: rotate(180deg);
 }
 
 /* Bounce */
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
+    50% { transform: translateY(5px); }
 }
 
 /* =========================
@@ -236,9 +247,9 @@ iframe {
         </div>
     </div>
 
-    <!-- ARROW -->
-    <div class="nav-toggle-wrap" onclick="toggleHeader()">
-        <div class="nav-toggle"></div>
+    <!-- TOGGLE -->
+    <div class="nav-toggle-wrap">
+        <div class="nav-toggle" onclick="toggleHeader()"></div>
     </div>
 </nav>
 
@@ -256,18 +267,26 @@ iframe {
 
 <script>
 const nav = document.getElementById("nav");
+const productImage = document.getElementById("productImage");
 
+/* Toggle header */
 function toggleHeader() {
     nav.classList.toggle("collapsed");
     nav.classList.toggle("expanded");
 }
 
-/* Product carousel */
+/* Product carousel with animation */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
+
 setInterval(() => {
-    idx = (idx + 1) % products.length;
-    document.getElementById("productImage").src = products[idx];
+    productImage.classList.add("fade-out");
+
+    setTimeout(() => {
+        idx = (idx + 1) % products.length;
+        productImage.src = products[idx];
+        productImage.classList.remove("fade-out");
+    }, 200);
 }, 5000);
 
 /* Tabs */
