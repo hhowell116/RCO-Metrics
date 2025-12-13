@@ -513,7 +513,8 @@
       50% { transform: scale(1.05); }
     }
     
-    .fullscreen-btn {
+    /* BUTTON */
+.fullscreen-btn {
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -527,30 +528,25 @@
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
 }
 
-.fullscreen-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 14px rgba(139,115,85,0.35);
-}
-
-/* ===== ICON BASE ===== */
+/* ICON */
 .fullscreen-icon {
   position: relative;
   width: 18px;
   height: 18px;
+  transition: transform 0.25s ease;
 }
 
-/* ============================= */
-/* ENTER FULLSCREEN (OUTWARD) */
-/* ============================= */
+/* TOP-LEFT ARROW */
 .fullscreen-icon::before,
 .fullscreen-icon::after {
   content: "";
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border: 2px solid #fff;
 }
 
+/* ↖ arrow */
 .fullscreen-icon::before {
   top: 0;
   left: 0;
@@ -558,6 +554,7 @@
   border-bottom: none;
 }
 
+/* ↘ arrow */
 .fullscreen-icon::after {
   bottom: 0;
   right: 0;
@@ -565,36 +562,9 @@
   border-top: none;
 }
 
-/* ============================= */
-/* EXIT FULLSCREEN (INWARD ARROWS) */
-/* ============================= */
-.fullscreen-btn.exit .fullscreen-icon::before,
-.fullscreen-btn.exit .fullscreen-icon::after {
-  border: none;
-  width: 0;
-  height: 0;
-}
-
-/* Left arrow → */
-.fullscreen-btn.exit .fullscreen-icon::before {
-  content: "";
-  position: absolute;
-  left: 1px;               /* 👈 PUSH LEFT */
-  top: 8px;
-  width: 6px;
-  height: 2px;
-  background: #fff;
-}
-
-/* Right arrow ← */
-.fullscreen-btn.exit .fullscreen-icon::after {
-  content: "";
-  position: absolute;
-  right: 1px;              /* 👉 PUSH RIGHT */
-  top: 8px;
-  width: 6px;
-  height: 2px;
-  background: #fff;
+/* EXIT FULLSCREEN = INVERT ARROWS */
+.fullscreen-btn.exit .fullscreen-icon {
+  transform: rotate(180deg);
 }
 
 
