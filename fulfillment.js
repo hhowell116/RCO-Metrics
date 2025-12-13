@@ -187,14 +187,14 @@ function showTooltip(e, data) {
     const tooltip = document.getElementById('tooltip');
     const date = parseDate(data.date);
     
-    tooltip.innerHTML = `
-<strong>${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong>
-Orders: ${data.orders.toLocaleString()}
-4-Day Rate: ${data.rate4.toFixed(2)}%
-7-Day Rate: ${data.rate7.toFixed(2)}%
-Remaining (4d): ${data.rem4}
+   tooltip.innerHTML = `
+<strong>${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong><br>
+Orders: ${data.orders.toLocaleString()}<br>
+4-Day Rate: ${data.rate4.toFixed(2)}%<br>
+7-Day Rate: ${data.rate7.toFixed(2)}%<br>
+Remaining (4d): ${data.rem4}<br>
 Remaining (7d): ${data.rem7}
-    `.trim();
+`.trim();
     
     tooltip.classList.add('show');
     moveTooltip(e);
