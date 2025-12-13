@@ -20,18 +20,15 @@
     }
 
     @media (min-width: 768px) {
-      body {
-        padding: 20px;
-      }
+      body { padding: 20px; }
     }
 
-    /* FULL-WIDTH PAGE */
+    /* FULL WIDTH CONTAINER */
     .container {
       width: 100%;
-      margin: 0;
     }
 
-    /* INNER CONTENT CONSTRAINT (matches Shipping) */
+    /* INNER CONTENT WRAPPER (matches Shipping) */
     .inner {
       max-width: 1400px;
       margin: 0 auto;
@@ -39,13 +36,14 @@
     }
 
     .header {
-      position: relative;
       background: #ffffff;
       padding: 20px;
       border-radius: 15px;
       box-shadow: 0 10px 40px rgba(139,115,85,0.15);
       margin-bottom: 20px;
+      text-align: center;
       border: 1px solid rgba(210,180,140,0.3);
+      position: relative;
     }
 
     @media (min-width: 768px) {
@@ -58,30 +56,24 @@
     .header h1 {
       color: #8b7355;
       font-size: 1.5em;
-      text-align: center;
       font-weight: 600;
     }
 
     @media (min-width: 768px) {
-      .header h1 {
-        font-size: 2.5em;
-      }
+      .header h1 { font-size: 2.5em; }
     }
 
     .controls {
       background: white;
-      padding: 15px;
+      padding: 20px;
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(139,115,85,0.1);
-      margin-bottom: 20px;
-      border: 1px solid rgba(210,180,140,0.2);
-    }
-
-    .controls-inner {
+      margin-bottom: 25px;
       display: flex;
       gap: 15px;
       align-items: center;
       flex-wrap: wrap;
+      border: 1px solid rgba(210,180,140,0.2);
     }
 
     .controls label {
@@ -91,20 +83,12 @@
 
     .controls select,
     .controls button {
-      padding: 12px 20px;
+      padding: 12px 24px;
       border: 2px solid #d2b48c;
       border-radius: 10px;
       font-weight: 600;
       background: white;
-      color: #8b7355;
       cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .controls button:hover,
-    .controls select:hover {
-      background: #faf8f5;
-      box-shadow: 0 4px 12px rgba(210,180,140,0.25);
     }
 
     .view-toggle {
@@ -113,10 +97,18 @@
       gap: 10px;
     }
 
+    .view-btn {
+      border: 2px solid #d2b48c;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
     .view-btn.active {
       background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
       color: white;
-      border-color: #c4a57b;
     }
 
     .stats-grid {
@@ -130,21 +122,21 @@
       background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
       padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(139,115,85,0.1);
       border: 1px solid rgba(210,180,140,0.15);
+      box-shadow: 0 5px 20px rgba(139,115,85,0.08);
     }
 
     .stat-label {
       color: #a0906f;
-      text-transform: uppercase;
-      font-weight: 600;
       font-size: 0.85em;
+      text-transform: uppercase;
       margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .stat-value {
-      color: #8b7355;
       font-size: 2.4em;
+      color: #8b7355;
       font-weight: 700;
     }
 
@@ -153,19 +145,42 @@
       background: white;
       padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(139,115,85,0.12);
       border: 1px solid rgba(210,180,140,0.2);
-      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(139,115,85,0.12);
+      display: none;
     }
 
-    .calendar-header h2,
-    .chart-view h2 {
-      color: #8b7355;
-      font-weight: 600;
-      margin-bottom: 20px;
+    .calendar-view.active,
+    .chart-view.active {
+      display: block;
     }
 
-    /* FULLSCREEN BUTTON — MATCHES SHIPPING */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .month-card {
+      background: linear-gradient(135deg, #8b7355 0%, #a0906f 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(139,115,85,0.2);
+    }
+
+    .chart-view.active {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 30px;
+    }
+
+    .chart-wrapper {
+      height: 420px;
+    }
+
+    /* FULLSCREEN BUTTON */
     .fullscreen-btn {
       position: absolute;
       top: 14px;
@@ -179,13 +194,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.25s ease;
       box-shadow: 0 4px 12px rgba(139,115,85,0.25);
     }
 
     .fullscreen-btn:hover {
       background: rgba(255,255,255,0.35);
-      transform: scale(1.05);
     }
 
     .fullscreen-icon {
@@ -204,100 +217,94 @@
     }
 
     .fullscreen-icon::before {
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       border-right: none;
       border-bottom: none;
     }
 
     .fullscreen-icon::after {
-      bottom: 0;
-      right: 0;
+      bottom: 0; right: 0;
       border-left: none;
       border-top: none;
     }
 
     .fullscreen-btn.exit .fullscreen-icon::before {
-      top: 4px;
-      left: 4px;
+      top: 4px; left: 4px;
     }
 
     .fullscreen-btn.exit .fullscreen-icon::after {
-      bottom: 4px;
-      right: 4px;
+      bottom: 4px; right: 4px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-      <div class="inner" style="position:relative">
-        <h1>Rowe Casa Organics Orders Overview</h1>
+<div class="container">
 
-        <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-          <div class="fullscreen-icon"></div>
-        </button>
-      </div>
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="controls">
-      <div class="inner controls-inner">
-        <label>View Year:</label>
-        <select>
-          <option>All Years</option>
-        </select>
-
-        <button>Current Month</button>
-
-        <div class="view-toggle">
-          <button class="view-btn active">Calendar</button>
-          <button class="view-btn">Chart</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATS -->
+  <!-- HEADER -->
+  <div class="header">
     <div class="inner">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Orders</div>
-          <div class="stat-value">829,950</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Orders Fulfilled</div>
-          <div class="stat-value">788,895</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Items Shipped</div>
-          <div class="stat-value">6,290,216</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Fulfillment Rate</div>
-          <div class="stat-value">95.1%</div>
-        </div>
-      </div>
+      <h1>Rowe Casa Organics Orders Overview</h1>
+      <button id="fullscreenBtn" class="fullscreen-btn">
+        <div class="fullscreen-icon"></div>
+      </button>
     </div>
-
   </div>
 
-  <script>
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
+  <!-- CONTROLS -->
+  <div class="inner">
+    <div class="controls">
+      <label>View Year:</label>
+      <select id="yearFilter"></select>
+      <button onclick="jumpToCurrentMonth()">Current Month</button>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
+        <button class="view-btn" onclick="switchView('chart')">Chart</button>
+      </div>
+    </div>
+  </div>
 
-    fullscreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    });
+  <!-- STATS -->
+  <div class="inner">
+    <div id="statsGrid" class="stats-grid"></div>
+  </div>
 
-    document.addEventListener('fullscreenchange', () => {
-      fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement);
-    });
-  </script>
+  <!-- CALENDAR -->
+  <div class="inner">
+    <div id="calendarView" class="calendar-view active">
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="inner">
+    <div id="chartView" class="chart-view">
+      <div class="chart-wrapper">
+        <canvas id="ordersChart"></canvas>
+      </div>
+      <div id="chartStats"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement);
+});
+</script>
+
 </body>
 </html>
