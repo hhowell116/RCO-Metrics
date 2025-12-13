@@ -97,17 +97,18 @@
       box-shadow: 0 2px 10px rgba(210,180,140,0.2);
     }
 
-    .header button {
-      background: white;
-      color: #8b7355;
-      border: 2px solid #d2b48c;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+    .header button:not(.fullscreen-btn) {
+  background: white;
+  color: #8b7355;
+  border: 2px solid #d2b48c;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
 
     .header button:hover {
       transform: translateY(-2px);
