@@ -30,13 +30,11 @@
     }
 }
 
- .container {
-    width: 100%;
-    max-width: none;
-    margin: 0 auto;
-    padding: 45px;
+    .container {
+  width: 100%;
+  margin: 0;
+  padding: 30px;
 }
-
 
 
     .header {
@@ -58,24 +56,26 @@
     }
 
     .header h1 {
-  font-size: 1.8em;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
+      color: #8b7355;
+      font-size: 1.5em;
+      margin-bottom: 8px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
 
-@media (min-width: 768px) {
-  .header h1 {
-    font-size: 1.8em; /* keep consistent like Fulfillment */
-  }
-}
-
+    @media (min-width: 768px) {
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+    }
 
     .controls {
       background: white;
-      padding: 12px;
+      padding: 15px;
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(139,115,85,0.1);
-      margin-bottom: 16px;
+      margin-bottom: 15px;
       display: flex;
       gap: 10px;
       align-items: center;
@@ -203,9 +203,9 @@
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
     @media (min-width: 768px) {
@@ -218,7 +218,7 @@
 
     .stat-card {
       background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
-      padding: 14px 16px;
+      padding: 15px;
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(139,115,85,0.08);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -255,9 +255,8 @@
 
     .stat-value {
       color: #8b7355;
-      font-size: 1.6em;
+      font-size: 1.8em;
       font-weight: 700;
-      margin-top: 4px;
     }
 
     @media (min-width: 768px) {
@@ -403,7 +402,7 @@
 
     .chart-view {
       background: white;
-      padding: 24px;
+      padding: 15px;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(139,115,85,0.12);
       border: 1px solid rgba(210,180,140,0.2);
@@ -652,57 +651,6 @@
     box-shadow: 0 5px 14px rgba(139,115,85,0.35);
 }
 
-/* HEADER LAYOUT */
-.header {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px;
-}
-
-/* LEFT */
-.header-left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* CENTER */
-.header-center {
-  text-align: center;
-}
-
-/* RIGHT */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* HEADER CONTROLS */
-.header-select {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 2px solid #d2b48c;
-  font-weight: 600;
-  color: #8b7355;
-  background: white;
-}
-
-.header-btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 2px solid #d2b48c;
-  background: white;
-  color: #8b7355;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.header-btn:hover {
-  background: #faf8f5;
-}
 
 
 
@@ -764,29 +712,27 @@
 <body>
   <div class="container">
     <div class="header">
-  <!-- LEFT -->
-  <div class="header-left">
-    <select id="yearFilter" class="header-select"></select>
-    <button class="header-btn" onclick="jumpToCurrentMonth()">Current Month</button>
-  </div>
+  <h1>Rowe Casa Organics Orders Overview</h1>
 
-  <!-- CENTER -->
-  <div class="header-center">
-    <h1>Rowe Casa Organics Orders Overview</h1>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="header-right">
-    <div class="view-toggle">
-      <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
-      <button class="view-btn" onclick="switchView('chart')">Chart</button>
-    </div>
-
-    <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-      <div class="fullscreen-icon"></div>
-    </button>
-  </div>
+  <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+    <div class="fullscreen-icon"></div>
+  </button>
 </div>
+
+
+    <div class="controls">
+      <label>View Year:</label>
+      <select id="yearFilter">
+        <option value="all">All Years</option>
+      </select>
+      
+      <button onclick="jumpToCurrentMonth()">Current Month</button>
+      
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="switchView('calendar')">Calendar</button>
+        <button class="view-btn" onclick="switchView('chart')">Chart</button>
+      </div>
+    </div>
 
     <div id="loading" class="loading">Loading data</div>
 
