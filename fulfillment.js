@@ -477,34 +477,26 @@ function updateTable(monthData) {
 }
 
 // Event listeners
-document.querySelectorAll('[data-view]').forEach(btn => {
-    if (btn.tagName === 'BUTTON') {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('[data-view]').forEach(b => {
-                if (b.tagName === 'BUTTON') b.classList.remove('active');
-            });
-            btn.classList.add('active');
-            
-            currentView = btn.dataset.view;
-            
-            const monthlyView = document.querySelector('.monthly-view');
-            const calendarView = document.querySelector('.calendar-view');
-            
-            monthlyView.classList.remove('active');
-            calendarView.classList.remove('active');
-            
-            if (currentView === 'monthly') {
-                monthlyView.classList.add('active');
-            } else {
-                calendarView.classList.add('active');
-            }
-            
-            document.getElementById('monthSelect').disabled = currentView === 'calendar';
-            
-            updateDashboard();
-        });
-    }
+document.querySelectorAll('.view-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const view = btn.dataset.view;
+
+    // Toggle active button
+    document.querySelectorAll('.view-toggle button').forEach(b =>
+      b.classList.remove('active')
+    );
+    btn.classList.add('active');
+
+    // Toggle views
+    document.querySelectorAll('.monthly-view, .calendar-view').forEach(v =>
+      v.classList.remove('active')
+    );
+
+    const target = document.querySelector(`.${view}-view`);
+    if (target) target.classList.add('active');
+  });
 });
+
 
 document.getElementById('yearSelect').addEventListener('change', e => {
     currentYear = parseInt(e.target.value);
