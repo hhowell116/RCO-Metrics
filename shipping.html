@@ -224,6 +224,7 @@
 .fullscreen-btn {
   position: absolute;
   top: 14px;
+  z-index: 10;
   left: 18px;
   right: auto;
   width: 48px;
@@ -288,16 +289,16 @@
 <body>
   <div class="wrap">
     <div class="header" role="banner">
-      <div style="width:56px"></div>
-      <div class="header-center">
-        <div class="title">Today's Shipping Leaderboard</div>
-        <div id="weekRange" class="meta">Week: loading…</div>
-      </div>
-      <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-  <div class="fullscreen-icon"></div>
-</button>
+  <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+    <div class="fullscreen-icon"></div>
+  </button>
 
-    </div>
+  <div class="header-center">
+    <div class="title">Today's Shipping Leaderboard</div>
+    <div id="weekRange" class="meta">Week: loading…</div>
+  </div>
+</div>
+
 
     <div id="boards" class="boards" aria-live="polite" style="margin-top:18px">
       <div class="notice">Loading data...</div>
