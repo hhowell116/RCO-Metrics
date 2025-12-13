@@ -1,3 +1,5 @@
+const calendarGrid = document.getElementById('calendarGrid');
+
 document.addEventListener('DOMContentLoaded', () => {
 
 // Find the most recent month with data
