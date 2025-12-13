@@ -201,6 +201,28 @@
         height: 300px;
     }
 }
+
+/* FORCE Year/Month selects to display text */
+#yearSelect, #monthSelect {
+  color: #8b7355 !important;
+  background: #ffffff !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  padding: 10px 36px 10px 14px !important; /* room for arrow */
+  min-width: 140px;
+  border: 2px solid #d2b48c !important;
+  border-radius: 10px !important;
+  appearance: auto;              /* undo any "custom select" hiding */
+  -webkit-appearance: menulist;  /* safari/chrome */
+  -moz-appearance: menulist;
+}
+
+/* make sure option text is visible too */
+#yearSelect option, #monthSelect option {
+  color: #111 !important;
+}
+
+    
 </style>
 </head>
 
