@@ -21,21 +21,28 @@
     html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg,var(--bg-start),var(--bg-end));color:#111;}
     .wrap{max-width:95%;margin:18px auto;padding:18px;}
     
-   .header{
+  .header{
   position: relative;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:16px;
-  border-radius:10px;
+  display: flex;
+  justify-content: center;   /* ✅ true center */
+  align-items: center;
+  padding: 16px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #faf8f5 0%, #f3efe6 100%);
-  box-shadow:0 8px 24px rgba(139,115,85,0.15);
-  color:#8b7355;
+  box-shadow: 0 8px 24px rgba(139,115,85,0.15);
+  color: #8b7355;
   border: 1px solid rgba(210,180,140,0.35);
 }
 
+
     }
-    .header-center{flex:1;text-align:center}
+    .header-center{
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;          /* ✅ hard center */
+  pointer-events: none;    /* prevents accidental interaction */
+}
+
     .title{font-weight:800;letter-spacing:1.5px;font-size:44px;margin:0;padding:0;text-transform:capitalize}
     .meta{
   font-size:26px;
