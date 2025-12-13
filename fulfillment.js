@@ -490,16 +490,15 @@ document.querySelectorAll('[data-view]').forEach(btn => {
             const monthlyView = document.querySelector('.monthly-view');
             const calendarView = document.querySelector('.calendar-view');
             
-            monthlyView.classList.remove('active');
-            calendarView.classList.remove('active');
-            
             if (currentView === 'monthly') {
-                monthlyView.classList.add('active');
+                monthlyView.style.display = 'block';
+                calendarView.style.display = 'none';
+                document.getElementById('monthSelect').disabled = false;
             } else {
-                calendarView.classList.add('active');
+                monthlyView.style.display = 'none';
+                calendarView.style.display = 'block';
+                document.getElementById('monthSelect').disabled = true;
             }
-            
-            document.getElementById('monthSelect').disabled = currentView === 'calendar';
             
             updateDashboard();
         });
