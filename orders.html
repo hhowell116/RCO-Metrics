@@ -514,42 +514,41 @@
     }
     
     .fullscreen-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
-      border: 2px solid rgba(139,115,85,0.35);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 3px 8px rgba(139,115,85,0.25);
-      flex-shrink: 0;
-    }
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+  border: 2px solid rgba(139,115,85,0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(139,115,85,0.25);
+}
 
-    .fullscreen-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 14px rgba(139,115,85,0.35);
-    }
+.fullscreen-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 14px rgba(139,115,85,0.35);
+}
 
-    .fullscreen-icon {
+/* ===== ICON BASE ===== */
+.fullscreen-icon {
   width: 16px;
   height: 16px;
   position: relative;
 }
 
-/* BASE CORNERS */
+/* ===== ENTER FULLSCREEN (OUTWARD CORNERS) ===== */
 .fullscreen-icon::before,
 .fullscreen-icon::after {
   content: "";
   position: absolute;
-  width: 7px;               /* slightly bigger */
+  width: 7px;
   height: 7px;
   border: 2px solid #ffffff;
 }
 
-/* ENTER FULLSCREEN ICON (OUTWARD) */
 .fullscreen-icon::before {
   top: 0;
   left: 0;
@@ -564,15 +563,28 @@
   border-top: none;
 }
 
-/* EXIT FULLSCREEN ICON (INWARD — FIXED) */
+/* ===== EXIT FULLSCREEN (INWARD CORNERS — SAFE) ===== */
+.fullscreen-btn.exit .fullscreen-icon::before,
+.fullscreen-btn.exit .fullscreen-icon::after {
+  width: 6px;
+  height: 6px;
+  border: 2px solid #ffffff;
+}
+
+/* Top-left inward */
 .fullscreen-btn.exit .fullscreen-icon::before {
   top: 3px;
   left: 3px;
+  border-left: none;
+  border-top: none;
 }
 
+/* Bottom-right inward */
 .fullscreen-btn.exit .fullscreen-icon::after {
   bottom: 3px;
   right: 3px;
+  border-right: none;
+  border-bottom: none;
 }
 
   </style>
