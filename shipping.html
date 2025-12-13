@@ -254,33 +254,34 @@
       box-shadow:0 5px 15px rgba(139,115,85,0.3);
     }
 
-    /* Fullscreen icon button */
+    /* Fullscreen icon button — MATCHES ORDERS DASHBOARD */
 .fullscreen-btn {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 12px;
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
   border: 2px solid rgba(139,115,85,0.35);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(139,115,85,0.25);
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(139,115,85,0.25);
+  z-index: 5;
 }
-
 
 .fullscreen-btn:hover {
-  background: rgba(255,255,255,0.25);
   transform: scale(1.05);
+  box-shadow: 0 5px 14px rgba(139,115,85,0.35);
 }
 
+/* ICON */
 .fullscreen-icon {
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   position: relative;
 }
 
@@ -288,9 +289,9 @@
 .fullscreen-icon::after {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 8px;
-  border: 3px solid #fff;
+  width: 6px;
+  height: 6px;
+  border: 2px solid #ffffff;
 }
 
 .fullscreen-icon::before {
