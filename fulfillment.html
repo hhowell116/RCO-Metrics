@@ -192,16 +192,26 @@
 
 .tooltip {
   position: fixed;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.85em;
+  z-index: 9999;
+  background: #ffffff;
+  border: 2px solid #d2b48c;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.8em;
+  color: #8b7355;
+  box-shadow: 0 6px 20px rgba(139,115,85,0.25);
   pointer-events: none;
-  z-index: 1000;
-  display: none;
-  max-width: 250px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  max-width: 240px;
 }
+
+.tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 .tooltip.show {
   display: block;
@@ -468,6 +478,7 @@ document.addEventListener('fullscreenchange', () => {
     fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement);
 });
 </script>
+<div id="tooltip" class="tooltip"></div>
 
 </body>
 </html>
