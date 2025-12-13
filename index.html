@@ -251,10 +251,11 @@ iframe {
     </div>
 
     <div class="nav-tabs">
-      <button class="nav-tab active" data-tab="orders">Orders Overview</button>
-      <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
-      <button class="nav-tab" data-tab="fulfillment">Fulfillment KPI</button>
-    </div>
+  <button class="nav-tab active" data-tab="fulfillment">Fulfillment KPI</button>
+  <button class="nav-tab" data-tab="orders">Orders Overview</button>
+  <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
+</div>
+
   </div>
 
   <div class="media-layer">
@@ -275,7 +276,11 @@ iframe {
 
 </nav>
 
-<div id="orders-frame" class="iframe-wrapper active">
+<div id="fulfillment-frame" class="iframe-wrapper active">
+  <iframe src="fulfillment.html"></iframe>
+</div>
+
+<div id="orders-frame" class="iframe-wrapper">
   <iframe src="orders.html"></iframe>
 </div>
 
@@ -283,9 +288,6 @@ iframe {
   <iframe src="shipping.html"></iframe>
 </div>
 
-<div id="fulfillment-frame" class="iframe-wrapper">
-  <iframe src="fulfillment.html"></iframe>
-</div>
 
 <script>
 const nav = document.getElementById("nav");
