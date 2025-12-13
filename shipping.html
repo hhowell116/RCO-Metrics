@@ -19,12 +19,14 @@
       --card-bg: rgba(255,255,255,0.98);
     }
     html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg,var(--bg-start),var(--bg-end));color:#111;}
-    .wrap{
+.wrap {
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 45px;   /* same spacing as Fulfillment */
+  padding: 45px;
+  box-sizing: border-box;   /* ✅ THIS is the key */
 }
+
 
     
   .header{
