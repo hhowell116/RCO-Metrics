@@ -31,10 +31,11 @@
     }
 
     .container {
-      width: 100%;
-      margin: 0;
-      padding: 20px 45px 45px; 
-    }
+    width: 100%;
+    max-width: none;         /* ✅ critical */
+    margin: 0 auto;
+    padding: 20px 45px 45px;           /* ✅ your requested spacing */
+}
 
     .header {
       position: relative;
