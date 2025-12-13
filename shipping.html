@@ -592,27 +592,25 @@
   }
 })();
 
-// TV View toggle
-const tvViewBtn = document.getElementById('tvViewBtn');
-tvViewBtn.addEventListener('click', () => {
+// Fullscreen icon toggle
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+fullscreenBtn.addEventListener('click', () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
-    tvViewBtn.textContent = 'Exit TV View';
-    tvViewBtn.style.background = 'linear-gradient(135deg, #c67b7b 0%, #a06060 100%)';
   } else {
     document.exitFullscreen();
-    tvViewBtn.textContent = 'TV View';
-    tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
   }
 });
 
-// Update button text if user exits fullscreen via ESC key
 document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement) {
-    tvViewBtn.textContent = 'TV View';
-    tvViewBtn.style.background = 'linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%)';
+  if (document.fullscreenElement) {
+    fullscreenBtn.classList.add('exit');
+  } else {
+    fullscreenBtn.classList.remove('exit');
   }
 });
+
 </script>
 </body>
 </html>
