@@ -287,7 +287,7 @@
     </div>
 
     <!-- MONTHLY VIEW -->
-    <div class="monthly-view active" data-view="monthly">
+        <div class="monthly-view" data-view="monthly" style="display: block;">
         <div class="chart-container">
             <h2 class="chart-title">Daily Fill Rate Performance</h2>
             <p class="chart-subtitle">Target lines: 95% (7-day) • 85% (4-day)</p>
@@ -321,12 +321,12 @@
     </div>
 
     <!-- CALENDAR VIEW -->
-    <div class="calendar-view" data-view="calendar">
+    <div class="calendar-view" data-view="calendar" style="display: none;">
         <div class="calendar-grid" id="calendarGrid"></div>
     </div>
 
 </div>
-
+<div id="tooltip"></div>
 <script src="data.js"></script>
 <script src="fulfillment.js"></script>
 
