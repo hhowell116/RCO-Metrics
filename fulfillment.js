@@ -515,9 +515,11 @@ document.getElementById('monthSelect').addEventListener('change', e => {
     currentMonth = parseInt(e.target.value);
     updateDashboard();
 });
+populateYearMonthSelectors();
 
 // Initialize with most recent data month
 document.getElementById('monthSelect').value = currentMonth.toString();
 document.getElementById('yearSelect').value = currentYear.toString();
 updateDashboard();
+    
 });
