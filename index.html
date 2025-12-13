@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RCO Metrics Dashboard</title>
 
 <style>
@@ -91,7 +91,61 @@ body {
 }
 
 /* =========================
-   TOGGLE ARROW
+   MEDIA (LOGO + PRODUCTS)
+========================= */
+.media-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.main-nav.collapsed .media-layer {
+  display: none;
+}
+
+/* Logo */
+.logo-media {
+  position: absolute;
+  left: 32px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logo-media img {
+  max-height: 90%;
+}
+
+/* Product carousel */
+.product-media {
+  position: absolute;
+  right: 32px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.product-label {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #8b7355;
+}
+
+.product-media img {
+  max-height: 90%;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.product-media img.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* =========================
+   SINGLE TOGGLE ARROW
 ========================= */
 .nav-toggle {
   position: absolute;
@@ -102,12 +156,12 @@ body {
   animation: bounce 2.4s infinite;
 }
 
-/* Expanded → arrow at bottom of header */
+/* Expanded → bottom of header */
 .main-nav.expanded .nav-toggle {
   bottom: -14px;
 }
 
-/* Collapsed → arrow at top of page */
+/* Collapsed → fixed at top */
 .main-nav.collapsed + .nav-toggle {
   position: fixed;
   top: 12px;
@@ -124,7 +178,7 @@ body {
   display: block;
 }
 
-/* Flip direction */
+/* Direction */
 .main-nav.expanded .nav-toggle::before {
   transform: rotate(180deg);
 }
@@ -171,11 +225,23 @@ iframe {
     </div>
   </div>
 
-  <!-- Arrow (inside header when expanded) -->
+  <!-- MEDIA -->
+  <div class="media-layer">
+    <div class="logo-media">
+      <img src="logo.png" alt="RCO Logo">
+    </div>
+
+    <div class="product-media">
+      <div class="product-label">Top Products</div>
+      <img id="productImage" src="tartcherry.png" alt="Product">
+    </div>
+  </div>
+
+  <!-- SINGLE ARROW -->
   <div class="nav-toggle" onclick="toggleHeader()"></div>
 </nav>
 
-<!-- Same arrow reused when collapsed -->
+<!-- SAME arrow reused when collapsed -->
 <div class="nav-toggle" onclick="toggleHeader()"></div>
 
 <div id="orders-frame" class="iframe-wrapper active">
@@ -192,6 +258,7 @@ iframe {
 
 <script>
 const nav = document.getElementById("nav");
+const productImage = document.getElementById("productImage");
 
 /* Toggle header */
 function toggleHeader() {
@@ -199,14 +266,25 @@ function toggleHeader() {
   nav.classList.toggle("expanded");
 }
 
-/* Tabs work again */
+/* Product carousel animation */
+const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
+let idx = 0;
+
+setInterval(() => {
+  productImage.classList.add("fade-out");
+  setTimeout(() => {
+    idx = (idx + 1) % products.length;
+    productImage.src = products[idx];
+    productImage.classList.remove("fade-out");
+  }, 200);
+}, 5000);
+
+/* Tabs */
 document.querySelectorAll(".nav-tab").forEach(tab => {
   tab.addEventListener("click", () => {
     const target = tab.dataset.tab;
-
     document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
-
     document.querySelectorAll(".iframe-wrapper").forEach(w => w.classList.remove("active"));
     document.getElementById(`${target}-frame`).classList.add("active");
   });
