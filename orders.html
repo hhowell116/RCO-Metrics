@@ -30,6 +30,7 @@
     }
 
     .header {
+      position: relative;
       background: linear-gradient(135deg, #ffffff 0%, #f5f0e8 100%);
       padding: 20px;
       border-radius: 15px;
@@ -638,9 +639,11 @@
 }
 
 .fullscreen-btn:hover {
+  background: rgba(255,255,255,0.35); /* hover color change */
   transform: scale(1.05);
   box-shadow: 0 6px 18px rgba(139,115,85,0.35);
 }
+
 
 
 .fullscreen-icon {
@@ -703,9 +706,10 @@
       <div style="position: relative;">
   <h1>Rowe Casa Organics Orders Overview</h1>
 
-  <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
-    <div class="fullscreen-icon"></div>
-  </button>
+<button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
+  <div class="fullscreen-icon"></div>
+</button>
+
 </div>
 
     </div>
