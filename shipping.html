@@ -21,12 +21,29 @@
     html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg,var(--bg-start),var(--bg-end));color:#111;}
     .wrap{max-width:95%;margin:18px auto;padding:18px;}
     
-    .header{
-        position: relative;display:flex;align-items:center;gap:16px;padding:16px;border-radius:10px;background:var(--header-grad);box-shadow:0 8px 24px rgba(139,115,85,0.25);color:white;
+   .header{
+  position: relative;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:16px;
+  border-radius:10px;
+  background: linear-gradient(135deg, #faf8f5 0%, #f3efe6 100%);
+  box-shadow:0 8px 24px rgba(139,115,85,0.15);
+  color:#8b7355;
+  border: 1px solid rgba(210,180,140,0.35);
+}
+
     }
     .header-center{flex:1;text-align:center}
     .title{font-weight:800;letter-spacing:1.5px;font-size:44px;margin:0;padding:0;text-transform:capitalize}
-    .meta{font-size:26px;color:rgba(255,255,255,0.95);margin-top:10px;font-weight:600}
+    .meta{
+  font-size:26px;
+  color:#a0906f;
+  margin-top:10px;
+  font-weight:600;
+}
+
 
     .boards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
     .card{
@@ -223,21 +240,21 @@
     /* Fullscreen icon button */
 .fullscreen-btn {
   position: absolute;
-  top: 14px;
-  z-index: 10;
-  left: auto;
-  right: 18px;
+  top: 10px;
+  right: 12px;
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background: rgba(255,255,255,0.15);
-  border: 2px solid rgba(255,255,255,0.55);
+  background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+  border: 2px solid rgba(139,115,85,0.35);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(139,115,85,0.25);
 }
+
 
 .fullscreen-btn:hover {
   background: rgba(255,255,255,0.25);
