@@ -302,6 +302,29 @@ setInterval(() => {
     productImage.classList.remove("fade-out");
   }, 200);
 }, 5000);
+
+  // Dashboard tab switching (FIX)
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const targetTab = tab.dataset.tab;
+
+    // Update active button
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // Show correct iframe
+    document.querySelectorAll('.iframe-wrapper').forEach(frame => {
+      frame.classList.remove('active');
+    });
+
+    const targetFrame = document.getElementById(`${targetTab}-frame`);
+    if (targetFrame) {
+      targetFrame.classList.add('active');
+    }
+  });
+});
+
+  
 </script>
 
 </body>
