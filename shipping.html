@@ -449,74 +449,78 @@
       visibleCards[0].style.margin = '0 auto';
     }
 
-    setTimeout(() => {
-      document.querySelectorAll('.scroll-wrapper').forEach(wrapper => {
-        const scrollContent = wrapper.querySelector('.scroll-content');
-        if (!scrollContent) {
-          log('No scroll content found');
-          return;
-        }
-        
-        const wrapperHeight = wrapper.getBoundingClientRect().height;
-        const contentHeight = scrollContent.getBoundingClientRect().height;
-        
-        log(`Scroll setup: wrapper=${wrapperHeight}px, content=${contentHeight}px`);
-        
-        if (contentHeight <= wrapperHeight) {
-          log('Content fits, no scrolling needed');
-          return;
-        }
-        
-        let position = 0;
-        let direction = 1;
-        const scrollSpeed = 30;
-        const maxScroll = contentHeight - wrapperHeight;
-        const pauseDuration = 2500;
-        let lastTime = performance.now();
-        let isPaused = false;
-        let pauseStartTime = 0;
-        let animationId = null;
-        
-        function animate(currentTime) {
-          if(isPaused) {
-            const pauseElapsed = currentTime - pauseStartTime;
-            if(pauseElapsed >= pauseDuration) {
-              isPaused = false;
-              lastTime = currentTime;
-            } else {
-              animationId = requestAnimationFrame(animate);
-              return;
-            }
-          }
-          
-          const deltaTime = (currentTime - lastTime) / 1000;
+    function startAutoScrollWhenReady() {
+  let startedAny = false;
+
+  document.querySelectorAll('.scroll-wrapper').forEach(wrapper => {
+    if (wrapper.dataset.started) return;
+
+    const scrollContent = wrapper.querySelector('.scroll-content');
+    if (!scrollContent) return;
+
+    const wrapperHeight = wrapper.getBoundingClientRect().height;
+    const contentHeight = scrollContent.getBoundingClientRect().height;
+
+    if (wrapperHeight === 0 || contentHeight === 0) return;
+    if (contentHeight <= wrapperHeight) return;
+
+    wrapper.dataset.started = 'true';
+    startedAny = true;
+
+    let position = 0;
+    let direction = 1;
+    const scrollSpeed = 30;
+    const maxScroll = contentHeight - wrapperHeight;
+    const pauseDuration = 2500;
+    let lastTime = performance.now();
+    let isPaused = false;
+    let pauseStartTime = 0;
+
+    function animate(currentTime) {
+      if (isPaused) {
+        if (currentTime - pauseStartTime >= pauseDuration) {
+          isPaused = false;
           lastTime = currentTime;
-          
-          position += scrollSpeed * deltaTime * direction;
-          
-          if(direction === 1 && position >= maxScroll) {
-            position = maxScroll;
-            direction = -1;
-            isPaused = true;
-            pauseStartTime = currentTime;
-          } else if(direction === -1 && position <= 0) {
-            position = 0;
-            direction = 1;
-            isPaused = true;
-            pauseStartTime = currentTime;
-          }
-          
-          scrollContent.style.transform = `translateY(-${position}px)`;
-          
-          animationId = requestAnimationFrame(animate);
+        } else {
+          requestAnimationFrame(animate);
+          return;
         }
-        
-        log(`Starting animation: maxScroll=${maxScroll}px`);
-        animationId = requestAnimationFrame(animate);
-      });
-    }, 1000);
+      }
+
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      position += scrollSpeed * deltaTime * direction;
+
+      if (direction === 1 && position >= maxScroll) {
+        position = maxScroll;
+        direction = -1;
+        isPaused = true;
+        pauseStartTime = currentTime;
+      } else if (direction === -1 && position <= 0) {
+        position = 0;
+        direction = 1;
+        isPaused = true;
+        pauseStartTime = currentTime;
+      }
+
+      scrollContent.style.transform = `translateY(-${position}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  });
+
+  // Keep retrying until at least one scroll starts
+  if (!startedAny) {
+    requestAnimationFrame(startAutoScrollWhenReady);
+  }
+}
+
 
     log('✓ Dashboard loaded successfully!');
+    requestAnimationFrame(startAutoScrollWhenReady);
+
 
   } catch(err){
     log(`ERROR: ${err.message}`, true);
