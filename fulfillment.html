@@ -9,11 +9,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <style>
+
+    body {
+    margin: 0;
+    padding: 0;        /* ✅ removes the extra right-side space */
+    min-height: 100vh;
+}
 /* ====== LAYOUT ====== */
 .container {
     width: 100%;
-    margin: 0;
-    padding: 30px;
+    max-width: none;         /* ✅ critical */
+    margin: 0 auto;
+    padding: 45px;           /* ✅ your requested spacing */
 }
 
 /* ====== HEADER ====== */
