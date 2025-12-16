@@ -374,9 +374,12 @@
     <!-- RIGHT -->
     <div class="header-right">
       <div class="view-toggle">
-        <button class="btn-secondary active" data-view="monthly">Monthly</button>
-        <button class="btn-secondary" data-view="calendar">Calendar</button>
-      </div>
+  <button class="btn-secondary active" data-view="monthly">Monthly</button>
+  <button class="btn-secondary" data-view="calendar">Calendar</button>
+  <button class="btn-secondary" data-dataset="regular">Regular</button>
+  <button class="btn-secondary" data-dataset="wholesale">Wholesale</button>
+</div>
+
 
       <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
         <div class="fullscreen-icon"></div>
@@ -458,7 +461,9 @@
 </div>
 <div id="tooltip"></div>
 <script src="data.js"></script>
+<script src="wholesale.js"></script>
 <script src="fulfillment.js"></script>
+
 
 <script>
 const fullscreenBtn = document.getElementById('fullscreenBtn');
