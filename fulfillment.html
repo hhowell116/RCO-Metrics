@@ -261,15 +261,11 @@
     border-top: none;
 }
 
-.fullscreen-btn.exit .fullscreen-icon::before {
-    top: 4px;
-    left: 4px;
+/* EXIT FULLSCREEN = INVERT ARROWS */
+.fullscreen-btn.exit .fullscreen-icon {
+  transform: rotate(180deg);
 }
 
-.fullscreen-btn.exit .fullscreen-icon::after {
-    bottom: 4px;
-    right: 4px;
-}
 
 /* ====== CONTROLS ====== */
 .kpi-controls {
