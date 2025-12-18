@@ -526,5 +526,96 @@ populateYearMonthSelectors();
 document.getElementById('monthSelect').value = currentMonth.toString();
 document.getElementById('yearSelect').value = currentYear.toString();
 updateDashboard();
-    
+
+
+
+// Add this code to the END of your fulfillment.js file, just before the closing });
+
+// ============================================
+// DATASET TOGGLE FUNCTIONALITY
+// ============================================
+
+let currentDataset = 'regular'; // Track which dataset is active
+let fullData = window.regularData || []; // Initialize with regular data
+
+// Dataset toggle button functionality
+const datasetToggleBtn = document.getElementById('datasetToggleBtn');
+
+if (datasetToggleBtn) {
+    datasetToggleBtn.addEventListener('click', () => {
+        // Toggle between datasets
+        if (currentDataset === 'regular') {
+            // Switch to wholesale
+            if (window.wholesaleData && window.wholesaleData.length > 0) {
+                fullData = window.wholesaleData;
+                currentDataset = 'wholesale';
+                datasetToggleBtn.textContent = 'Switch to Regular';
+                datasetToggleBtn.style.background = 'linear-gradient(135deg, #8b7355 0%, #a0906f 100%)';
+                datasetToggleBtn.style.color = 'white';
+                datasetToggleBtn.style.borderColor = '#8b7355';
+                
+                // Update dashboard title indicator
+                updateDashboardTitle('Wholesale');
+            } else {
+                alert('Wholesale data not available. Make sure wholesale.js is loaded.');
+                return;
+            }
+        } else {
+            // Switch back to regular
+            if (window.regularData && window.regularData.length > 0) {
+                fullData = window.regularData;
+                currentDataset = 'regular';
+                datasetToggleBtn.textContent = 'Switch to Wholesale';
+                datasetToggleBtn.style.background = '';
+                datasetToggleBtn.style.color = '';
+                datasetToggleBtn.style.borderColor = '';
+                
+                // Update dashboard title indicator
+                updateDashboardTitle('Regular');
+            } else {
+                alert('Regular data not available.');
+                return;
+            }
+        }
+        
+        // Find the most recent month in the new dataset
+        const recentData = getMostRecentDataMonth();
+        currentMonth = recentData.month;
+        currentYear = recentData.year;
+        
+        // Update the selectors
+        document.getElementById('monthSelect').value = currentMonth.toString();
+        document.getElementById('yearSelect').value = currentYear.toString();
+        
+        // Refresh the dashboard with new data
+        updateDashboard();
+    });
+}
+
+// Function to update dashboard title with dataset indicator
+function updateDashboardTitle(datasetType) {
+    const headerTitle = document.querySelector('.header-center h1');
+    if (headerTitle) {
+        const baseTitle = '📦 RCO Fulfillment Dashboard';
+        if (datasetType === 'Wholesale') {
+            headerTitle.innerHTML = `${baseTitle} <span style="color: #8b7355; font-size: 0.6em; margin-left: 10px;">● WHOLESALE</span>`;
+        } else {
+            headerTitle.textContent = baseTitle;
+        }
+    }
+}
+
+// ============================================
+// INITIALIZATION - Store original data
+// ============================================
+
+// Store the original data from data.js as regularData
+if (typeof fullData !== 'undefined' && !window.regularData) {
+    window.regularData = fullData;
+}
+
+// Load wholesale data if available
+if (typeof wholesaleData !== 'undefined' && !window.wholesaleData) {
+    window.wholesaleData = wholesaleData;
+}
 });
