@@ -1,4 +1,16 @@
+// ============================================
+// REPLACE THE ENTIRE fulfillment.js CONTENT WITH THIS
+// ============================================
+
 document.addEventListener('DOMContentLoaded', () => {
+
+// Store both datasets
+let regularData = typeof fullData !== 'undefined' ? [...fullData] : [];
+let wholesaleDataCopy = typeof wholesaleData !== 'undefined' ? [...wholesaleData] : [];
+let currentDataset = 'regular';
+
+// Set fullData to regular initially
+let fullData = [...regularData];
 
 // Find the most recent month with data
 function getMostRecentDataMonth() {
@@ -102,6 +114,7 @@ function updateDashboard() {
         updateTable(monthData);
     }
 }
+
 function forceHideTooltip() {
   const tooltip = document.getElementById('tooltip');
   if (!tooltip) return;
@@ -419,13 +432,14 @@ function updateCharts(monthData) {
         }
     });
 }
+
 const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
 function populateYearMonthSelectors() {
     // YEARS
     yearSelect.innerHTML = '';
-    const years = [2025, 2026]; // adjust if needed
+    const years = [2025, 2026];
 
     years.forEach(year => {
         const option = document.createElement('option');
@@ -520,102 +534,69 @@ document.getElementById('monthSelect').addEventListener('change', e => {
     currentMonth = parseInt(e.target.value);
     updateDashboard();
 });
-populateYearMonthSelectors();
-
-// Initialize with most recent data month
-document.getElementById('monthSelect').value = currentMonth.toString();
-document.getElementById('yearSelect').value = currentYear.toString();
-updateDashboard();
-
-
-
-// Add this code to the END of your fulfillment.js file, just before the closing });
 
 // ============================================
 // DATASET TOGGLE FUNCTIONALITY
 // ============================================
 
-let currentDataset = 'regular'; // Track which dataset is active
-let fullData = window.regularData || []; // Initialize with regular data
-
-// Dataset toggle button functionality
 const datasetToggleBtn = document.getElementById('datasetToggleBtn');
 
 if (datasetToggleBtn) {
     datasetToggleBtn.addEventListener('click', () => {
-        // Toggle between datasets
         if (currentDataset === 'regular') {
             // Switch to wholesale
-            if (window.wholesaleData && window.wholesaleData.length > 0) {
-                fullData = window.wholesaleData;
+            if (wholesaleDataCopy.length > 0) {
+                fullData = [...wholesaleDataCopy];
                 currentDataset = 'wholesale';
-                datasetToggleBtn.textContent = 'Switch to Regular';
+                datasetToggleBtn.textContent = 'Regular';
                 datasetToggleBtn.style.background = 'linear-gradient(135deg, #8b7355 0%, #a0906f 100%)';
                 datasetToggleBtn.style.color = 'white';
                 datasetToggleBtn.style.borderColor = '#8b7355';
                 
-                // Update dashboard title indicator
-                updateDashboardTitle('Wholesale');
+                // Add indicator to title
+                const headerTitle = document.querySelector('.header-center h1');
+                if (headerTitle) {
+                    headerTitle.innerHTML = '📦 RCO Fulfillment Dashboard <span style="color: #8b7355; font-size: 0.6em; margin-left: 10px;">● WHOLESALE</span>';
+                }
             } else {
                 alert('Wholesale data not available. Make sure wholesale.js is loaded.');
                 return;
             }
         } else {
             // Switch back to regular
-            if (window.regularData && window.regularData.length > 0) {
-                fullData = window.regularData;
-                currentDataset = 'regular';
-                datasetToggleBtn.textContent = 'Switch to Wholesale';
-                datasetToggleBtn.style.background = '';
-                datasetToggleBtn.style.color = '';
-                datasetToggleBtn.style.borderColor = '';
-                
-                // Update dashboard title indicator
-                updateDashboardTitle('Regular');
-            } else {
-                alert('Regular data not available.');
-                return;
+            fullData = [...regularData];
+            currentDataset = 'regular';
+            datasetToggleBtn.textContent = 'Wholesale';
+            datasetToggleBtn.style.background = '';
+            datasetToggleBtn.style.color = '';
+            datasetToggleBtn.style.borderColor = '';
+            
+            // Remove indicator from title
+            const headerTitle = document.querySelector('.header-center h1');
+            if (headerTitle) {
+                headerTitle.textContent = '📦 RCO Fulfillment Dashboard';
             }
         }
         
-        // Find the most recent month in the new dataset
+        // Find most recent data in new dataset
         const recentData = getMostRecentDataMonth();
         currentMonth = recentData.month;
         currentYear = recentData.year;
         
-        // Update the selectors
+        // Update selectors
         document.getElementById('monthSelect').value = currentMonth.toString();
         document.getElementById('yearSelect').value = currentYear.toString();
         
-        // Refresh the dashboard with new data
+        // Refresh dashboard
         updateDashboard();
     });
 }
 
-// Function to update dashboard title with dataset indicator
-function updateDashboardTitle(datasetType) {
-    const headerTitle = document.querySelector('.header-center h1');
-    if (headerTitle) {
-        const baseTitle = '📦 RCO Fulfillment Dashboard';
-        if (datasetType === 'Wholesale') {
-            headerTitle.innerHTML = `${baseTitle} <span style="color: #8b7355; font-size: 0.6em; margin-left: 10px;">● WHOLESALE</span>`;
-        } else {
-            headerTitle.textContent = baseTitle;
-        }
-    }
-}
+populateYearMonthSelectors();
 
-// ============================================
-// INITIALIZATION - Store original data
-// ============================================
-
-// Store the original data from data.js as regularData
-if (typeof fullData !== 'undefined' && !window.regularData) {
-    window.regularData = fullData;
-}
-
-// Load wholesale data if available
-if (typeof wholesaleData !== 'undefined' && !window.wholesaleData) {
-    window.wholesaleData = wholesaleData;
-}
+// Initialize with most recent data month
+document.getElementById('monthSelect').value = currentMonth.toString();
+document.getElementById('yearSelect').value = currentYear.toString();
+updateDashboard();
+    
 });
