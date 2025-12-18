@@ -552,7 +552,7 @@ if (datasetToggleBtn) {
                 fullData.push(...wholesaleData);
                 
                 currentlyShowingWholesale = true;
-                datasetToggleBtn.textContent = 'Regular';
+                datasetToggleBtn.textContent = 'Retail';
                 datasetToggleBtn.style.background = 'linear-gradient(135deg, #8b7355 0%, #a0906f 100%)';
                 datasetToggleBtn.style.color = 'white';
                 datasetToggleBtn.style.borderColor = '#8b7355';
