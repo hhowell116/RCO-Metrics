@@ -526,6 +526,13 @@ populateYearMonthSelectors();
 // Initialize with most recent data month
 document.getElementById('monthSelect').value = currentMonth.toString();
 document.getElementById('yearSelect').value = currentYear.toString();
+
+// Set initial title to show Retail
+const headerTitle = document.querySelector('.header-center h1');
+if (headerTitle) {
+    headerTitle.innerHTML = '📦 RCO Fulfillment Dashboard <span style="color: #8b7355; font-weight: 600;"> - Retail</span>';
+}
+
 updateDashboard();
 
 // ============================================
@@ -553,14 +560,11 @@ if (datasetToggleBtn) {
                 
                 currentlyShowingWholesale = true;
                 datasetToggleBtn.textContent = 'Retail';
-                datasetToggleBtn.style.background = 'linear-gradient(135deg, #8b7355 0%, #a0906f 100%)';
-                datasetToggleBtn.style.color = 'white';
-                datasetToggleBtn.style.borderColor = '#8b7355';
                 
                 // Add indicator to title
                 const headerTitle = document.querySelector('.header-center h1');
                 if (headerTitle) {
-                    headerTitle.innerHTML = '📦 RCO Fulfillment Dashboard <span style="color: #8b7355; font-size: 0.6em; margin-left: 10px;">● WHOLESALE</span>';
+                    headerTitle.innerHTML = '📦 RCO Fulfillment Dashboard <span style="color: #8b7355; font-weight: 600;"> - Wholesale</span>';
                 }
             } else {
                 alert('Wholesale data not available. Make sure wholesale.js is loaded.');
@@ -574,14 +578,11 @@ if (datasetToggleBtn) {
                 
                 currentlyShowingWholesale = false;
                 datasetToggleBtn.textContent = 'Wholesale';
-                datasetToggleBtn.style.background = '';
-                datasetToggleBtn.style.color = '';
-                datasetToggleBtn.style.borderColor = '';
                 
-                // Remove indicator from title
+                // Add Retail indicator to title
                 const headerTitle = document.querySelector('.header-center h1');
                 if (headerTitle) {
-                    headerTitle.textContent = '📦 RCO Fulfillment Dashboard';
+                    headerTitle.innerHTML = '📦 RCO Fulfillment Dashboard <span style="color: #8b7355; font-weight: 600;"> - Retail</span>';
                 }
             }
         }
