@@ -1,16 +1,4 @@
-// ============================================
-// REPLACE THE ENTIRE fulfillment.js CONTENT WITH THIS
-// ============================================
-
 document.addEventListener('DOMContentLoaded', () => {
-
-// Store both datasets
-let regularData = typeof fullData !== 'undefined' ? [...fullData] : [];
-let wholesaleDataCopy = typeof wholesaleData !== 'undefined' ? [...wholesaleData] : [];
-let currentDataset = 'regular';
-
-// Set fullData to regular initially
-let fullData = [...regularData];
 
 // Find the most recent month with data
 function getMostRecentDataMonth() {
@@ -114,7 +102,6 @@ function updateDashboard() {
         updateTable(monthData);
     }
 }
-
 function forceHideTooltip() {
   const tooltip = document.getElementById('tooltip');
   if (!tooltip) return;
@@ -432,14 +419,13 @@ function updateCharts(monthData) {
         }
     });
 }
-
 const yearSelect = document.getElementById('yearSelect');
 const monthSelect = document.getElementById('monthSelect');
 
 function populateYearMonthSelectors() {
     // YEARS
     yearSelect.innerHTML = '';
-    const years = [2025, 2026];
+    const years = [2025, 2026]; // adjust if needed
 
     years.forEach(year => {
         const option = document.createElement('option');
@@ -535,6 +521,13 @@ document.getElementById('monthSelect').addEventListener('change', e => {
     updateDashboard();
 });
 
+populateYearMonthSelectors();
+
+// Initialize with most recent data month
+document.getElementById('monthSelect').value = currentMonth.toString();
+document.getElementById('yearSelect').value = currentYear.toString();
+updateDashboard();
+
 // ============================================
 // DATASET TOGGLE FUNCTIONALITY
 // ============================================
@@ -542,12 +535,23 @@ document.getElementById('monthSelect').addEventListener('change', e => {
 const datasetToggleBtn = document.getElementById('datasetToggleBtn');
 
 if (datasetToggleBtn) {
+    let regularDataBackup = null;
+    let currentlyShowingWholesale = false;
+    
     datasetToggleBtn.addEventListener('click', () => {
-        if (currentDataset === 'regular') {
-            // Switch to wholesale
-            if (wholesaleDataCopy.length > 0) {
-                fullData = [...wholesaleDataCopy];
-                currentDataset = 'wholesale';
+        if (!currentlyShowingWholesale) {
+            // Switching TO wholesale
+            if (typeof wholesaleData !== 'undefined' && wholesaleData.length > 0) {
+                // Backup regular data first time
+                if (!regularDataBackup) {
+                    regularDataBackup = [...fullData];
+                }
+                
+                // Replace fullData with wholesale
+                fullData.length = 0;
+                fullData.push(...wholesaleData);
+                
+                currentlyShowingWholesale = true;
                 datasetToggleBtn.textContent = 'Regular';
                 datasetToggleBtn.style.background = 'linear-gradient(135deg, #8b7355 0%, #a0906f 100%)';
                 datasetToggleBtn.style.color = 'white';
@@ -563,18 +567,22 @@ if (datasetToggleBtn) {
                 return;
             }
         } else {
-            // Switch back to regular
-            fullData = [...regularData];
-            currentDataset = 'regular';
-            datasetToggleBtn.textContent = 'Wholesale';
-            datasetToggleBtn.style.background = '';
-            datasetToggleBtn.style.color = '';
-            datasetToggleBtn.style.borderColor = '';
-            
-            // Remove indicator from title
-            const headerTitle = document.querySelector('.header-center h1');
-            if (headerTitle) {
-                headerTitle.textContent = '📦 RCO Fulfillment Dashboard';
+            // Switching BACK to regular
+            if (regularDataBackup) {
+                fullData.length = 0;
+                fullData.push(...regularDataBackup);
+                
+                currentlyShowingWholesale = false;
+                datasetToggleBtn.textContent = 'Wholesale';
+                datasetToggleBtn.style.background = '';
+                datasetToggleBtn.style.color = '';
+                datasetToggleBtn.style.borderColor = '';
+                
+                // Remove indicator from title
+                const headerTitle = document.querySelector('.header-center h1');
+                if (headerTitle) {
+                    headerTitle.textContent = '📦 RCO Fulfillment Dashboard';
+                }
             }
         }
         
@@ -591,12 +599,5 @@ if (datasetToggleBtn) {
         updateDashboard();
     });
 }
-
-populateYearMonthSelectors();
-
-// Initialize with most recent data month
-document.getElementById('monthSelect').value = currentMonth.toString();
-document.getElementById('yearSelect').value = currentYear.toString();
-updateDashboard();
     
 });
