@@ -1,4 +1,4 @@
-const fullData = [
+const wholesaleData = [
   {date:"1/1/2025",orders:2019,rem4:17,rem7:17,rate4:99.16,rate7:99.16},
   {date:"1/2/2025",orders:2521,rem4:122,rem7:122,rate4:95.16,rate7:95.16},
   {date:"1/3/2025",orders:992,rem4:44,rem7:44,rate4:95.56,rate7:95.56},
