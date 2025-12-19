@@ -255,6 +255,28 @@ iframe {
 }
 
   /* =========================================
+   HIDE IFRAME SCROLLBARS (VISUAL ONLY)
+========================================= */
+
+iframe {
+  scrollbar-width: none;        /* Firefox */
+}
+
+iframe::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+  /* =========================================
+   KIOSK MODE — REMOVE OUTER SCROLLBAR
+========================================= */
+
+body.kiosk-active {
+  overflow: hidden;
+}
+
+
+  /* =========================================
    KIOSK MODE — HIDE HEADER, KEEP BUTTON
 ========================================= */
 
