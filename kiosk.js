@@ -122,24 +122,21 @@ async function runKiosk() {
 ========================================= */
 
 kioskBtn.addEventListener('click', async () => {
-  kioskActive = !kioskActive;
+  // ENTER TV VIEW ONLY
+  if (kioskActive) return;
 
-  if (kioskActive) {
-    kioskBtn.textContent = '⏹ Exit Kiosk';
+  kioskActive = true;
 
-    // Hide header via body class
-    document.body.classList.add('kiosk-active');
+  document.body.classList.add('kiosk-active');
 
-    // TRUE fullscreen
-    if (!document.fullscreenElement) {
-      await document.documentElement.requestFullscreen();
-    }
-
-    runKiosk();
-  } else {
-    exitKiosk();
+  // Request fullscreen ONCE (parent only)
+  if (document.fullscreenElement !== document.documentElement) {
+    await document.documentElement.requestFullscreen();
   }
+
+  runKiosk();
 });
+
 let kioskBtnTimeout;
 
 document.addEventListener('mousemove', () => {
