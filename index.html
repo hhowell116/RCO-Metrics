@@ -6,20 +6,31 @@
 <title>RCO Metrics Dashboard</title>
 
 <style>
+/* =========================================
+   GLOBAL RESET
+========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* index page never scrolls */
+}
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
-/* =========================================
-   KIOSK MODE BUTTON — INVERTED STYLE
-========================================= */
 
+/* =========================================
+   KIOSK MODE BUTTON (ENTER ONLY)
+========================================= */
 .kiosk-btn {
   position: fixed;
   top: 16px;
-  right: 20px;
+  left: 16px;
   z-index: 10000;
 
   background: #ffffff;
@@ -44,51 +55,21 @@ body {
 .kiosk-btn:active {
   transform: scale(0.96);
 }
-  /* =========================================
-   KIOSK MODE — FIX HEADER TOGGLE ARROW
-========================================= */
 
-body.kiosk-active .nav-toggle-wrap {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10001;
-}
-.kiosk-btn {
-  top: 16px;
-  left: 16px;
-  right: auto;
-}
-
+/* Hide kiosk button once kiosk is active */
 body.kiosk-active .kiosk-btn {
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  display: none;
 }
 
-  /* =========================================
-   HARD LOCK INDEX PAGE SCROLLING
-========================================= */
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;   /* <-- this is the key */
-}
-
-
-/* =========================
+/* =========================================
    HEADER
-========================= */
+========================================= */
 .main-nav {
   position: sticky;
   top: 0;
   z-index: 1000;
   background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
   border-bottom: 3px solid #c4a57b;
-  overflow: visible;
   transition: padding 0.45s ease;
 }
 
@@ -104,28 +85,14 @@ html, body {
   overflow: hidden;
 }
 
-.main-nav.collapsed .nav-toggle-wrap {
-  position: fixed;
-  top: 28px;
+/* Hide header entirely in kiosk mode */
+body.kiosk-active .main-nav {
+  display: none;
 }
+
 /* =========================================
-   HIDE OUTER (BROWSER) SCROLLBAR
+   HEADER CONTENT
 ========================================= */
-
-/* Chrome, Edge, Safari */
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-/* Firefox */
-body {
-  scrollbar-width: none;
-}
-
-/* =========================
-   CENTER CONTENT
-========================= */
 .header-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -153,9 +120,9 @@ body {
   margin-bottom: 18px;
 }
 
-/* =========================
+/* =========================================
    NAV BUTTONS
-========================= */
+========================================= */
 .nav-tabs {
   display: flex;
   justify-content: center;
@@ -184,9 +151,9 @@ body {
   color: white;
 }
 
-/* =========================
-   MEDIA CONTAINER
-========================= */
+/* =========================================
+   MEDIA LAYER
+========================================= */
 .media-layer {
   position: absolute;
   left: 50%;
@@ -241,9 +208,9 @@ body {
   transform: scale(0.95);
 }
 
-/* =========================
-   TOGGLE ARROW
-========================= */
+/* =========================================
+   HEADER TOGGLE ARROW
+========================================= */
 .nav-toggle-wrap {
   position: absolute;
   left: 50%;
@@ -251,6 +218,16 @@ body {
   transform: translateX(-50%) translateY(-70%);
   z-index: 2000;
   cursor: pointer;
+}
+
+/* Lock arrow to top in kiosk mode */
+body.kiosk-active .nav-toggle-wrap {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  bottom: auto;
+  transform: translateX(-50%);
+  z-index: 10002;
 }
 
 .nav-toggle {
@@ -281,66 +258,37 @@ body {
   50% { transform: translateY(6px); }
 }
 
-/* =========================
+/* =========================================
    IFRAMES
-========================= */
+========================================= */
 .iframe-wrapper {
   display: none;
   height: calc(100vh - 150px);
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .iframe-wrapper.active {
   display: block;
 }
 
+/* Full height in kiosk mode */
+body.kiosk-active .iframe-wrapper {
+  height: 100vh !important;
+}
+
 iframe {
   width: 100%;
   height: 100%;
   border: none;
-}
 
-.main-nav.collapsed ~ .iframe-wrapper {
-  height: 100vh;
-}
-
-  /* =========================================
-   HIDE IFRAME SCROLLBARS (VISUAL ONLY)
-========================================= */
-
-iframe {
-  scrollbar-width: none;        /* Firefox */
+  /* Hide iframe scrollbars */
+  scrollbar-width: none;
 }
 
 iframe::-webkit-scrollbar {
   width: 0;
   height: 0;
-}
-
-  /* =========================================
-   KIOSK MODE — REMOVE OUTER SCROLLBAR
-========================================= */
-
-body.kiosk-active {
-  overflow: hidden;
-}
-
-
-  /* =========================================
-   KIOSK MODE — HIDE HEADER, KEEP BUTTON
-========================================= */
-
-body.kiosk-active .main-nav {
-  display: none;
-}
-
-/* Expand iframe to full screen when header is hidden */
-body.kiosk-active .iframe-wrapper {
-  height: 100vh !important;
-}
-
-/* Keep kiosk button visible */
-body.kiosk-active .kiosk-btn {
-  z-index: 10001;
 }
 
 </style>
