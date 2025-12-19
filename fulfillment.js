@@ -600,5 +600,11 @@ if (datasetToggleBtn) {
         updateDashboard();
     });
 }
+    window.addEventListener('message', (event) => {
+  if (event.data?.type === 'TV_VIEW_STATE') {
+    document.body.classList.toggle('tv-view-active', event.data.active);
+  }
+});
+
     
 });
