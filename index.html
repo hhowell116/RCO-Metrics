@@ -23,6 +23,13 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
+/* =========================================
+   HIDE TV VIEW BUTTON WHEN HEADER COLLAPSED
+========================================= */
+
+.main-nav.collapsed ~ .kiosk-btn {
+  display: none;
+}
 
 /* =========================================
    KIOSK MODE BUTTON (ENTER ONLY)
@@ -304,7 +311,7 @@ iframe::-webkit-scrollbar {
 
 <!-- KIOSK BUTTON -->
 <button id="kioskBtn" class="kiosk-btn">
-  📺 Kiosk Mode
+  TV-View
 </button>
 
 <!-- HEADER -->
