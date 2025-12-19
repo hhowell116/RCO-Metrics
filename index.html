@@ -250,7 +250,13 @@ body.kiosk-active .nav-toggle-wrap {
 }
 
 .main-nav.collapsed .nav-toggle-wrap {
-  transform: translateX(-50%) translateY(-70%) rotate(180deg);
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  bottom: auto;
+
+  transform: translateX(-50%) rotate(180deg);
+  z-index: 10002;
 }
 
 @keyframes bounce {
@@ -263,10 +269,10 @@ body.kiosk-active .nav-toggle-wrap {
 ========================================= */
 .iframe-wrapper {
   display: none;
-  height: calc(100vh - 150px);
-  max-height: 100vh;
+  height: 100vh;
   overflow: hidden;
 }
+
 
 .iframe-wrapper.active {
   display: block;
