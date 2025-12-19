@@ -284,7 +284,23 @@
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
   z-index: 10;
 }
+/* Fullscreen button hover — matches Orders dashboard */
+.fullscreen-btn:hover {
+  background: #ffffff;
+  border-color: #c4a57b;
+  box-shadow: 0 4px 12px rgba(210,180,140,0.35);
+}
 
+/* Keep icon visible on white */
+.fullscreen-btn:hover .fullscreen-icon::before,
+.fullscreen-btn:hover .fullscreen-icon::after {
+  border-color: #8b7355;
+}
+
+.fullscreen-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(139,115,85,0.3);
+}
 
 /* ICON */
 .fullscreen-icon {
