@@ -12,15 +12,15 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
+
 /* =========================================
    KIOSK MODE BUTTON
 ========================================= */
-
-.tv-mode-btn {
+.kiosk-btn {
   position: fixed;
   top: 16px;
   right: 20px;
-  z-index: 9999;
+  z-index: 10000;
 
   background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
   color: #ffffff;
@@ -34,17 +34,15 @@ body {
   box-shadow: 0 4px 12px rgba(210,180,140,0.35);
 }
 
-.tv-mode-btn:hover {
+.kiosk-btn:hover {
   background: #ffffff;
   color: #8b7355;
   transform: translateY(-2px);
 }
 
-.tv-mode-btn:active {
+.kiosk-btn:active {
   transform: scale(0.96);
 }
-
-  
 
 /* =========================
    HEADER
@@ -59,12 +57,10 @@ body {
   transition: padding 0.45s ease;
 }
 
-/* Expanded */
 .main-nav.expanded {
   padding: 18px 0 44px;
 }
 
-/* Collapsed: NO background, NO line */
 .main-nav.collapsed {
   height: 0;
   padding: 0;
@@ -73,12 +69,10 @@ body {
   overflow: hidden;
 }
 
-  .main-nav.collapsed .nav-toggle-wrap {
+.main-nav.collapsed .nav-toggle-wrap {
   position: fixed;
   top: 28px;
-  bottom: auto;
 }
-
 
 /* =========================
    CENTER CONTENT
@@ -96,7 +90,6 @@ body {
   pointer-events: none;
 }
 
-/* Titles */
 .title-wrap h1 {
   color: #8b7355;
   font-size: 1.9em;
@@ -159,7 +152,6 @@ body {
   display: none;
 }
 
-/* LOGO */
 .logo-media {
   position: absolute;
   left: 0;
@@ -171,10 +163,8 @@ body {
 
 .logo-media img {
   max-height: 85%;
-  width: auto;
 }
 
-/* PRODUCT */
 .product-media {
   position: absolute;
   right: -60px;
@@ -190,12 +180,10 @@ body {
   font-weight: 600;
   color: #8b7355;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .product-media img {
   max-height: 100%;
-  width: auto;
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -205,7 +193,7 @@ body {
 }
 
 /* =========================
-   TOGGLE ARROW (ALWAYS SAME)
+   TOGGLE ARROW
 ========================= */
 .nav-toggle-wrap {
   position: absolute;
@@ -223,7 +211,6 @@ body {
   border-right: 16px solid transparent;
   border-bottom: 18px solid #c4a57b;
   animation: bounce 2.4s infinite;
-  position: relative;
 }
 
 .nav-toggle::after {
@@ -236,12 +223,10 @@ body {
   border-bottom: 14px solid white;
 }
 
-/* Flip arrow */
 .main-nav.collapsed .nav-toggle-wrap {
   transform: translateX(-50%) translateY(-70%) rotate(180deg);
 }
 
-/* Bounce */
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
@@ -265,19 +250,20 @@ iframe {
   border: none;
 }
 
-  .main-nav.collapsed ~ .iframe-wrapper {
+.main-nav.collapsed ~ .iframe-wrapper {
   height: 100vh;
 }
-
-  
 </style>
 </head>
 
 <body>
-<button id="tvModeBtn" class="btn-secondary tv-mode-btn">
+
+<!-- KIOSK BUTTON -->
+<button id="kioskBtn" class="kiosk-btn">
   📺 Kiosk Mode
 </button>
 
+<!-- HEADER -->
 <nav class="main-nav expanded" id="nav">
 
   <div class="header-content">
@@ -287,12 +273,10 @@ iframe {
     </div>
 
     <div class="nav-tabs">
-  <button class="nav-tab active" data-tab="fulfillment">Fulfillment KPI</button>
-  <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
-  <button class="nav-tab" data-tab="orders">Orders Overview</button>
-</div>
-
-
+      <button class="nav-tab active" data-tab="fulfillment">Fulfillment KPI</button>
+      <button class="nav-tab" data-tab="shipping">Shipping Leaderboard</button>
+      <button class="nav-tab" data-tab="orders">Orders Overview</button>
+    </div>
   </div>
 
   <div class="media-layer">
@@ -302,17 +286,16 @@ iframe {
 
     <div class="product-media">
       <div class="product-label">Top Products</div>
-      <img id="productImage" src="tartcherry.png" alt="Top Product">
+      <img id="productImage" src="tartcherry.png">
     </div>
   </div>
 
-  <!-- ARROW -->
   <div class="nav-toggle-wrap" onclick="toggleHeader()">
     <div class="nav-toggle"></div>
   </div>
-
 </nav>
 
+<!-- IFRAMES -->
 <div id="fulfillment-frame" class="iframe-wrapper active">
   <iframe src="fulfillment.html"></iframe>
 </div>
@@ -325,8 +308,6 @@ iframe {
   <iframe src="orders.html"></iframe>
 </div>
 
-
-
 <script>
 const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
@@ -336,7 +317,7 @@ function toggleHeader() {
   nav.classList.toggle("expanded");
 }
 
-/* Product carousel animation */
+/* Product carousel */
 const products = ["tartcherry.png", "elderberry.png", "hairspritz.png"];
 let idx = 0;
 
@@ -349,30 +330,22 @@ setInterval(() => {
   }, 200);
 }, 5000);
 
-  // Dashboard tab switching (FIX)
+/* Tab switching */
 document.querySelectorAll('.nav-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const targetTab = tab.dataset.tab;
 
-    // Update active button
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
 
-    // Show correct iframe
-    document.querySelectorAll('.iframe-wrapper').forEach(frame => {
-      frame.classList.remove('active');
-    });
-
-    const targetFrame = document.getElementById(`${targetTab}-frame`);
-    if (targetFrame) {
-      targetFrame.classList.add('active');
-    }
+    document.querySelectorAll('.iframe-wrapper').forEach(f => f.classList.remove('active'));
+    document.getElementById(`${targetTab}-frame`).classList.add('active');
   });
 });
-
-  
 </script>
-<script src="tv-mode.js"></script>
+
+<!-- KIOSK CONTROLLER -->
+<script src="kiosk.js"></script>
 
 </body>
 </html>
