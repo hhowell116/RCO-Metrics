@@ -1,12 +1,11 @@
 /* =========================================
-   TRUE KIOSK MODE CONTROLLER (IFRAME BASED)
-   PHASE 2 — VIEW ROTATION + HEADER HIDE
+   TV VIEW / KIOSK MODE CONTROLLER (FINAL)
 ========================================= */
 
 const dashboards = [
   'fulfillment.html',
   'orders.html',
-  'shipping-leaderboard.html'
+  'shipping.html'
 ];
 
 let kioskActive = false;
@@ -14,11 +13,11 @@ let index = 0;
 
 const timings = {
   loadDelay: 4000,
+  viewPause: 8000,
   scrollDown: 9000,
   pauseBottom: 4000,
   scrollUp: 6000,
-  pauseTop: 3000,
-  viewPause: 8000
+  pauseTop: 3000
 };
 
 const frame = document.getElementById('kioskFrame');
@@ -27,19 +26,36 @@ const kioskBtn = document.getElementById('kioskBtn');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* =========================================
-   HELPERS — DASHBOARD VIEW SWITCHING
+   DASHBOARD STATE MESSAGING
 ========================================= */
 
-function switchFulfillmentView(view) {
-  const win = frame.contentWindow;
-  const btn = win?.document?.querySelector(`[data-view="${view}"]`);
-  if (btn) btn.click();
+function setTVViewState(active) {
+  if (!frame || !frame.contentWindow) return;
+
+  frame.contentWindow.postMessage(
+    { type: 'TV_VIEW_STATE', active },
+    '*'
+  );
 }
 
-function switchOrdersView(view) {
-  const win = frame.contentWindow;
-  if (typeof win?.switchView === 'function') {
-    win.switchView(view);
+/* =========================================
+   EXIT TV VIEW (ONE SOURCE OF TRUTH)
+========================================= */
+
+function exitKiosk() {
+  kioskActive = false;
+
+  document.body.classList.remove(
+    'kiosk-active',
+    'tv-view-active',
+    'show-exit'
+  );
+
+  setTVViewState(false);
+
+  // Always exit browser fullscreen completely
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
   }
 }
 
@@ -55,81 +71,83 @@ async function runKiosk() {
     await sleep(timings.loadDelay);
     if (!kioskActive) return;
 
-    /* ===============================
-       FULFILLMENT DASHBOARD
-    =============================== */
+    /* Fulfillment behavior */
     if (page.includes('fulfillment')) {
-      // Monthly view
-      switchFulfillmentView('monthly');
+      frame.contentWindow?.document
+        ?.querySelector('[data-view="monthly"]')
+        ?.click();
+
       await sleep(timings.viewPause);
 
-      // Scroll
       frame.contentWindow.scrollTo({
         top: frame.contentDocument.body.scrollHeight,
         behavior: 'smooth'
       });
+
       await sleep(timings.scrollDown);
 
-      // Calendar view
-      switchFulfillmentView('calendar');
+      frame.contentWindow?.document
+        ?.querySelector('[data-view="calendar"]')
+        ?.click();
+
       await sleep(timings.viewPause);
     }
 
-    /* ===============================
-       ORDERS DASHBOARD
-    =============================== */
+    /* Orders behavior */
     else if (page.includes('orders')) {
-      switchOrdersView('calendar');
+      frame.contentWindow?.switchView?.('calendar');
       await sleep(timings.viewPause);
 
       frame.contentWindow.scrollTo({
         top: frame.contentDocument.body.scrollHeight,
         behavior: 'smooth'
       });
+
       await sleep(timings.scrollDown);
 
-      switchOrdersView('chart');
+      frame.contentWindow?.switchView?.('chart');
       await sleep(timings.viewPause);
     }
 
-    /* ===============================
-       SHIPPING LEADERBOARD
-    =============================== */
+    /* Shipping behavior (scroll only) */
     else {
       frame.contentWindow.scrollTo({
         top: frame.contentDocument.body.scrollHeight,
         behavior: 'smooth'
       });
-      await sleep(timings.scrollDown);
 
+      await sleep(timings.scrollDown);
       await sleep(timings.pauseBottom);
 
       frame.contentWindow.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
+
       await sleep(timings.scrollUp);
     }
 
     await sleep(timings.pauseTop);
-
     index = (index + 1) % dashboards.length;
   }
 }
 
 /* =========================================
-   ENTER / EXIT KIOSK MODE
+   ENTER TV VIEW
 ========================================= */
 
 kioskBtn.addEventListener('click', async () => {
-  // ENTER TV VIEW ONLY
   if (kioskActive) return;
 
   kioskActive = true;
 
-  document.body.classList.add('kiosk-active');
+  document.body.classList.add(
+    'kiosk-active',
+    'tv-view-active'
+  );
 
-  // Request fullscreen ONCE (parent only)
+  setTVViewState(true);
+
   if (document.fullscreenElement !== document.documentElement) {
     await document.documentElement.requestFullscreen();
   }
@@ -137,51 +155,41 @@ kioskBtn.addEventListener('click', async () => {
   runKiosk();
 });
 
-let kioskBtnTimeout;
-
-document.addEventListener('mousemove', () => {
-  if (!kioskActive) return;
-
-  kioskBtn.style.opacity = '1';
-  kioskBtn.style.pointerEvents = 'auto';
-
-  clearTimeout(kioskBtnTimeout);
-  kioskBtnTimeout = setTimeout(() => {
-    kioskBtn.style.opacity = '0';
-    kioskBtn.style.pointerEvents = 'none';
-  }, 3000);
-});
-
 /* =========================================
-   HANDLE ESC / FULLSCREEN EXIT
+   EXIT ON ESC OR FULLSCREEN CHANGE
 ========================================= */
 
 document.addEventListener('fullscreenchange', () => {
   if (!kioskActive) return;
 
-  // If the parent document is no longer fullscreen,
-  // exit TV View immediately
-  if (document.fullscreenElement !== document.documentElement) {
+  if (!document.fullscreenElement) {
     exitKiosk();
   }
 });
-
-function exitKiosk() {
-  kioskActive = false;
-  document.body.classList.remove('kiosk-active');
-
-  // FORCE exit fullscreen if parent is still fullscreen
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  }
-}
 
 /* =========================================
-   EXIT TV VIEW FROM IFRAME (ONE-CLICK FIX)
+   EXIT BUTTON VISIBILITY (MOUSE MOVE)
 ========================================= */
+
+let exitTimeout;
+
+document.addEventListener('mousemove', () => {
+  if (!kioskActive) return;
+
+  document.body.classList.add('show-exit');
+
+  clearTimeout(exitTimeout);
+  exitTimeout = setTimeout(() => {
+    document.body.classList.remove('show-exit');
+  }, 3000);
+});
+
+/* =========================================
+   EXIT FROM DASHBOARD MESSAGE
+========================================= */
+
 window.addEventListener('message', (event) => {
-  if (event.data === 'EXIT_TV_VIEW') {
+  if (event.data?.type === 'EXIT_TV_VIEW') {
     exitKiosk();
   }
 });
-
