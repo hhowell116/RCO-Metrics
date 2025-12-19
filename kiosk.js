@@ -1,5 +1,6 @@
 /* =========================================
    TRUE KIOSK MODE CONTROLLER (IFRAME BASED)
+   PHASE 2 — VIEW ROTATION + HEADER HIDE
 ========================================= */
 
 const dashboards = [
@@ -12,11 +13,12 @@ let kioskActive = false;
 let index = 0;
 
 const timings = {
-  pageDuration: 30000,   // total time per dashboard
-  scrollDown: 12000,
+  loadDelay: 4000,
+  scrollDown: 9000,
   pauseBottom: 4000,
   scrollUp: 6000,
-  pauseTop: 3000
+  pauseTop: 3000,
+  viewPause: 8000
 };
 
 const frame = document.getElementById('kioskFrame');
@@ -24,33 +26,100 @@ const kioskBtn = document.getElementById('kioskBtn');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/* =========================================
+   HELPERS — DASHBOARD VIEW SWITCHING
+========================================= */
+
+function switchFulfillmentView(view) {
+  const win = frame.contentWindow;
+  const btn = win?.document?.querySelector(`[data-view="${view}"]`);
+  if (btn) btn.click();
+}
+
+function switchOrdersView(view) {
+  const win = frame.contentWindow;
+  if (typeof win?.switchView === 'function') {
+    win.switchView(view);
+  }
+}
+
+/* =========================================
+   MAIN KIOSK LOOP
+========================================= */
+
 async function runKiosk() {
   while (kioskActive) {
-    frame.src = dashboards[index];
+    const page = dashboards[index];
+    frame.src = page;
 
-    await sleep(4000); // allow dashboard to render
+    await sleep(timings.loadDelay);
+    if (!kioskActive) return;
 
-    // Scroll down inside iframe
-    frame.contentWindow.scrollTo({
-      top: frame.contentDocument.body.scrollHeight,
-      behavior: 'smooth'
-    });
+    /* ===============================
+       FULFILLMENT DASHBOARD
+    =============================== */
+    if (page.includes('fulfillment')) {
+      // Monthly view
+      switchFulfillmentView('monthly');
+      await sleep(timings.viewPause);
 
-    await sleep(timings.scrollDown);
-    await sleep(timings.pauseBottom);
+      // Scroll
+      frame.contentWindow.scrollTo({
+        top: frame.contentDocument.body.scrollHeight,
+        behavior: 'smooth'
+      });
+      await sleep(timings.scrollDown);
 
-    // Scroll back up
-    frame.contentWindow.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+      // Calendar view
+      switchFulfillmentView('calendar');
+      await sleep(timings.viewPause);
+    }
 
-    await sleep(timings.scrollUp);
+    /* ===============================
+       ORDERS DASHBOARD
+    =============================== */
+    else if (page.includes('orders')) {
+      switchOrdersView('calendar');
+      await sleep(timings.viewPause);
+
+      frame.contentWindow.scrollTo({
+        top: frame.contentDocument.body.scrollHeight,
+        behavior: 'smooth'
+      });
+      await sleep(timings.scrollDown);
+
+      switchOrdersView('chart');
+      await sleep(timings.viewPause);
+    }
+
+    /* ===============================
+       SHIPPING LEADERBOARD
+    =============================== */
+    else {
+      frame.contentWindow.scrollTo({
+        top: frame.contentDocument.body.scrollHeight,
+        behavior: 'smooth'
+      });
+      await sleep(timings.scrollDown);
+
+      await sleep(timings.pauseBottom);
+
+      frame.contentWindow.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      await sleep(timings.scrollUp);
+    }
+
     await sleep(timings.pauseTop);
 
     index = (index + 1) % dashboards.length;
   }
 }
+
+/* =========================================
+   ENTER / EXIT KIOSK MODE
+========================================= */
 
 kioskBtn.addEventListener('click', async () => {
   kioskActive = !kioskActive;
@@ -58,14 +127,33 @@ kioskBtn.addEventListener('click', async () => {
   if (kioskActive) {
     kioskBtn.textContent = '⏹ Exit Kiosk';
 
-    // TRUE fullscreen — this now works
+    // Hide header via body class
+    document.body.classList.add('kiosk-active');
+
+    // TRUE fullscreen
     if (!document.fullscreenElement) {
       await document.documentElement.requestFullscreen();
     }
 
     runKiosk();
   } else {
-    kioskBtn.textContent = '📺 Kiosk Mode';
-    document.exitFullscreen?.();
+    exitKiosk();
   }
 });
+
+/* =========================================
+   HANDLE ESC / FULLSCREEN EXIT
+========================================= */
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && kioskActive) {
+    exitKiosk();
+  }
+});
+
+function exitKiosk() {
+  kioskActive = false;
+  document.body.classList.remove('kiosk-active');
+  kioskBtn.textContent = '📺 Kiosk Mode';
+  document.exitFullscreen?.();
+}
