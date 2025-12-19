@@ -83,6 +83,17 @@
     gap: 8px;
     align-items: center;
 }
+    /* Hide scrollbars for kiosk / TV view */
+html, body {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 /* ===== Calendar View ===== */
 
 .calendar-view {
