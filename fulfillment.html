@@ -228,6 +228,22 @@
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
 }
 
+/* Fullscreen button hover — matches Orders dashboard */
+.fullscreen-btn:hover {
+  background: #ffffff;
+  border-color: #c4a57b;
+  box-shadow: 0 4px 12px rgba(210,180,140,0.35);
+}
+
+/* Keep icon visible on white */
+.fullscreen-btn:hover .fullscreen-icon::before,
+.fullscreen-btn:hover .fullscreen-icon::after {
+  border-color: #8b7355;
+}
+.fullscreen-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(139,115,85,0.3);
+}
 
 
 /* ICON */
@@ -347,6 +363,36 @@
 /* make sure option text is visible too */
 #yearSelect option, #monthSelect option {
   color: #111 !important;
+}
+/* =========================================
+   BUTTON INTERACTIONS — MATCH ORDERS DASHBOARD
+========================================= */
+
+/* Base button motion */
+button,
+.btn-secondary {
+  transition: all 0.25s ease;
+}
+
+/* Hover lift */
+button:hover,
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(210, 180, 140, 0.3);
+}
+
+/* Pressed / active */
+button:active,
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(210, 180, 140, 0.25);
+}
+/* Active toggle buttons (Monthly / Calendar / Wholesale) */
+.btn-secondary.active {
+  background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
+  color: #ffffff;
+  border-color: #c4a57b;
+  box-shadow: 0 4px 15px rgba(210,180,140,0.35);
 }
 
     
