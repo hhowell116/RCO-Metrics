@@ -160,7 +160,11 @@ document.addEventListener('mousemove', () => {
 ========================================= */
 
 document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement && kioskActive) {
+  if (!kioskActive) return;
+
+  // If parent document is no longer fullscreen,
+  // we assume user exited via ESC or dashboard fullscreen
+  if (document.fullscreenElement !== document.documentElement) {
     exitKiosk();
   }
 });
@@ -168,6 +172,4 @@ document.addEventListener('fullscreenchange', () => {
 function exitKiosk() {
   kioskActive = false;
   document.body.classList.remove('kiosk-active');
-  kioskBtn.textContent = '📺 Kiosk Mode';
-  document.exitFullscreen?.();
 }
