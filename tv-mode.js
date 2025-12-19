@@ -1,75 +1,103 @@
 /* =========================================
-   GLOBAL TV MODE CONTROLLER — PHASE 1
+   GLOBAL KIOSK MODE CONTROLLER — FIXED
 ========================================= */
 
-const TV_MODE = {
-  enabled: false,
+const KIOSK_KEY = 'KIOSK_MODE_ACTIVE';
+
+const KIOSK = {
   dashboards: [
     'fulfillment.html',
     'orders.html',
     'shipping-leaderboard.html'
   ],
-  currentIndex: 0,
-  scrollDuration: 12000, // ms to scroll down
+  scrollDuration: 12000,
   pauseAtTop: 3000,
-  pauseAtBottom: 4000,
-  pageDuration: 30000 // total time per dashboard
+  pauseAtBottom: 4000
 };
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function runTVLoop() {
-  while (TV_MODE.enabled) {
-    const page = TV_MODE.dashboards[TV_MODE.currentIndex];
+/* =========================================
+   START KIOSK MODE (USER GESTURE SAFE)
+========================================= */
 
-    // Navigate to dashboard
-    window.location.href = page;
-    await sleep(4000); // wait for page load
+async function startKioskMode() {
+  localStorage.setItem(KIOSK_KEY, 'true');
 
-    if (!TV_MODE.enabled) break;
-
-    // Scroll down
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    await sleep(TV_MODE.scrollDuration);
-
-    // Pause at bottom
-    await sleep(TV_MODE.pauseAtBottom);
-
-    // Scroll back up
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    await sleep(TV_MODE.scrollDuration / 2);
-
-    // Pause at top
-    await sleep(TV_MODE.pauseAtTop);
-
-    // Advance dashboard
-    TV_MODE.currentIndex =
-      (TV_MODE.currentIndex + 1) % TV_MODE.dashboards.length;
+  // Fullscreen MUST happen here
+  if (!document.fullscreenElement) {
+    await document.documentElement.requestFullscreen();
   }
+
+  // Start on first dashboard
+  localStorage.setItem('KIOSK_INDEX', '0');
+  window.location.href = KIOSK.dashboards[0];
 }
 
 /* =========================================
-   BUTTON HANDLER
+   RUN LOOP ON DASHBOARD PAGES
 ========================================= */
 
-const tvBtn = document.getElementById('tvModeBtn');
+async function runKioskLoop() {
+  if (localStorage.getItem(KIOSK_KEY) !== 'true') return;
 
-if (tvBtn) {
-  tvBtn.addEventListener('click', async () => {
-    TV_MODE.enabled = !TV_MODE.enabled;
+  let index = parseInt(localStorage.getItem('KIOSK_INDEX') || '0', 10);
 
-    if (TV_MODE.enabled) {
-      tvBtn.textContent = '⏹ Exit TV View';
+  // Scroll down
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  await sleep(KIOSK.scrollDuration);
 
-      // Enter fullscreen
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      }
+  await sleep(KIOSK.pauseAtBottom);
 
-      runTVLoop();
+  // Scroll up
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  await sleep(KIOSK.scrollDuration / 2);
+
+  await sleep(KIOSK.pauseAtTop);
+
+  // Advance page
+  index = (index + 1) % KIOSK.dashboards.length;
+  localStorage.setItem('KIOSK_INDEX', index.toString());
+
+  window.location.href = KIOSK.dashboards[index];
+}
+
+/* =========================================
+   EXIT KIOSK MODE
+========================================= */
+
+function exitKioskMode() {
+  localStorage.removeItem(KIOSK_KEY);
+  localStorage.removeItem('KIOSK_INDEX');
+  document.exitFullscreen?.();
+}
+
+/* =========================================
+   BUTTON HANDLER (INDEX PAGE)
+========================================= */
+
+const kioskBtn = document.getElementById('tvModeBtn');
+
+if (kioskBtn) {
+  kioskBtn.addEventListener('click', async () => {
+    const active = localStorage.getItem(KIOSK_KEY) === 'true';
+
+    if (!active) {
+      kioskBtn.textContent = '⏹ Exit Kiosk';
+      startKioskMode();
     } else {
-      tvBtn.textContent = '📺 TV View';
-      document.exitFullscreen?.();
+      kioskBtn.textContent = '📺 Kiosk Mode';
+      exitKioskMode();
     }
   });
 }
+
+/* =========================================
+   AUTO-RUN ON DASHBOARD PAGES
+========================================= */
+
+window.addEventListener('load', () => {
+  if (localStorage.getItem(KIOSK_KEY) === 'true') {
+    runKioskLoop();
+  }
+});
