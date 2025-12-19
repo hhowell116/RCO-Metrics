@@ -12,6 +12,25 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
+/* =========================================
+   TV MODE BUTTON — FLOATING, NON-INTRUSIVE
+========================================= */
+
+.tv-mode-btn {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 9999;
+
+  /* visual polish */
+  padding: 10px 16px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+body.tv-mode-active .tv-mode-btn {
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* =========================
    HEADER
@@ -241,6 +260,9 @@ iframe {
 </head>
 
 <body>
+<button id="tvModeBtn" class="btn-secondary tv-mode-btn">
+  📺 TV View
+</button>
 
 <nav class="main-nav expanded" id="nav">
 
@@ -336,6 +358,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
   
 </script>
+<script src="tv-mode.js"></script>
 
 </body>
 </html>
