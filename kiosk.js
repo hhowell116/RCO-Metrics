@@ -166,12 +166,16 @@ document.addEventListener('fullscreenchange', () => {
   }
 });
 
-
 function exitKiosk() {
   kioskActive = false;
   document.body.classList.remove('kiosk-active');
-  // DO NOT call document.exitFullscreen()
+
+  // FORCE exit fullscreen if parent is still fullscreen
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
 }
+
 /* =========================================
    EXIT TV VIEW FROM IFRAME (ONE-CLICK FIX)
 ========================================= */
