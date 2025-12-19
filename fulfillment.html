@@ -395,7 +395,23 @@ button:active,
   box-shadow: 0 4px 15px rgba(210,180,140,0.35);
 }
 
-    
+/* =========================================
+   PREVENT HEADER FROM MOVING ON HOVER
+========================================= */
+
+.kpi-header,
+.fulfillment-header,
+.header-bar {
+  transform: none !important;
+}
+
+.kpi-header:hover,
+.fulfillment-header:hover,
+.header-bar:hover {
+  transform: none !important;
+  box-shadow: inherit !important;
+}
+
 </style>
 </head>
 
