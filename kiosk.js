@@ -162,14 +162,17 @@ document.addEventListener('mousemove', () => {
 document.addEventListener('fullscreenchange', () => {
   if (!kioskActive) return;
 
-  // If parent document is no longer fullscreen,
-  // we assume user exited via ESC or dashboard fullscreen
+  // If the parent document is no longer fullscreen,
+  // exit TV View immediately
   if (document.fullscreenElement !== document.documentElement) {
     exitKiosk();
   }
 });
 
+
 function exitKiosk() {
   kioskActive = false;
   document.body.classList.remove('kiosk-active');
+  // DO NOT call document.exitFullscreen()
 }
+
