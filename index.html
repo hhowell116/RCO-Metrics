@@ -253,6 +253,25 @@ iframe {
 .main-nav.collapsed ~ .iframe-wrapper {
   height: 100vh;
 }
+
+  /* =========================================
+   KIOSK MODE — HIDE HEADER, KEEP BUTTON
+========================================= */
+
+body.kiosk-active .main-nav {
+  display: none;
+}
+
+/* Expand iframe to full screen when header is hidden */
+body.kiosk-active .iframe-wrapper {
+  height: 100vh !important;
+}
+
+/* Keep kiosk button visible */
+body.kiosk-active .kiosk-btn {
+  z-index: 10001;
+}
+
 </style>
 </head>
 
