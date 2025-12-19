@@ -172,4 +172,12 @@ function exitKiosk() {
   document.body.classList.remove('kiosk-active');
   // DO NOT call document.exitFullscreen()
 }
+/* =========================================
+   EXIT TV VIEW FROM IFRAME (ONE-CLICK FIX)
+========================================= */
+window.addEventListener('message', (event) => {
+  if (event.data === 'EXIT_TV_VIEW') {
+    exitKiosk();
+  }
+});
 
