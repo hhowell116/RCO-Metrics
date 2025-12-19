@@ -43,6 +43,18 @@ body {
 .kiosk-btn:active {
   transform: scale(0.96);
 }
+  /* =========================================
+   HARD LOCK INDEX PAGE SCROLLING
+========================================= */
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;   /* <-- this is the key */
+}
+
 
 /* =========================
    HEADER
