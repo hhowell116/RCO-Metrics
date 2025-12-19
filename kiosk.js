@@ -140,6 +140,20 @@ kioskBtn.addEventListener('click', async () => {
     exitKiosk();
   }
 });
+let kioskBtnTimeout;
+
+document.addEventListener('mousemove', () => {
+  if (!kioskActive) return;
+
+  kioskBtn.style.opacity = '1';
+  kioskBtn.style.pointerEvents = 'auto';
+
+  clearTimeout(kioskBtnTimeout);
+  kioskBtnTimeout = setTimeout(() => {
+    kioskBtn.style.opacity = '0';
+    kioskBtn.style.pointerEvents = 'none';
+  }, 3000);
+});
 
 /* =========================================
    HANDLE ESC / FULLSCREEN EXIT
