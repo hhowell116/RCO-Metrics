@@ -711,6 +711,41 @@ window.addEventListener('message', (event) => {
           handleError(error);
         });
     }
+    /* =========================================
+   DASHBOARD FULLSCREEN BUTTON HANDLER
+   Add this to fulfillment.html, orders.html, and shipping.html
+========================================= */
+
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+fullscreenBtn.addEventListener('click', () => {
+  // Check if we're in TV view mode
+  const inTVView = document.body.classList.contains('tv-view-active');
+  
+  if (inTVView) {
+    // We're in TV view - send exit message to parent
+    window.parent.postMessage({ type: 'EXIT_TV_VIEW' }, '*');
+  } else {
+    // Normal fullscreen toggle behavior
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+});
+
+// Update button appearance when fullscreen changes
+document.addEventListener('fullscreenchange', () => {
+  fullscreenBtn.classList.toggle('exit', !!document.fullscreenElement);
+});
+
+// Listen for TV view state changes from parent
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'TV_VIEW_STATE') {
+    document.body.classList.toggle('tv-view-active', event.data.active);
+  }
+});
 
     function displayData(data) {
       document.getElementById('loading').style.display = 'none';
