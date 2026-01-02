@@ -171,16 +171,32 @@ body.kiosk-active .main-nav {
 }
 
 /* =========================================
-   TODAY'S ORDERS COUNTER (LEFT SIDE)
+   LOGO (LEFT SIDE)
+========================================= */
+.logo-media {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logo-media img {
+  max-height: 85%;
+}
+
+/* =========================================
+   TODAY'S ORDERS COUNTER (RIGHT OF LOGO)
 ========================================= */
 .orders-counter {
   position: absolute;
-  left: -100px;
+  left: 200px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
   padding: 8px 0;
-  min-width: 120px;
+  min-width: 140px;
 }
 
 .orders-counter-label {
@@ -208,18 +224,6 @@ body.kiosk-active .main-nav {
 
 .orders-counter.loading .orders-counter-value {
   opacity: 0.5;
-}
-
-/* =========================================
-   LOGO (ORIGINAL POSITION)
-========================================= */
-.logo-media {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
 }
 
 .logo-media img {
@@ -399,8 +403,8 @@ iframe::-webkit-scrollbar {
 const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
 
-// REPLACE THIS WITH YOUR PUBLISHED SHEET CSV URL
-const SHEET_CSV_URL = 'YOUR_PUBLISHED_SHEET_URL_HERE';
+// Google Sheets published URL - converted to CSV format
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8QJoPNm81iKxeGcnv6gGSCy-LMvcSNvjIw1zQRs_8c2cvK1k0spsmBbRIkubk5mgribg6f8pADd_y/pub?gid=1613797299&single=true&output=csv';
 
 function toggleHeader() {
   nav.classList.toggle("collapsed");
