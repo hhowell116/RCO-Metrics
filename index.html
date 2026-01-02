@@ -16,17 +16,17 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* index page never scrolls */
+  overflow: hidden;
 }
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f5f0 0%, #e8e4d9 100%);
 }
+
 /* =========================================
    HIDE TV VIEW BUTTON WHEN HEADER COLLAPSED
 ========================================= */
-
 .main-nav.collapsed ~ .kiosk-btn {
   display: none;
 }
@@ -39,15 +39,12 @@ body {
   top: 16px;
   left: 16px;
   z-index: 10000;
-
   background: #ffffff;
   color: #8b7355;
   border: 2px solid #d2b48c;
-
   padding: 10px 18px;
   font-weight: 600;
   border-radius: 10px;
-
   transition: all 0.25s ease;
   box-shadow: 0 4px 12px rgba(210,180,140,0.25);
 }
@@ -63,7 +60,6 @@ body {
   transform: scale(0.96);
 }
 
-/* Hide kiosk button once kiosk is active */
 body.kiosk-active .kiosk-btn {
   display: none;
 }
@@ -92,7 +88,6 @@ body.kiosk-active .kiosk-btn {
   overflow: hidden;
 }
 
-/* Hide header entirely in kiosk mode */
 body.kiosk-active .main-nav {
   display: none;
 }
@@ -175,9 +170,55 @@ body.kiosk-active .main-nav {
   display: none;
 }
 
-.logo-media {
+/* =========================================
+   TODAY'S ORDERS COUNTER (LEFT SIDE)
+========================================= */
+.orders-counter {
   position: absolute;
   left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+  border: 3px solid #c4a57b;
+  border-radius: 12px;
+  padding: 16px 24px;
+  box-shadow: 0 4px 16px rgba(139, 115, 85, 0.15);
+  min-width: 180px;
+}
+
+.orders-counter-label {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: #b8a68f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.orders-counter-value {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #8b7355;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.orders-counter-updated {
+  font-size: 0.65em;
+  color: #b8a68f;
+  font-weight: 500;
+}
+
+.orders-counter.loading .orders-counter-value {
+  opacity: 0.5;
+}
+
+/* =========================================
+   LOGO (MOVED SLIGHTLY RIGHT)
+========================================= */
+.logo-media {
+  position: absolute;
+  left: 220px;
   top: 0;
   bottom: 0;
   display: flex;
@@ -188,6 +229,9 @@ body.kiosk-active .main-nav {
   max-height: 85%;
 }
 
+/* =========================================
+   PRODUCT MEDIA (RIGHT SIDE)
+========================================= */
 .product-media {
   position: absolute;
   right: -60px;
@@ -227,7 +271,6 @@ body.kiosk-active .main-nav {
   cursor: pointer;
 }
 
-/* Lock arrow to top in kiosk mode */
 body.kiosk-active .nav-toggle-wrap {
   position: fixed;
   top: 8px;
@@ -261,7 +304,6 @@ body.kiosk-active .nav-toggle-wrap {
   top: 8px;
   left: 50%;
   bottom: auto;
-
   transform: translateX(-50%) rotate(180deg);
   z-index: 10002;
 }
@@ -280,12 +322,10 @@ body.kiosk-active .nav-toggle-wrap {
   overflow: hidden;
 }
 
-
 .iframe-wrapper.active {
   display: block;
 }
 
-/* Full height in kiosk mode */
 body.kiosk-active .iframe-wrapper {
   height: 100vh !important;
 }
@@ -294,8 +334,6 @@ iframe {
   width: 100%;
   height: 100%;
   border: none;
-
-  /* Hide iframe scrollbars */
   scrollbar-width: none;
 }
 
@@ -303,13 +341,10 @@ iframe::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
-
 </style>
 </head>
 
 <body>
-
-
 
 <!-- HEADER -->
 <nav class="main-nav expanded" id="nav">
@@ -328,6 +363,13 @@ iframe::-webkit-scrollbar {
   </div>
 
   <div class="media-layer">
+    <!-- TODAY'S ORDERS COUNTER -->
+    <div class="orders-counter" id="ordersCounter">
+      <div class="orders-counter-label">Today's Orders</div>
+      <div class="orders-counter-value" id="orderCount">--</div>
+      <div class="orders-counter-updated" id="orderUpdated">Loading...</div>
+    </div>
+
     <div class="logo-media">
       <img src="logo.png" alt="Rowe Casa Organics Logo">
     </div>
@@ -360,6 +402,9 @@ iframe::-webkit-scrollbar {
 const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
 
+// REPLACE THIS WITH YOUR PUBLISHED SHEET CSV URL
+const SHEET_CSV_URL = 'YOUR_PUBLISHED_SHEET_URL_HERE';
+
 function toggleHeader() {
   nav.classList.toggle("collapsed");
   nav.classList.toggle("expanded");
@@ -390,6 +435,55 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
     document.getElementById(`${targetTab}-frame`).classList.add('active');
   });
 });
+
+/* =========================================
+   FETCH TODAY'S ORDERS FROM GOOGLE SHEET
+========================================= */
+async function updateOrderCount() {
+  const counter = document.getElementById('ordersCounter');
+  const countEl = document.getElementById('orderCount');
+  const updatedEl = document.getElementById('orderUpdated');
+  
+  try {
+    counter.classList.add('loading');
+    
+    const response = await fetch(SHEET_CSV_URL);
+    const text = await response.text();
+    
+    // Parse CSV (simple parser for 2-column data)
+    const lines = text.trim().split('\n');
+    let totalOrders = '--';
+    let lastUpdated = 'Unknown';
+    
+    // Look for "Total Orders:" and "Last Updated:" rows
+    lines.forEach(line => {
+      const parts = line.split(',');
+      if (parts[0] && parts[0].includes('Total Orders')) {
+        totalOrders = parts[1] ? parts[1].trim() : '--';
+      }
+      if (parts[0] && parts[0].includes('Last Updated')) {
+        lastUpdated = parts[1] ? parts[1].trim() : 'Unknown';
+      }
+    });
+    
+    countEl.textContent = totalOrders;
+    updatedEl.textContent = `Updated: ${lastUpdated}`;
+    
+    counter.classList.remove('loading');
+    
+  } catch (error) {
+    console.error('Error fetching order count:', error);
+    countEl.textContent = 'Error';
+    updatedEl.textContent = 'Failed to load';
+    counter.classList.remove('loading');
+  }
+}
+
+// Update immediately on load
+updateOrderCount();
+
+// Update every 10 minutes (600000 ms)
+setInterval(updateOrderCount, 600000);
 </script>
 
 <!-- KIOSK CONTROLLER -->
