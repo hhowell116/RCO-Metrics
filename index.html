@@ -403,8 +403,9 @@ iframe::-webkit-scrollbar {
 const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
 
-// Google Sheets published CSV URL
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOBToONYyl4YN8FLICcXmF_9FAUuhnJS3_N8JQq7d8ooMI2FQabP8k0SHvKA9ZTeDKmEKIz6IeJRlY/pub?output=csv';
+// Google Sheets ID
+const SHEET_ID = '1-S1OU7nw_085IXVbfiOY5qDPuRcPx2RqQJg8pnOqU9I';
+const SHEET_GID = '0'; // Change this if your data is on a different tab
 
 function toggleHeader() {
   nav.classList.toggle("collapsed");
@@ -448,26 +449,46 @@ async function updateOrderCount() {
   try {
     counter.classList.add('loading');
     
-    const response = await fetch(SHEET_CSV_URL);
+    // Use Google Visualization API to query the sheet
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+    
+    const response = await fetch(url);
     const text = await response.text();
     
-    console.log('Raw CSV data:', text); // Debug log
+    console.log('Raw response:', text.substring(0, 200)); // Debug log
     
-    // Parse CSV - the sheet has headers in row 1, data in rows 2-3
-    const lines = text.trim().split('\n');
+    // Google returns JSONP, we need to extract the JSON
+    const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/)[1];
+    const data = JSON.parse(jsonText);
     
-    if (lines.length < 3) {
-      console.error('Not enough data in CSV');
-      throw new Error('Invalid CSV format');
-    }
+    console.log('Parsed data:', data); // Debug log
     
-    // Row 2 should have "Total Orders:" label, value in second column
-    // Row 3 should have "Last Updated:" label, value in second column
-    const orderLine = lines[1].split(',');
-    const updatedLine = lines[2].split(',');
+    // Access the table data
+    const rows = data.table.rows;
     
-    const totalOrders = orderLine[1] ? orderLine[1].trim().replace(/"/g, '') : '--';
-    const lastUpdated = updatedLine[1] ? updatedLine[1].trim().replace(/"/g, '') : 'Unknown';
+    // Assuming your sheet has:
+    // Row 1: "Orders Today:" | <count>
+    // Row 2: "Last Updated:" | <timestamp>
+    // Adjust indices as needed based on your actual sheet structure
+    
+    let totalOrders = '--';
+    let lastUpdated = 'Unknown';
+    
+    // Look through rows to find our data
+    rows.forEach(row => {
+      const cells = row.c;
+      if (cells && cells.length >= 2) {
+        const label = cells[0]?.v || '';
+        const value = cells[1]?.v || '';
+        
+        if (label.includes('Orders') || label.includes('Total')) {
+          totalOrders = value;
+        }
+        if (label.includes('Updated') || label.includes('Last')) {
+          lastUpdated = value;
+        }
+      }
+    });
     
     console.log('Parsed orders:', totalOrders);
     console.log('Parsed updated:', lastUpdated);
