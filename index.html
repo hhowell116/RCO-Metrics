@@ -404,7 +404,9 @@ const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
 
 // Google Sheets published URL - converted to CSV format
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOBToONYyl4YN8FLICcXmF_9FAUuhnJS3_N8JQq7d8ooMI2FQabP8k0SHvKA9ZTeDKmEKIz6IeJRlY/pub?gid=0&single=true&output=csv';
+// Extract the sheet ID from the pubhtml URL and convert to CSV export format
+const SHEET_ID = '1-S1OU7nw_085IXVbfiOY5qDPuRcPx2RqQJg8pnOqU9I'; // Your actual sheet ID
+const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 
 function toggleHeader() {
   nav.classList.toggle("collapsed");
