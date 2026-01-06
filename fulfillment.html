@@ -12,85 +12,85 @@
 /* =========================================
    TV VIEW — HIDE DASHBOARD FULLSCREEN BUTTON
 ========================================= */
-
 body.tv-view-active .fullscreen-btn {
   display: none !important;
 }
 
-    body {
-    margin: 0;
-    padding: 0;        /* ✅ removes the extra right-side space */
-    min-height: 100vh;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
+
 /* ====== LAYOUT ====== */
 .container {
-    width: 100%;
-    max-width: none;         /* ✅ critical */
-    margin: 0 auto;
-    padding: 20px 45px 45px;           /* ✅ your requested spacing */
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 20px 45px 45px;
 }
 
 /* ====== HEADER ====== */
 .kpi-header {
-    position: relative;
-    padding: 22px 20px;
-    margin-bottom: 16px;
-    text-align: center;
+  position: relative;
+  padding: 22px 20px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .kpi-header h1 {
-    margin: 0;
-    font-size: 2em;
-    font-weight: 600;
-    color: var(--tan-dark);
+  margin: 0;
+  font-size: 2em;
+  font-weight: 600;
+  color: var(--tan-dark);
 }
 
 .fulfillment-header {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 22px;
-    position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  position: relative;
 }
 
-
 .header-bar {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
 }
 
 /* CENTER */
 .header-center {
-    text-align: center;
+  text-align: center;
 }
 
 .header-center h1 {
-    margin: 0;
-    font-size: 1.8em;
-    font-weight: 600;
-    color: var(--tan-dark);
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: 600;
+  color: var(--tan-dark);
 }
 
 .header-left,
 .header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Remove unused background spacing */
 .kpi-controls {
-    display: none;
+  display: none;
 }
 
 .view-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
-    /* Hide scrollbars for kiosk / TV view */
+
+/* Hide scrollbars for kiosk / TV view */
 html, body {
   scrollbar-width: none;
 }
@@ -99,24 +99,9 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 0;
   height: 0;
-}
-
-    /* =========================================
-   GLOBAL — HIDE SCROLLBARS (DASHBOARD)
-========================================= */
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-html, body {
-  scrollbar-width: none;
 }
 
 /* ===== Calendar View ===== */
-
 .calendar-view {
   width: 100%;
 }
@@ -194,7 +179,6 @@ html, body {
 }
 
 /* ===== Rate colors ===== */
-
 .cal-rate-excellent {
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   color: #2e7d32;
@@ -221,8 +205,6 @@ html, body {
 }
 
 /* ===== Tooltip ===== */
-/* ===== Tooltip ===== */
-
 .tooltip {
   position: fixed;
   background: linear-gradient(135deg, #5c4a35 0%, #3f3326 100%);
@@ -243,7 +225,7 @@ html, body {
   display: block;
 }
 
-   /* Fullscreen icon button — MATCHES ORDERS DASHBOARD */
+/* Fullscreen icon button */
 .fullscreen-btn {
   width: 36px;
   height: 36px;
@@ -251,32 +233,29 @@ html, body {
   background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
   border: 2px solid rgba(139,115,85,0.35);
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(139,115,85,0.25);
+  flex-shrink: 0;
 }
 
-/* Fullscreen button hover — matches Orders dashboard */
 .fullscreen-btn:hover {
   background: #ffffff;
   border-color: #c4a57b;
   box-shadow: 0 4px 12px rgba(210,180,140,0.35);
 }
 
-/* Keep icon visible on white */
 .fullscreen-btn:hover .fullscreen-icon::before,
 .fullscreen-btn:hover .fullscreen-icon::after {
   border-color: #8b7355;
 }
+
 .fullscreen-btn:active {
   transform: scale(0.96);
   box-shadow: 0 2px 6px rgba(139,115,85,0.3);
 }
-
 
 /* ICON */
 .fullscreen-icon {
@@ -286,7 +265,6 @@ html, body {
   transition: transform 0.25s ease;
 }
 
-/* TOP-LEFT ARROW */
 .fullscreen-icon::before,
 .fullscreen-icon::after {
   content: "";
@@ -296,7 +274,6 @@ html, body {
   border: 2px solid #fff;
 }
 
-/* ↖ arrow */
 .fullscreen-icon::before {
   top: 0;
   left: 0;
@@ -304,7 +281,6 @@ html, body {
   border-bottom: none;
 }
 
-/* ↘ arrow */
 .fullscreen-icon::after {
   bottom: 0;
   right: 0;
@@ -312,69 +288,47 @@ html, body {
   border-top: none;
 }
 
-/* EXIT FULLSCREEN = INVERT ARROWS */
 .fullscreen-btn.exit .fullscreen-icon {
   transform: rotate(180deg);
 }
 
-
-
-/* ====== CONTROLS ====== */
-.kpi-controls {
-    background: white;
-    padding: 16px;
-    border-radius: 15px;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 24px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* ====== KPI CARDS (SHORTER HEIGHT) ====== */
+/* ====== KPI CARDS ====== */
 .kpi-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .stat-card {
-    padding: 14px 16px;
+  padding: 14px 16px;
 }
 
 .stat-label {
-    font-size: 0.75em;
+  font-size: 0.75em;
 }
 
 .stat-value {
-    font-size: 1.6em;
-    margin-top: 4px;
+  font-size: 1.6em;
+  margin-top: 4px;
 }
 
 .stat-subtitle {
-    font-size: 0.7em;
+  font-size: 0.7em;
 }
 
 /* ====== CHARTS ====== */
 .chart-container {
-    background: white;
-    padding: 24px;
-    border-radius: 15px;
-    box-shadow: var(--shadow-md);
-    margin-bottom: 20px;
+  background: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
 }
 
 .chart-wrapper {
-    position: relative;
-    height: 350px;
-}
-
-@media (max-width: 768px) {
-    .chart-wrapper {
-        height: 300px;
-    }
+  position: relative;
+  height: 350px;
 }
 
 /* FORCE Year/Month selects to display text */
@@ -383,44 +337,37 @@ html, body {
   background: #ffffff !important;
   font-size: 14px !important;
   line-height: 1.2 !important;
-  padding: 10px 36px 10px 14px !important; /* room for arrow */
+  padding: 10px 36px 10px 14px !important;
   min-width: 140px;
   border: 2px solid #d2b48c !important;
   border-radius: 10px !important;
-  appearance: auto;              /* undo any "custom select" hiding */
-  -webkit-appearance: menulist;  /* safari/chrome */
+  appearance: auto;
+  -webkit-appearance: menulist;
   -moz-appearance: menulist;
 }
 
-/* make sure option text is visible too */
 #yearSelect option, #monthSelect option {
   color: #111 !important;
 }
-  
-/* =========================================
-   BUTTON INTERACTIONS — MATCH ORDERS DASHBOARD
-========================================= */
 
-/* Base button motion */
+/* Button interactions */
 button,
 .btn-secondary {
   transition: all 0.25s ease;
 }
 
-/* Hover lift */
 button:hover,
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(210, 180, 140, 0.3);
 }
 
-/* Pressed / active */
 button:active,
 .btn-secondary:active {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(210, 180, 140, 0.25);
 }
-/* Active toggle buttons (Monthly / Calendar / Wholesale) */
+
 .btn-secondary.active {
   background: linear-gradient(135deg, #d2b48c 0%, #c4a57b 100%);
   color: #ffffff;
@@ -428,25 +375,19 @@ button:active,
   box-shadow: 0 4px 15px rgba(210,180,140,0.35);
 }
 
-/* =========================================
-   PREVENT HEADER FROM MOVING ON HOVER
-========================================= */
-
 .kpi-header,
 .fulfillment-header,
 .header-bar {
   transform: none !important;
 }
 
-
-/* Completely freeze header hover visuals */
 .kpi-header.card,
 .kpi-header.card:hover {
   background: white !important;
   box-shadow: 0 10px 40px rgba(139,115,85,0.15) !important;
   transition: none !important;
 }
-/* Make header behave as one solid surface */
+
 .kpi-header {
   background: white !important;
 }
@@ -454,11 +395,279 @@ button:active,
 .kpi-header .header-bar {
   background: transparent !important;
 }
+
 .kpi-header:hover,
 .kpi-header:hover .header-bar {
   background: white !important;
 }
 
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+========================================= */
+
+/* Tablet (< 1024px) */
+@media (max-width: 1023px) {
+  .container {
+    padding: 15px 20px 30px;
+  }
+  
+  .header-bar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .header-left,
+  .header-right {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .header-center h1 {
+    font-size: 1.5em;
+  }
+  
+  .kpi-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 12px 15px 20px;
+  }
+  
+  .kpi-header {
+    padding: 15px 12px;
+    margin-bottom: 12px;
+  }
+  
+  .header-bar {
+    gap: 10px;
+  }
+  
+  .header-center h1 {
+    font-size: 1.3em;
+  }
+  
+  .header-left,
+  .header-right {
+    gap: 8px;
+  }
+  
+  #yearSelect, #monthSelect {
+    font-size: 13px !important;
+    padding: 8px 28px 8px 10px !important;
+    min-width: 120px;
+  }
+  
+  .btn-secondary {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .fullscreen-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .fullscreen-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .fullscreen-icon::before,
+  .fullscreen-icon::after {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .kpi-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 12px 14px;
+  }
+  
+  .stat-label {
+    font-size: 0.7em;
+  }
+  
+  .stat-value {
+    font-size: 1.4em;
+  }
+  
+  .stat-subtitle {
+    font-size: 0.65em;
+  }
+  
+  .chart-container {
+    padding: 16px;
+    margin-bottom: 15px;
+  }
+  
+  .chart-wrapper {
+    height: 250px;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .month-calendar {
+    padding: 15px;
+  }
+  
+  .month-header {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+  }
+  
+  .calendar-days {
+    gap: 3px;
+  }
+  
+  .day-label {
+    font-size: 0.7em;
+    padding: 4px 2px;
+  }
+  
+  .calendar-day {
+    font-size: 0.65em;
+  }
+  
+  /* Make table scrollable on mobile */
+  .card.mt-3 {
+    overflow-x: auto;
+  }
+  
+  table {
+    min-width: 600px;
+  }
+  
+  th, td {
+    padding: 10px 8px;
+    font-size: 0.85em;
+  }
+}
+
+/* Small Mobile (< 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px 12px 15px;
+  }
+  
+  .kpi-header {
+    padding: 12px 10px;
+  }
+  
+  .header-center h1 {
+    font-size: 1.1em;
+  }
+  
+  #yearSelect, #monthSelect {
+    font-size: 12px !important;
+    padding: 7px 24px 7px 8px !important;
+    min-width: 100px;
+  }
+  
+  .btn-secondary {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  
+  .view-toggle {
+    gap: 6px;
+  }
+  
+  .fullscreen-btn {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .kpi-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .stat-card {
+    padding: 10px 12px;
+  }
+  
+  .stat-value {
+    font-size: 1.3em;
+  }
+  
+  .chart-container {
+    padding: 12px;
+  }
+  
+  .chart-wrapper {
+    height: 220px;
+  }
+  
+  .calendar-grid {
+    gap: 10px;
+  }
+  
+  .month-calendar {
+    padding: 12px;
+  }
+  
+  .month-header {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+  
+  .calendar-days {
+    gap: 2px;
+  }
+  
+  .day-label {
+    font-size: 0.65em;
+    padding: 3px 1px;
+  }
+  
+  .calendar-day {
+    font-size: 0.6em;
+    border-radius: 4px;
+  }
+  
+  th, td {
+    padding: 8px 6px;
+    font-size: 0.8em;
+  }
+  
+  .tooltip {
+    font-size: 0.75em;
+    padding: 10px 12px;
+    max-width: 200px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chart-wrapper {
+    height: 200px;
+  }
+  
+  .kpi-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 </style>
 </head>
 
@@ -483,17 +692,10 @@ button:active,
     <!-- RIGHT -->
     <div class="header-right">
       <div class="view-toggle">
-  <button class="btn-secondary active" data-view="monthly">Monthly</button>
-  <button class="btn-secondary" data-view="calendar">Calendar</button>
-  <button
-  id="datasetToggleBtn"
-  class="btn-secondary"
->
-  Wholesale
-</button>
-
-</div>
-
+        <button class="btn-secondary active" data-view="monthly">Monthly</button>
+        <button class="btn-secondary" data-view="calendar">Calendar</button>
+        <button id="datasetToggleBtn" class="btn-secondary">Wholesale</button>
+      </div>
 
       <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Toggle Fullscreen">
         <div class="fullscreen-icon"></div>
@@ -531,7 +733,7 @@ button:active,
     </div>
 
     <!-- MONTHLY VIEW -->
-        <div class="monthly-view" data-view="monthly" style="display: block;">
+    <div class="monthly-view" data-view="monthly" style="display: block;">
         <div class="chart-container">
             <h2 class="chart-title">Daily Fill Rate Performance</h2>
             <p class="chart-subtitle">Target lines: 95% (7-day) • 85% (4-day)</p>
@@ -566,18 +768,16 @@ button:active,
 
     <!-- CALENDAR VIEW -->
     <div class="calendar-view" data-view="calendar">
-  <div id="calendarGrid" class="calendar-grid"></div>
-</div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </div>
 
     <div id="tooltip" class="tooltip"></div>
 
-
 </div>
-<div id="tooltip"></div>
+
 <script src="data.js"></script>
 <script src="wholesale.js"></script>
 <script src="fulfillment.js"></script>
-
 
 <script>
 const fullscreenBtn = document.getElementById('fullscreenBtn');
