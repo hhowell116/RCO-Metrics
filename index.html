@@ -466,32 +466,36 @@ async function updateOrderCount() {
     // Access the table data
     const rows = data.table.rows;
     
-    // Assuming your sheet has:
-    // Row 1: "Orders Today:" | <count>
-    // Row 2: "Last Updated:" | <timestamp>
-    // Adjust indices as needed based on your actual sheet structure
+    console.log('Total rows:', rows.length);
+    console.log('All row data:', JSON.stringify(rows, null, 2));
     
     let totalOrders = '--';
     let lastUpdated = 'Unknown';
     
     // Look through rows to find our data
-    rows.forEach(row => {
+    rows.forEach((row, index) => {
       const cells = row.c;
+      console.log(`Row ${index}:`, cells);
+      
       if (cells && cells.length >= 2) {
-        const label = cells[0]?.v || '';
-        const value = cells[1]?.v || '';
+        const label = String(cells[0]?.v || '');
+        const value = String(cells[1]?.v || '');
         
-        if (label.includes('Orders') || label.includes('Total')) {
+        console.log(`  Label: "${label}", Value: "${value}"`);
+        
+        if (label.toLowerCase().includes('order') || label.toLowerCase().includes('total')) {
           totalOrders = value;
+          console.log(`  ✓ Found orders: ${value}`);
         }
-        if (label.includes('Updated') || label.includes('Last')) {
+        if (label.toLowerCase().includes('update') || label.toLowerCase().includes('last')) {
           lastUpdated = value;
+          console.log(`  ✓ Found updated: ${value}`);
         }
       }
     });
     
-    console.log('Parsed orders:', totalOrders);
-    console.log('Parsed updated:', lastUpdated);
+    console.log('Final parsed orders:', totalOrders);
+    console.log('Final parsed updated:', lastUpdated);
     
     countEl.textContent = totalOrders;
     updatedEl.textContent = lastUpdated;
