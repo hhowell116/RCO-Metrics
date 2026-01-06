@@ -403,9 +403,10 @@ iframe::-webkit-scrollbar {
 const nav = document.getElementById("nav");
 const productImage = document.getElementById("productImage");
 
-// Google Sheets ID
-const SHEET_ID = '1-S1OU7nw_085IXVbfiOY5qDPuRcPx2RqQJg8pnOqU9I';
-const SHEET_GID = '1592344464'; // Change this if your data is on a different tab
+// Google Sheets (Orders Counter)
+const SHEET_ID = '1H9eeS3zv3DOj7ETw6DgF8m_n1PirPjVKziiISw95khI';
+const SHEET_GID = '1592344464';
+
 
 function toggleHeader() {
   nav.classList.toggle("collapsed");
@@ -440,81 +441,58 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 
 /* =========================================
    FETCH TODAY'S ORDERS FROM GOOGLE SHEET
+   A1 = Last Updated
+   B2 = Order Count
 ========================================= */
+
+async function fetchGvizTable() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+  const res = await fetch(url);
+  const text = await res.text();
+
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
+  if (!match) throw new Error("GViz parse failed");
+
+  return JSON.parse(match[1]).table;
+}
+
+function cellValue(table, row, col) {
+  const cell = table?.rows?.[row]?.c?.[col];
+  return cell?.f ?? cell?.v ?? null;
+}
+
 async function updateOrderCount() {
   const counter = document.getElementById('ordersCounter');
   const countEl = document.getElementById('orderCount');
   const updatedEl = document.getElementById('orderUpdated');
-  
+
   try {
     counter.classList.add('loading');
-    
-    // Use Google Visualization API to query the sheet
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
-    
-    const response = await fetch(url);
-    const text = await response.text();
-    
-    console.log('Raw response:', text.substring(0, 200)); // Debug log
-    
-    // Google returns JSONP, we need to extract the JSON
-    const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/)[1];
-    const data = JSON.parse(jsonText);
-    
-    console.log('Parsed data:', data); // Debug log
-    
-    // Access the table data
-    const rows = data.table.rows;
-    
-    console.log('Total rows:', rows.length);
-    console.log('All row data:', JSON.stringify(rows, null, 2));
-    
-    let totalOrders = '--';
-    let lastUpdated = 'Unknown';
-    
-    // Look through rows to find our data
-    rows.forEach((row, index) => {
-      const cells = row.c;
-      console.log(`Row ${index}:`, cells);
-      
-      if (cells && cells.length >= 2) {
-        const label = String(cells[0]?.v || '');
-        const value = String(cells[1]?.v || '');
-        
-        console.log(`  Label: "${label}", Value: "${value}"`);
-        
-        if (label.toLowerCase().includes('order') || label.toLowerCase().includes('total')) {
-          totalOrders = value;
-          console.log(`  ✓ Found orders: ${value}`);
-        }
-        if (label.toLowerCase().includes('update') || label.toLowerCase().includes('last')) {
-          lastUpdated = value;
-          console.log(`  ✓ Found updated: ${value}`);
-        }
-      }
-    });
-    
-    console.log('Final parsed orders:', totalOrders);
-    console.log('Final parsed updated:', lastUpdated);
-    
-    countEl.textContent = totalOrders;
-    updatedEl.textContent = lastUpdated;
-    
-    counter.classList.remove('loading');
-    
-  } catch (error) {
-    console.error('Error fetching order count:', error);
+
+    const table = await fetchGvizTable();
+
+    // A1 → row 0, col 0
+    const updated = cellValue(table, 0, 0);
+
+    // B2 → row 1, col 1
+    const orders = cellValue(table, 1, 1);
+
+    countEl.textContent = orders ?? '--';
+    updatedEl.textContent = updated ?? 'Unknown';
+
+  } catch (err) {
+    console.error('Order counter error:', err);
     countEl.textContent = 'Error';
     updatedEl.textContent = 'Failed to load';
+  } finally {
     counter.classList.remove('loading');
   }
 }
 
-// Update immediately on load
+// Run immediately + refresh every 10 minutes
 updateOrderCount();
-
-// Update every 10 minutes (600000 ms)
 setInterval(updateOrderCount, 600000);
+
 </script>
 
 <!-- KIOSK CONTROLLER -->
