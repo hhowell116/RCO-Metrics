@@ -453,7 +453,10 @@ async function fetchGvizTable() {
   const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
   if (!match) throw new Error("GViz parse failed");
 
-  return JSON.parse(match[1]).table;
+  const json = JSON.parse(match[1]);
+  if (json.status !== "ok") throw new Error(`GViz status not ok: ${json.status}`);
+
+  return json.table;
 }
 
 function cellValue(table, row, col) {
@@ -471,15 +474,14 @@ async function updateOrderCount() {
 
     const table = await fetchGvizTable();
 
-    // A1 → row 0, col 0
+    // A1 (row 0 col 0) = date
     const updated = cellValue(table, 0, 0);
 
-// B1 → row 0, col 1
-const ordersText = cellValue(table, 0, 1);
+    // B1 (row 0 col 1) = order count (number)
+    const orders = cellValue(table, 0, 1);
 
-    countEl.textContent = orders ?? '--';
-    updatedEl.textContent = updated ?? 'Unknown';
-
+    countEl.textContent = (orders ?? '--');
+    updatedEl.textContent = (updated ?? 'Unknown');
   } catch (err) {
     console.error('Order counter error:', err);
     countEl.textContent = 'Error';
@@ -489,9 +491,9 @@ const ordersText = cellValue(table, 0, 1);
   }
 }
 
-// Run immediately + refresh every 10 minutes
 updateOrderCount();
 setInterval(updateOrderCount, 600000);
+
 
 </script>
 
