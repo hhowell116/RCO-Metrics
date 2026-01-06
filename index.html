@@ -474,8 +474,8 @@ async function updateOrderCount() {
     // A1 → row 0, col 0
     const updated = cellValue(table, 0, 0);
 
-    // B2 → row 1, col 1
-    const orders = cellValue(table, 1, 1);
+// B1 → row 0, col 1
+const ordersText = cellValue(table, 0, 1);
 
     countEl.textContent = orders ?? '--';
     updatedEl.textContent = updated ?? 'Unknown';
