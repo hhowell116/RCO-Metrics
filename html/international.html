@@ -10,6 +10,10 @@
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/maps/world.js"></script>
 
+<style>
+.jvm-tooltip { pointer-events: none !important; }
+</style>
+
 </head>
 
 <body class="page-international">
@@ -83,11 +87,6 @@
   </div>
 </div>
 
-<div class="intl-hover-info" id="hoverInfo">
-  <div class="hover-name" id="hoverName"></div>
-  <div class="hover-orders" id="hoverOrders"></div>
-</div>
-
 <script>
 const ORDERS_DATA = {
   2025: {
@@ -119,7 +118,7 @@ const COUNTRY_NAMES = {
   SG:'Singapore', IL:'Israel', ZA:'South Africa', AE:'UAE', CL:'Chile'
 };
 
-let currentYear = 2025;
+let currentYear = 'all';
 let worldMap = null;
 
 function getColor(value, max) {
@@ -153,17 +152,27 @@ function lerpColor(a, b, t) {
 }
 
 function getYearData() {
+  if (currentYear === 'all') {
+    const merged = {};
+    for (const year of Object.keys(ORDERS_DATA)) {
+      for (const [code, count] of Object.entries(ORDERS_DATA[year].countries)) {
+        merged[code] = (merged[code] || 0) + count;
+      }
+    }
+    return { countries: merged };
+  }
   return ORDERS_DATA[currentYear] || ORDERS_DATA[2025];
 }
 
-function buildWorldColorValues() {
+function applyRegionColors() {
+  if (!worldMap || !worldMap.regions) return;
   const data = getYearData().countries;
   const max = Math.max(...Object.values(data));
-  const colors = {};
   for (const [code, count] of Object.entries(data)) {
-    colors[code] = getColor(count, max);
+    if (worldMap.regions[code]) {
+      worldMap.regions[code].element.setStyle('fill', getColor(count, max));
+    }
   }
-  return colors;
 }
 
 function initWorldMap() {
@@ -173,7 +182,6 @@ function initWorldMap() {
     return;
   }
 
-  const colors = buildWorldColorValues();
   const data = getYearData().countries;
 
   if (worldMap) {
@@ -204,10 +212,6 @@ function initWorldMap() {
         cursor: 'pointer',
       },
     },
-    regions: Object.entries(colors).map(([code, color]) => ({
-      code: code,
-      style: { initial: { fill: color } }
-    })),
     onRegionTooltipShow(event, tooltip, code) {
       const count = data[code] || 0;
       const name = COUNTRY_NAMES[code] || code;
@@ -237,6 +241,8 @@ function initWorldMap() {
       updatePanelForRegion(code);
     }
   });
+
+  applyRegionColors();
 }
 
 function updatePanelForRegion(code) {
@@ -245,10 +251,11 @@ function updatePanelForRegion(code) {
   const count = data[code] || 0;
   const totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
   const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+  const label = currentYear === 'all' ? 'all time' : currentYear;
 
   document.getElementById('panelTitle').textContent = name;
   document.getElementById('panelSubtitle').textContent =
-    `${count.toLocaleString()} orders in ${currentYear} (${pct}% of global total)`;
+    `${count.toLocaleString()} orders ${label} (${pct}% of global total)`;
 }
 
 function updateSummaryStats() {
@@ -259,12 +266,13 @@ function updateSummaryStats() {
   const topCode = entries[0]?.[0] || '--';
   const topName = COUNTRY_NAMES[topCode] || topCode;
   const avg = numCountries > 0 ? Math.round(total / numCountries) : 0;
+  const label = currentYear === 'all' ? 'all time' : `for ${currentYear}`;
 
   document.getElementById('statTotalOrders').textContent = total.toLocaleString();
   document.getElementById('statCountries').textContent = numCountries;
   document.getElementById('statTopRegion').textContent = topName;
   document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
-  document.getElementById('metaText').textContent = `Showing worldwide order distribution for ${currentYear}`;
+  document.getElementById('metaText').textContent = `Showing worldwide order distribution ${label}`;
 
   renderTopList(entries.slice(0, 8), entries[0]?.[1] || 1);
 }
@@ -297,14 +305,16 @@ function refreshMap() {
 function populateYearSelect() {
   const select = document.getElementById('yearSelect');
   const years = Object.keys(ORDERS_DATA).sort((a, b) => b - a);
-  select.innerHTML = years.map(y => `<option value="${y}"${y == currentYear ? ' selected' : ''}>${y}</option>`).join('');
+  let options = '<option value="all"' + (currentYear === 'all' ? ' selected' : '') + '>All Time</option>';
+  options += years.map(y => `<option value="${y}"${y == currentYear ? ' selected' : ''}>${y}</option>`).join('');
+  select.innerHTML = options;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   populateYearSelect();
 
   document.getElementById('yearSelect').addEventListener('change', (e) => {
-    currentYear = parseInt(e.target.value);
+    currentYear = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
     refreshMap();
   });
 
