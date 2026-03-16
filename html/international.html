@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/jsvectormap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/maps/world.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.3.0/dist/maps/us-aea-en.js"></script>
 
 <style>
 .jvm-tooltip { pointer-events: none !important; }
@@ -42,15 +43,32 @@
 
   <div class="intl-content">
 
-    <div class="intl-map-card">
-      <div class="intl-map-wrapper">
-        <div id="worldMapContainer"></div>
+    <div class="intl-maps-column">
+
+      <div class="intl-map-card">
+        <div class="intl-map-section-label">Global Orders</div>
+        <div class="intl-map-wrapper">
+          <div id="worldMapContainer"></div>
+        </div>
+        <div class="intl-legend">
+          <span class="intl-legend-label">Fewer orders</span>
+          <div class="intl-legend-bar"></div>
+          <span class="intl-legend-label">More orders</span>
+        </div>
       </div>
-      <div class="intl-legend">
-        <span class="intl-legend-label">Fewer orders</span>
-        <div class="intl-legend-bar"></div>
-        <span class="intl-legend-label">More orders</span>
+
+      <div class="intl-map-card">
+        <div class="intl-map-section-label">United States by State</div>
+        <div class="intl-map-wrapper intl-map-wrapper-us">
+          <div id="usMapContainer"></div>
+        </div>
+        <div class="intl-legend">
+          <span class="intl-legend-label">Fewer orders</span>
+          <div class="intl-legend-bar"></div>
+          <span class="intl-legend-label">More orders</span>
+        </div>
       </div>
+
     </div>
 
     <div class="intl-detail-panel">
@@ -82,6 +100,11 @@
         <h3 id="topListTitle">Top Countries</h3>
         <div id="topListItems"></div>
       </div>
+
+      <div class="intl-top-list" style="margin-top: 18px;">
+        <h3>Top States</h3>
+        <div id="topStateItems"></div>
+      </div>
     </div>
 
   </div>
@@ -97,6 +120,19 @@ const ORDERS_DATA = {
       NZ: 154, CH: 143, NO: 132, DK: 121, BE: 110,
       AT: 98, IE: 87, PL: 76, PT: 65, FI: 54,
       SG: 48, IL: 43, ZA: 38, AE: 35, CL: 32
+    },
+    usStates: {
+      'US-CA': 3210, 'US-TX': 2845, 'US-NY': 1987, 'US-FL': 1876, 'US-IL': 1234,
+      'US-PA': 1098, 'US-OH': 987, 'US-GA': 945, 'US-NC': 876, 'US-MI': 765,
+      'US-NJ': 732, 'US-VA': 698, 'US-WA': 654, 'US-AZ': 612, 'US-MA': 578,
+      'US-TN': 543, 'US-IN': 498, 'US-MO': 465, 'US-MD': 432, 'US-WI': 398,
+      'US-CO': 387, 'US-MN': 365, 'US-SC': 343, 'US-AL': 321, 'US-LA': 298,
+      'US-KY': 276, 'US-OR': 265, 'US-OK': 243, 'US-CT': 232, 'US-UT': 221,
+      'US-IA': 198, 'US-NV': 187, 'US-AR': 176, 'US-MS': 165, 'US-KS': 154,
+      'US-NM': 143, 'US-NE': 132, 'US-ID': 121, 'US-WV': 110, 'US-HI': 98,
+      'US-NH': 87, 'US-ME': 76, 'US-MT': 65, 'US-RI': 54, 'US-DE': 48,
+      'US-SD': 43, 'US-ND': 38, 'US-AK': 35, 'US-VT': 32, 'US-WY': 28,
+      'US-DC': 24
     }
   },
   2024: {
@@ -105,6 +141,19 @@ const ORDERS_DATA = {
       MX: 765, JP: 543, FR: 498, BR: 376, IT: 321,
       ES: 265, NL: 232, SE: 198, KR: 165, IN: 143,
       NZ: 121, CH: 110, NO: 98, DK: 87, BE: 76
+    },
+    usStates: {
+      'US-CA': 2765, 'US-TX': 2432, 'US-NY': 1654, 'US-FL': 1543, 'US-IL': 1087,
+      'US-PA': 965, 'US-OH': 843, 'US-GA': 798, 'US-NC': 732, 'US-MI': 654,
+      'US-NJ': 621, 'US-VA': 587, 'US-WA': 543, 'US-AZ': 512, 'US-MA': 487,
+      'US-TN': 454, 'US-IN': 421, 'US-MO': 398, 'US-MD': 365, 'US-WI': 332,
+      'US-CO': 321, 'US-MN': 298, 'US-SC': 276, 'US-AL': 265, 'US-LA': 243,
+      'US-KY': 221, 'US-OR': 210, 'US-OK': 198, 'US-CT': 187, 'US-UT': 176,
+      'US-IA': 165, 'US-NV': 154, 'US-AR': 143, 'US-MS': 132, 'US-KS': 121,
+      'US-NM': 110, 'US-NE': 98, 'US-ID': 87, 'US-WV': 76, 'US-HI': 65,
+      'US-NH': 54, 'US-ME': 48, 'US-MT': 43, 'US-RI': 38, 'US-DE': 35,
+      'US-SD': 32, 'US-ND': 28, 'US-AK': 24, 'US-VT': 21, 'US-WY': 18,
+      'US-DC': 15
     }
   }
 };
@@ -118,25 +167,37 @@ const COUNTRY_NAMES = {
   SG:'Singapore', IL:'Israel', ZA:'South Africa', AE:'UAE', CL:'Chile'
 };
 
+const US_STATE_NAMES = {
+  'US-CA':'California','US-TX':'Texas','US-NY':'New York','US-FL':'Florida','US-IL':'Illinois',
+  'US-PA':'Pennsylvania','US-OH':'Ohio','US-GA':'Georgia','US-NC':'North Carolina','US-MI':'Michigan',
+  'US-NJ':'New Jersey','US-VA':'Virginia','US-WA':'Washington','US-AZ':'Arizona','US-MA':'Massachusetts',
+  'US-TN':'Tennessee','US-IN':'Indiana','US-MO':'Missouri','US-MD':'Maryland','US-WI':'Wisconsin',
+  'US-CO':'Colorado','US-MN':'Minnesota','US-SC':'South Carolina','US-AL':'Alabama','US-LA':'Louisiana',
+  'US-KY':'Kentucky','US-OR':'Oregon','US-OK':'Oklahoma','US-CT':'Connecticut','US-UT':'Utah',
+  'US-IA':'Iowa','US-NV':'Nevada','US-AR':'Arkansas','US-MS':'Mississippi','US-KS':'Kansas',
+  'US-NM':'New Mexico','US-NE':'Nebraska','US-ID':'Idaho','US-WV':'West Virginia','US-HI':'Hawaii',
+  'US-NH':'New Hampshire','US-ME':'Maine','US-MT':'Montana','US-RI':'Rhode Island','US-DE':'Delaware',
+  'US-SD':'South Dakota','US-ND':'North Dakota','US-AK':'Alaska','US-VT':'Vermont','US-WY':'Wyoming',
+  'US-DC':'Washington DC'
+};
+
 let currentYear = 'all';
 let worldMap = null;
+let usMap = null;
 
 function getColor(value, max) {
   if (!value || value === 0) return '#f0ece6';
   const ratio = Math.min(value / max, 1);
 
-  if (ratio < 0.25) {
-    const t = ratio / 0.25;
-    return lerpColor('#e8f5e9', '#a5d6a7', t);
-  } else if (ratio < 0.5) {
-    const t = (ratio - 0.25) / 0.25;
-    return lerpColor('#a5d6a7', '#ffcc02', t);
-  } else if (ratio < 0.75) {
-    const t = (ratio - 0.5) / 0.25;
-    return lerpColor('#ffcc02', '#ff9800', t);
+  if (ratio < 0.33) {
+    const t = ratio / 0.33;
+    return lerpColor('#e8e3d8', '#c9b99a', t);
+  } else if (ratio < 0.66) {
+    const t = (ratio - 0.33) / 0.33;
+    return lerpColor('#c9b99a', '#ab9071', t);
   } else {
-    const t = (ratio - 0.75) / 0.25;
-    return lerpColor('#ff9800', '#e53935', t);
+    const t = (ratio - 0.66) / 0.34;
+    return lerpColor('#ab9071', '#5f4b3c', t);
   }
 }
 
@@ -153,24 +214,29 @@ function lerpColor(a, b, t) {
 
 function getYearData() {
   if (currentYear === 'all') {
-    const merged = {};
+    const mergedCountries = {};
+    const mergedStates = {};
     for (const year of Object.keys(ORDERS_DATA)) {
       for (const [code, count] of Object.entries(ORDERS_DATA[year].countries)) {
-        merged[code] = (merged[code] || 0) + count;
+        mergedCountries[code] = (mergedCountries[code] || 0) + count;
+      }
+      if (ORDERS_DATA[year].usStates) {
+        for (const [code, count] of Object.entries(ORDERS_DATA[year].usStates)) {
+          mergedStates[code] = (mergedStates[code] || 0) + count;
+        }
       }
     }
-    return { countries: merged };
+    return { countries: mergedCountries, usStates: mergedStates };
   }
   return ORDERS_DATA[currentYear] || ORDERS_DATA[2025];
 }
 
-function applyRegionColors() {
-  if (!worldMap || !worldMap.regions) return;
-  const data = getYearData().countries;
+function applyRegionColors(map, data) {
+  if (!map || !map.regions) return;
   const max = Math.max(...Object.values(data));
   for (const [code, count] of Object.entries(data)) {
-    if (worldMap.regions[code]) {
-      worldMap.regions[code].element.setStyle('fill', getColor(count, max));
+    if (map.regions[code]) {
+      map.regions[code].element.setStyle('fill', getColor(count, max));
     }
   }
 }
@@ -238,35 +304,112 @@ function initWorldMap() {
       }
     },
     onRegionSelected(event, code) {
-      updatePanelForRegion(code);
+      updatePanelForRegion(code, 'country');
     }
   });
 
-  applyRegionColors();
+  applyRegionColors(worldMap, data);
 }
 
-function updatePanelForRegion(code) {
-  const data = getYearData().countries;
-  const name = COUNTRY_NAMES[code] || code;
-  const count = data[code] || 0;
-  const totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
-  const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+function initUSMap() {
+  const container = document.getElementById('usMapContainer');
+  if (container.offsetWidth === 0 || container.offsetHeight === 0) {
+    setTimeout(initUSMap, 150);
+    return;
+  }
+
+  const data = getYearData().usStates || {};
+
+  if (usMap) {
+    usMap.destroy();
+    usMap = null;
+  }
+  container.innerHTML = '';
+
+  usMap = new jsVectorMap({
+    selector: '#usMapContainer',
+    map: 'us_aea_en',
+    backgroundColor: 'transparent',
+    zoomButtons: true,
+    zoomOnScroll: true,
+    showTooltip: true,
+    regionStyle: {
+      initial: {
+        fill: '#f0ece6',
+        stroke: '#d7d1ca',
+        strokeWidth: 0.5,
+      },
+      hover: {
+        fillOpacity: 0.8,
+        cursor: 'pointer',
+      },
+    },
+    onRegionTooltipShow(event, tooltip, code) {
+      const count = data[code] || 0;
+      const name = US_STATE_NAMES[code] || code;
+      const totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
+      const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+
+      if (count > 0) {
+        tooltip.text(
+          `<div style="text-align:center;min-width:120px;">
+            <div style="font-weight:700;margin-bottom:3px;">${name}</div>
+            <div>${count.toLocaleString()} orders</div>
+            <div style="opacity:0.8;font-size:0.85em;">${pct}% of US total</div>
+          </div>`,
+          true
+        );
+      } else {
+        tooltip.text(
+          `<div style="text-align:center;">
+            <div style="font-weight:700;">${name}</div>
+            <div style="opacity:0.7;">No orders</div>
+          </div>`,
+          true
+        );
+      }
+    },
+    onRegionSelected(event, code) {
+      updatePanelForRegion(code, 'state');
+    }
+  });
+
+  applyRegionColors(usMap, data);
+}
+
+function updatePanelForRegion(code, type) {
+  const yearData = getYearData();
   const label = currentYear === 'all' ? 'all time' : currentYear;
+  let name, count, totalOrders;
+
+  if (type === 'state') {
+    name = US_STATE_NAMES[code] || code;
+    const data = yearData.usStates || {};
+    count = data[code] || 0;
+    totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
+  } else {
+    name = COUNTRY_NAMES[code] || code;
+    count = yearData.countries[code] || 0;
+    totalOrders = Object.values(yearData.countries).reduce((a, b) => a + b, 0);
+  }
+
+  const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
 
   document.getElementById('panelTitle').textContent = name;
   document.getElementById('panelSubtitle').textContent =
-    `${count.toLocaleString()} orders ${label} (${pct}% of global total)`;
+    `${count.toLocaleString()} orders ${label} (${pct}% of ${type === 'state' ? 'US' : 'global'} total)`;
 }
 
 function updateSummaryStats() {
-  const data = getYearData().countries;
-  const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
-  const total = entries.reduce((s, e) => s + e[1], 0);
-  const numCountries = entries.length;
-  const topCode = entries[0]?.[0] || '--';
+  const yearData = getYearData();
+  const label = currentYear === 'all' ? 'all time' : `for ${currentYear}`;
+
+  const countryEntries = Object.entries(yearData.countries).sort((a, b) => b[1] - a[1]);
+  const total = countryEntries.reduce((s, e) => s + e[1], 0);
+  const numCountries = countryEntries.length;
+  const topCode = countryEntries[0]?.[0] || '--';
   const topName = COUNTRY_NAMES[topCode] || topCode;
   const avg = numCountries > 0 ? Math.round(total / numCountries) : 0;
-  const label = currentYear === 'all' ? 'all time' : `for ${currentYear}`;
 
   document.getElementById('statTotalOrders').textContent = total.toLocaleString();
   document.getElementById('statCountries').textContent = numCountries;
@@ -274,13 +417,18 @@ function updateSummaryStats() {
   document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
   document.getElementById('metaText').textContent = `Showing worldwide order distribution ${label}`;
 
-  renderTopList(entries.slice(0, 8), entries[0]?.[1] || 1);
+  renderTopList('topListItems', countryEntries.slice(0, 8), 'country', countryEntries[0]?.[1] || 1);
+
+  const stateData = yearData.usStates || {};
+  const stateEntries = Object.entries(stateData).sort((a, b) => b[1] - a[1]);
+  renderTopList('topStateItems', stateEntries.slice(0, 8), 'state', stateEntries[0]?.[1] || 1);
 }
 
-function renderTopList(entries, max) {
-  const container = document.getElementById('topListItems');
+function renderTopList(containerId, entries, type, max) {
+  const container = document.getElementById(containerId);
+  const nameMap = type === 'state' ? US_STATE_NAMES : COUNTRY_NAMES;
   container.innerHTML = entries.map(([code, count], i) => {
-    const name = COUNTRY_NAMES[code] || code;
+    const name = nameMap[code] || code;
     const barWidth = Math.round((count / max) * 100);
     return `
       <div class="intl-top-item">
@@ -298,7 +446,10 @@ function refreshMap() {
   document.getElementById('panelSubtitle').textContent = 'Hover over a region for details';
   updateSummaryStats();
   requestAnimationFrame(() => {
-    setTimeout(initWorldMap, 100);
+    setTimeout(() => {
+      initWorldMap();
+      initUSMap();
+    }, 100);
   });
 }
 
