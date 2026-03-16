@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCO Metrics Dashboard</title>
+
+<link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <img src="Assets/logo.png" class="sidebar-logo" alt="Rowe Casa Organics">
+
+      <div class="sidebar-title-box">
+        <div class="sidebar-title">RCO Metrics</div>
+        <div class="sidebar-subtitle">Operational Dashboards</div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <button class="nav-btn active" data-tab="fulfillment">Fulfillment KPI</button>
+      <button class="nav-btn" data-tab="shipping">Shipping Leaderboards</button>
+      <button class="nav-btn" data-tab="orders">Orders Overview</button>
+      <button class="nav-btn" data-tab="international">International Orders</button>
+    </div>
+
+    <div class="sidebar-footer">
+
+      <div class="orders-widget">
+        <div class="orders-label">TODAY'S ORDERS</div>
+        <div class="orders-value" id="orderCount">--</div>
+        <div class="orders-updated" id="orderUpdated">Last updated:<br>Loading...</div>
+      </div>
+
+      <div class="product-carousel">
+        <div class="carousel-label">Top Products</div>
+        <img id="sidebarProductImage" src="Assets/tartcherry.png" class="carousel-image" alt="Product">
+      </div>
+
+      <div class="sidebar-separator"></div>
+
+      <div class="footer-mini-row">
+        <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="Toggle Dark Mode" title="Toggle Dark Mode"></button>
+
+        <button
+          class="icon-btn"
+          id="tvModeBtn"
+          type="button"
+          aria-label="TV Mode"
+          title="TV Mode - Auto rotate through dashboards"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3.5" y="6.5" width="17" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+            <line x1="8" y1="20" x2="16" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="10" y1="4" x2="7" y2="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="14" y1="4" x2="17" y2="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="sign-out-btn" onclick="signOutUser()">Sign Out</button>
+    </div>
+
+  </aside>
+
+  <main class="content-area">
+    <div id="fulfillment-frame" class="iframe-wrapper active">
+      <iframe src="html/fulfillment.html"></iframe>
+    </div>
+    <div id="shipping-frame" class="iframe-wrapper">
+      <iframe src="html/shipping.html"></iframe>
+    </div>
+    <div id="orders-frame" class="iframe-wrapper">
+      <iframe src="html/orders.html"></iframe>
+    </div>
+    <div id="international-frame" class="iframe-wrapper">
+      <iframe src="html/international.html"></iframe>
+    </div>
+  </main>
+
+</div>
+
+<div class="tv-transition" id="tvTransition" aria-hidden="true"></div>
+
+<script>
+function setActiveTab(tab){
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+
+  document.querySelectorAll('.iframe-wrapper').forEach(f => {
+    f.classList.remove('active');
+    f.style.display = 'none';
+  });
+
+  const frame = document.getElementById(`${tab}-frame`);
+  if (frame){
+    frame.classList.add('active');
+    frame.style.display = 'block';
+  }
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    setActiveTab(tab);
+
+    if (typeof broadcastThemeToIframes === 'function' && typeof getSavedTheme === 'function') {
+      broadcastThemeToIframes(getSavedTheme());
+    }
+  });
+});
+</script>
+
+<script>
+const sidebarProductImage = document.getElementById("sidebarProductImage");
+const products = ["Assets/tartcherry.png", "Assets/elderberry.png", "Assets/hairspritz.png"];
+let productIndex = 0;
+
+setInterval(() => {
+  if (sidebarProductImage) {
+    sidebarProductImage.classList.add("fade-out");
+    setTimeout(() => {
+      productIndex = (productIndex + 1) % products.length;
+      sidebarProductImage.src = products[productIndex];
+      sidebarProductImage.classList.remove("fade-out");
+    }, 350);
+  }
+}, 5000);
+</script>
+
+<script>
+const SHEET_ID = '1H9eeS3zv3DOj7ETw6DgF8m_n1PirPjVKziiISw95khI';
+const SHEET_GID = '1592344464';
+
+async function fetchGvizTable() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
+  const json = JSON.parse(match[1]);
+  return json.table;
+}
+
+function cellValue(table, r, c) {
+  return table?.rows?.[r]?.c?.[c]?.v ?? null;
+}
+
+async function updateOrderCount() {
+  try {
+    const table = await fetchGvizTable();
+    const rawTimestamp = cellValue(table, 0, 0);
+    const orderValue = cellValue(table, 0, 1);
+
+    document.getElementById('orderCount').textContent = orderValue ?? '--';
+
+    if (rawTimestamp) {
+      let date;
+
+      if (typeof rawTimestamp === 'string' && rawTimestamp.startsWith('Date(')) {
+        const m = rawTimestamp.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+        if (m) {
+          const [, year, month, day, hours, minutes, seconds] = m;
+          date = new Date(
+            parseInt(year), parseInt(month), parseInt(day),
+            parseInt(hours), parseInt(minutes), parseInt(seconds)
+          );
+        }
+      } else if (typeof rawTimestamp === 'string') {
+        date = new Date(rawTimestamp);
+      } else if (rawTimestamp instanceof Date) {
+        date = rawTimestamp;
+      } else {
+        date = new Date(rawTimestamp);
+      }
+
+      if (date && !isNaN(date.getTime())) {
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(-2);
+        const hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+
+        const formattedTime = `${month}/${day}/${year} ${displayHours}:${minutes} ${ampm}`;
+        document.getElementById('orderUpdated').innerHTML = `Last updated:<br>${formattedTime}`;
+      } else {
+        document.getElementById('orderUpdated').innerHTML = `Last updated:<br>${rawTimestamp}`;
+      }
+    } else {
+      document.getElementById('orderUpdated').innerHTML = 'Last updated:<br>Unknown';
+    }
+  } catch (e) {
+    console.error('Order count error:', e);
+    document.getElementById('orderCount').textContent = '—';
+    document.getElementById('orderUpdated').innerHTML = 'Last updated:<br>Error';
+  }
+}
+
+updateOrderCount();
+setInterval(updateOrderCount, 600000);
+</script>
+
+<script>
+const THEME_KEY = 'rco_theme';
+const themeBtn = document.getElementById('themeToggleBtn');
+
+function moonIcon(){
+  return `
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a7 7 0 1 0 11.5 11.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </svg>`;
+}
+function sunIcon(){
+  return `
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+}
+
+function getSavedTheme(){
+  return localStorage.getItem(THEME_KEY) || 'light';
+}
+
+function broadcastThemeToIframes(theme){
+  document.querySelectorAll('iframe').forEach(f => {
+    try { f.contentWindow.postMessage({ type: 'RCO_THEME', theme }, '*'); } catch(e) {}
+  });
+}
+
+function broadcastTvStateToIframes(active){
+  document.querySelectorAll('iframe').forEach(f => {
+    try { f.contentWindow.postMessage({ type: 'TV_VIEW_STATE', active }, '*'); } catch(e) {}
+  });
+}
+
+function setTheme(theme){
+  const isDark = theme === 'dark';
+  document.body.classList.toggle('dark', isDark);
+  localStorage.setItem(THEME_KEY, theme);
+
+  if (themeBtn){
+    themeBtn.innerHTML = isDark ? sunIcon() : moonIcon();
+  }
+  broadcastThemeToIframes(theme);
+}
+
+if (themeBtn){
+  themeBtn.addEventListener('click', () => {
+    const cur = getSavedTheme();
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+}
+
+setTheme(getSavedTheme());
+
+document.querySelectorAll('iframe').forEach(f => {
+  f.addEventListener('load', () => broadcastThemeToIframes(getSavedTheme()));
+});
+</script>
+
+<script>
+const tvBtn = document.getElementById('tvModeBtn');
+const tvTransition = document.getElementById('tvTransition');
+
+let tvEnabled = false;
+let tvTimeout = null;
+let tvIndex = 0;
+const TV_STEP_MS = 8000;
+
+function postToTab(tab, message){
+  const frameWrap = document.getElementById(`${tab}-frame`);
+  const iframe = frameWrap?.querySelector('iframe');
+  if (!iframe?.contentWindow) return;
+  try { iframe.contentWindow.postMessage(message, '*'); } catch(e) {}
+}
+
+function withTvFade(workFn, holdMs = 320){
+  if (!tvTransition) { workFn(); return; }
+
+  tvTransition.classList.add('show');
+  setTimeout(() => { try { workFn(); } catch(e) {} }, 90);
+  setTimeout(() => tvTransition.classList.remove('show'), holdMs);
+}
+
+const TV_PLAYLIST = [
+  { tab: 'fulfillment', command: { type:'TV_ACTION', target:'fulfillment', dataset:'retail', view:'monthly' } },
+  { tab: 'fulfillment', command: { type:'TV_ACTION', target:'fulfillment', dataset:'retail', view:'calendar' } },
+  { tab: 'fulfillment', command: { type:'TV_ACTION', target:'fulfillment', dataset:'wholesale', view:'monthly' } },
+  { tab: 'fulfillment', command: { type:'TV_ACTION', target:'fulfillment', dataset:'wholesale', view:'calendar' } },
+
+  { tab: 'shipping' },
+
+  { tab: 'orders', command: { type:'TV_ACTION', target:'orders', view:'calendar' } },
+  { tab: 'orders', command: { type:'TV_ACTION', target:'orders', view:'chart' } },
+
+  { tab: 'international', command: { type:'TV_ACTION', target:'international', view:'world' } },
+  { tab: 'international', command: { type:'TV_ACTION', target:'international', view:'us' } },
+
+  { tab: 'fulfillment', command: { type:'TV_ACTION', target:'fulfillment', dataset:'retail', view:'monthly' } },
+];
+
+function runTvStep(i){
+  const step = TV_PLAYLIST[i % TV_PLAYLIST.length];
+
+  withTvFade(() => {
+    setActiveTab(step.tab);
+    broadcastThemeToIframes(getSavedTheme());
+
+    if (step.command){
+      setTimeout(() => postToTab(step.tab, step.command), 60);
+    }
+  }, 340);
+}
+
+function scheduleNext(){
+  clearTimeout(tvTimeout);
+  tvTimeout = setTimeout(() => {
+    tvIndex = (tvIndex + 1) % TV_PLAYLIST.length;
+    runTvStep(tvIndex);
+    scheduleNext();
+  }, TV_STEP_MS);
+}
+
+async function enterTvMode(){
+  tvEnabled = true;
+  tvBtn?.classList.add('active');
+  document.body.classList.add('tv-mode');
+  broadcastTvStateToIframes(true);
+
+  try{
+    if (!document.fullscreenElement){
+      await document.documentElement.requestFullscreen();
+    }
+  } catch(e){
+    console.error('Fullscreen failed:', e);
+  }
+
+  tvIndex = 0;
+  runTvStep(tvIndex);
+  scheduleNext();
+}
+
+async function exitTvMode(){
+  tvEnabled = false;
+  tvBtn?.classList.remove('active');
+  clearTimeout(tvTimeout);
+  tvTimeout = null;
+  document.body.classList.remove('tv-mode');
+  broadcastTvStateToIframes(false);
+
+  try{
+    if (document.fullscreenElement){
+      await document.exitFullscreen();
+    }
+  } catch(e){
+    console.error('Exit fullscreen failed:', e);
+  }
+}
+
+if (tvBtn){
+  tvBtn.addEventListener('click', () => {
+    if (!tvEnabled) enterTvMode();
+    else exitTvMode();
+  });
+}
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && tvEnabled){
+    tvEnabled = false;
+    tvBtn?.classList.remove('active');
+    clearTimeout(tvTimeout);
+    tvTimeout = null;
+    document.body.classList.remove('tv-mode');
+    broadcastTvStateToIframes(false);
+  }
+});
+</script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDEn7ooJJ1zATM5oEnx3ByDiOFTFxr_JiA",
+  authDomain: "rco-metrics-d0f3b.firebaseapp.com",
+  projectId: "rco-metrics-d0f3b",
+  storageBucket: "rco-metrics-d0f3b.firebasestorage.app",
+  messagingSenderId: "1021645263850",
+  appId: "1:1021645263850:web:dfd5c7cd0bd99762679893",
+  measurementId: "G-DR5MLDL5BG"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.replace('html/login.html');
+  } else {
+    const email = user.email;
+    const allowedDomain = '@rowecasaorganics.com';
+
+    if (!email.endsWith(allowedDomain)) {
+      alert('Access denied. Only @rowecasaorganics.com accounts are allowed.');
+      signOut(auth).then(() => {
+        window.location.replace('html/login.html');
+      });
+    }
+  }
+});
+
+window.signOutUser = async function() {
+  try {
+    await signOut(auth);
+    window.location.replace('html/login.html');
+  } catch (error) {
+    console.error('Sign out error:', error);
+    alert('Failed to sign out. Please try again.');
+  }
+};
+</script>
+
+</body>
+</html>

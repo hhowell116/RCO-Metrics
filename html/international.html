@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Orders - RCO Metrics</title>
+<link rel="stylesheet" href="../css/main.css">
+
+<link rel="stylesheet" href="https://unpkg.com/jsvectormap@1.6.0/dist/css/jsvectormap.min.css">
+<script src="https://unpkg.com/jsvectormap@1.6.0/dist/js/jsvectormap.min.js"></script>
+<script src="https://unpkg.com/jsvectormap@1.6.0/dist/maps/world.js"></script>
+<script src="https://unpkg.com/jsvectormap@1.6.0/dist/maps/us-aea-en.js"></script>
+
+</head>
+
+<body class="page-international">
+
+<div class="intl-container">
+
+  <div class="intl-header">
+    <div class="intl-header-left">
+      <select id="yearSelect"></select>
+    </div>
+    <div class="intl-header-center">
+      <h1>International Orders</h1>
+      <div class="intl-meta" id="metaText">Showing worldwide order distribution</div>
+    </div>
+    <div class="intl-header-right">
+      <button class="intl-view-btn active" data-view="world">World</button>
+      <button class="intl-view-btn" data-view="us">US States</button>
+      <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="intl-content">
+
+    <div class="intl-map-card">
+      <div class="intl-map-wrapper">
+        <div id="worldMapContainer"></div>
+        <div id="usMapContainer"></div>
+      </div>
+      <div class="intl-legend">
+        <span class="intl-legend-label">Fewer orders</span>
+        <div class="intl-legend-bar"></div>
+        <span class="intl-legend-label">More orders</span>
+      </div>
+    </div>
+
+    <div class="intl-detail-panel">
+      <div class="intl-detail-header">
+        <h2 id="panelTitle">Overview</h2>
+        <div class="intl-detail-subtitle" id="panelSubtitle">Hover over a region for details</div>
+      </div>
+
+      <div class="intl-summary-stats">
+        <div class="intl-stat-box">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="statTotalOrders">--</div>
+        </div>
+        <div class="intl-stat-box">
+          <div class="stat-label">Countries</div>
+          <div class="stat-value" id="statCountries">--</div>
+        </div>
+        <div class="intl-stat-box">
+          <div class="stat-label">Top Region</div>
+          <div class="stat-value" id="statTopRegion">--</div>
+        </div>
+        <div class="intl-stat-box">
+          <div class="stat-label">Avg / Region</div>
+          <div class="stat-value" id="statAvgOrders">--</div>
+        </div>
+      </div>
+
+      <div class="intl-top-list">
+        <h3 id="topListTitle">Top Regions</h3>
+        <div id="topListItems"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="intl-hover-info" id="hoverInfo">
+  <div class="hover-name" id="hoverName"></div>
+  <div class="hover-orders" id="hoverOrders"></div>
+</div>
+
+<script>
+const ORDERS_DATA = {
+  2025: {
+    countries: {
+      US: 14832, CA: 2190, GB: 1654, AU: 1120, DE: 987,
+      MX: 876, JP: 654, FR: 598, BR: 432, IT: 387,
+      ES: 312, NL: 278, SE: 245, KR: 198, IN: 176,
+      NZ: 154, CH: 143, NO: 132, DK: 121, BE: 110,
+      AT: 98, IE: 87, PL: 76, PT: 65, FI: 54,
+      SG: 48, IL: 43, ZA: 38, AE: 35, CL: 32
+    },
+    usStates: {
+      'US-CA': 3210, 'US-TX': 2845, 'US-NY': 1987, 'US-FL': 1876, 'US-IL': 1234,
+      'US-PA': 1098, 'US-OH': 987, 'US-GA': 945, 'US-NC': 876, 'US-MI': 765,
+      'US-NJ': 732, 'US-VA': 698, 'US-WA': 654, 'US-AZ': 612, 'US-MA': 578,
+      'US-TN': 543, 'US-IN': 498, 'US-MO': 465, 'US-MD': 432, 'US-WI': 398,
+      'US-CO': 387, 'US-MN': 365, 'US-SC': 343, 'US-AL': 321, 'US-LA': 298,
+      'US-KY': 276, 'US-OR': 265, 'US-OK': 243, 'US-CT': 232, 'US-UT': 221,
+      'US-IA': 198, 'US-NV': 187, 'US-AR': 176, 'US-MS': 165, 'US-KS': 154,
+      'US-NM': 143, 'US-NE': 132, 'US-ID': 121, 'US-WV': 110, 'US-HI': 98,
+      'US-NH': 87, 'US-ME': 76, 'US-MT': 65, 'US-RI': 54, 'US-DE': 48,
+      'US-SD': 43, 'US-ND': 38, 'US-AK': 35, 'US-VT': 32, 'US-WY': 28,
+      'US-DC': 24
+    }
+  },
+  2024: {
+    countries: {
+      US: 12450, CA: 1876, GB: 1432, AU: 965, DE: 843,
+      MX: 765, JP: 543, FR: 498, BR: 376, IT: 321,
+      ES: 265, NL: 232, SE: 198, KR: 165, IN: 143,
+      NZ: 121, CH: 110, NO: 98, DK: 87, BE: 76
+    },
+    usStates: {
+      'US-CA': 2765, 'US-TX': 2432, 'US-NY': 1654, 'US-FL': 1543, 'US-IL': 1087,
+      'US-PA': 965, 'US-OH': 843, 'US-GA': 798, 'US-NC': 732, 'US-MI': 654,
+      'US-NJ': 621, 'US-VA': 587, 'US-WA': 543, 'US-AZ': 512, 'US-MA': 487,
+      'US-TN': 454, 'US-IN': 421, 'US-MO': 398, 'US-MD': 365, 'US-WI': 332,
+      'US-CO': 321, 'US-MN': 298, 'US-SC': 276, 'US-AL': 265, 'US-LA': 243,
+      'US-KY': 221, 'US-OR': 210, 'US-OK': 198, 'US-CT': 187, 'US-UT': 176,
+      'US-IA': 165, 'US-NV': 154, 'US-AR': 143, 'US-MS': 132, 'US-KS': 121,
+      'US-NM': 110, 'US-NE': 98, 'US-ID': 87, 'US-WV': 76, 'US-HI': 65,
+      'US-NH': 54, 'US-ME': 48, 'US-MT': 43, 'US-RI': 38, 'US-DE': 35,
+      'US-SD': 32, 'US-ND': 28, 'US-AK': 24, 'US-VT': 21, 'US-WY': 18,
+      'US-DC': 15
+    }
+  }
+};
+
+const COUNTRY_NAMES = {
+  US:'United States', CA:'Canada', GB:'United Kingdom', AU:'Australia', DE:'Germany',
+  MX:'Mexico', JP:'Japan', FR:'France', BR:'Brazil', IT:'Italy',
+  ES:'Spain', NL:'Netherlands', SE:'Sweden', KR:'South Korea', IN:'India',
+  NZ:'New Zealand', CH:'Switzerland', NO:'Norway', DK:'Denmark', BE:'Belgium',
+  AT:'Austria', IE:'Ireland', PL:'Poland', PT:'Portugal', FI:'Finland',
+  SG:'Singapore', IL:'Israel', ZA:'South Africa', AE:'UAE', CL:'Chile'
+};
+
+const US_STATE_NAMES = {
+  'US-CA':'California','US-TX':'Texas','US-NY':'New York','US-FL':'Florida','US-IL':'Illinois',
+  'US-PA':'Pennsylvania','US-OH':'Ohio','US-GA':'Georgia','US-NC':'North Carolina','US-MI':'Michigan',
+  'US-NJ':'New Jersey','US-VA':'Virginia','US-WA':'Washington','US-AZ':'Arizona','US-MA':'Massachusetts',
+  'US-TN':'Tennessee','US-IN':'Indiana','US-MO':'Missouri','US-MD':'Maryland','US-WI':'Wisconsin',
+  'US-CO':'Colorado','US-MN':'Minnesota','US-SC':'South Carolina','US-AL':'Alabama','US-LA':'Louisiana',
+  'US-KY':'Kentucky','US-OR':'Oregon','US-OK':'Oklahoma','US-CT':'Connecticut','US-UT':'Utah',
+  'US-IA':'Iowa','US-NV':'Nevada','US-AR':'Arkansas','US-MS':'Mississippi','US-KS':'Kansas',
+  'US-NM':'New Mexico','US-NE':'Nebraska','US-ID':'Idaho','US-WV':'West Virginia','US-HI':'Hawaii',
+  'US-NH':'New Hampshire','US-ME':'Maine','US-MT':'Montana','US-RI':'Rhode Island','US-DE':'Delaware',
+  'US-SD':'South Dakota','US-ND':'North Dakota','US-AK':'Alaska','US-VT':'Vermont','US-WY':'Wyoming',
+  'US-DC':'Washington DC'
+};
+
+let currentYear = 2025;
+let currentView = 'world';
+let worldMap = null;
+let usMap = null;
+
+function getColor(value, max) {
+  if (!value || value === 0) return '#f0ece6';
+  const ratio = Math.min(value / max, 1);
+
+  if (ratio < 0.25) {
+    const t = ratio / 0.25;
+    return lerpColor('#e8f5e9', '#a5d6a7', t);
+  } else if (ratio < 0.5) {
+    const t = (ratio - 0.25) / 0.25;
+    return lerpColor('#a5d6a7', '#ffcc02', t);
+  } else if (ratio < 0.75) {
+    const t = (ratio - 0.5) / 0.25;
+    return lerpColor('#ffcc02', '#ff9800', t);
+  } else {
+    const t = (ratio - 0.75) / 0.25;
+    return lerpColor('#ff9800', '#e53935', t);
+  }
+}
+
+function lerpColor(a, b, t) {
+  const ah = parseInt(a.slice(1), 16);
+  const bh = parseInt(b.slice(1), 16);
+  const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
+  const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+  const rr = Math.round(ar + (br - ar) * t);
+  const rg = Math.round(ag + (bg - ag) * t);
+  const rb = Math.round(ab + (bb - ab) * t);
+  return `#${((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1)}`;
+}
+
+function getYearData() {
+  return ORDERS_DATA[currentYear] || ORDERS_DATA[2025];
+}
+
+function buildWorldColorValues() {
+  const data = getYearData().countries;
+  const max = Math.max(...Object.values(data));
+  const colors = {};
+  for (const [code, count] of Object.entries(data)) {
+    colors[code] = getColor(count, max);
+  }
+  return colors;
+}
+
+function buildUSColorValues() {
+  const data = getYearData().usStates;
+  const max = Math.max(...Object.values(data));
+  const colors = {};
+  for (const [code, count] of Object.entries(data)) {
+    colors[code] = getColor(count, max);
+  }
+  return colors;
+}
+
+function initWorldMap() {
+  const colors = buildWorldColorValues();
+  const data = getYearData().countries;
+
+  if (worldMap) worldMap.destroy();
+
+  worldMap = new jsVectorMap({
+    selector: '#worldMapContainer',
+    map: 'world',
+    backgroundColor: 'transparent',
+    zoomButtons: true,
+    zoomOnScroll: true,
+    zoomOnScrollSpeed: 3,
+    zoomMax: 12,
+    zoomMin: 1,
+    zoomAnimate: true,
+    showTooltip: true,
+    regionStyle: {
+      initial: {
+        fill: '#f0ece6',
+        stroke: '#d7d1ca',
+        strokeWidth: 0.5,
+      },
+      hover: {
+        fillOpacity: 0.8,
+        cursor: 'pointer',
+      },
+    },
+    regions: Object.entries(colors).map(([code, color]) => ({
+      code: code,
+      style: { initial: { fill: color } }
+    })),
+    onRegionTooltipShow(event, tooltip, code) {
+      const count = data[code] || 0;
+      const name = COUNTRY_NAMES[code] || code;
+      const totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
+      const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+
+      if (count > 0) {
+        tooltip.text(
+          `<div style="text-align:center;min-width:120px;">
+            <div style="font-weight:700;margin-bottom:3px;">${name}</div>
+            <div>${count.toLocaleString()} orders</div>
+            <div style="opacity:0.8;font-size:0.85em;">${pct}% of total</div>
+          </div>`,
+          true
+        );
+      } else {
+        tooltip.text(
+          `<div style="text-align:center;">
+            <div style="font-weight:700;">${name}</div>
+            <div style="opacity:0.7;">No orders</div>
+          </div>`,
+          true
+        );
+      }
+    },
+    onRegionSelected(event, code) {
+      updatePanelForRegion(code, 'country');
+    }
+  });
+}
+
+function initUSMap() {
+  const colors = buildUSColorValues();
+  const data = getYearData().usStates;
+
+  if (usMap) usMap.destroy();
+
+  usMap = new jsVectorMap({
+    selector: '#usMapContainer',
+    map: 'us_aea_en',
+    backgroundColor: 'transparent',
+    zoomButtons: true,
+    zoomOnScroll: true,
+    showTooltip: true,
+    regionStyle: {
+      initial: {
+        fill: '#f0ece6',
+        stroke: '#d7d1ca',
+        strokeWidth: 0.5,
+      },
+      hover: {
+        fillOpacity: 0.8,
+        cursor: 'pointer',
+      },
+    },
+    regions: Object.entries(colors).map(([code, color]) => ({
+      code: code,
+      style: { initial: { fill: color } }
+    })),
+    onRegionTooltipShow(event, tooltip, code) {
+      const count = data[code] || 0;
+      const name = US_STATE_NAMES[code] || code;
+      const totalOrders = Object.values(data).reduce((a, b) => a + b, 0);
+      const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+
+      if (count > 0) {
+        tooltip.text(
+          `<div style="text-align:center;min-width:120px;">
+            <div style="font-weight:700;margin-bottom:3px;">${name}</div>
+            <div>${count.toLocaleString()} orders</div>
+            <div style="opacity:0.8;font-size:0.85em;">${pct}% of US total</div>
+          </div>`,
+          true
+        );
+      } else {
+        tooltip.text(
+          `<div style="text-align:center;">
+            <div style="font-weight:700;">${name}</div>
+            <div style="opacity:0.7;">No orders</div>
+          </div>`,
+          true
+        );
+      }
+    },
+    onRegionSelected(event, code) {
+      updatePanelForRegion(code, 'state');
+    }
+  });
+}
+
+function updatePanelForRegion(code, type) {
+  const yearData = getYearData();
+  let name, count, dataset, totalOrders;
+
+  if (type === 'state') {
+    name = US_STATE_NAMES[code] || code;
+    dataset = yearData.usStates;
+    count = dataset[code] || 0;
+    totalOrders = Object.values(dataset).reduce((a, b) => a + b, 0);
+  } else {
+    name = COUNTRY_NAMES[code] || code;
+    dataset = yearData.countries;
+    count = dataset[code] || 0;
+    totalOrders = Object.values(dataset).reduce((a, b) => a + b, 0);
+  }
+
+  const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : '0.0';
+
+  document.getElementById('panelTitle').textContent = name;
+  document.getElementById('panelSubtitle').textContent =
+    `${count.toLocaleString()} orders in ${currentYear} (${pct}% of ${type === 'state' ? 'US' : 'global'} total)`;
+}
+
+function updateSummaryStats() {
+  const yearData = getYearData();
+
+  if (currentView === 'world') {
+    const data = yearData.countries;
+    const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+    const total = entries.reduce((s, e) => s + e[1], 0);
+    const numCountries = entries.length;
+    const topCode = entries[0]?.[0] || '--';
+    const topName = COUNTRY_NAMES[topCode] || topCode;
+    const avg = numCountries > 0 ? Math.round(total / numCountries) : 0;
+
+    document.getElementById('statTotalOrders').textContent = total.toLocaleString();
+    document.getElementById('statCountries').textContent = numCountries;
+    document.getElementById('statTopRegion').textContent = topName;
+    document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
+    document.getElementById('topListTitle').textContent = 'Top Countries';
+    document.getElementById('metaText').textContent = `Showing worldwide order distribution for ${currentYear}`;
+
+    renderTopList(entries.slice(0, 8), 'country', entries[0]?.[1] || 1);
+  } else {
+    const data = yearData.usStates;
+    const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+    const total = entries.reduce((s, e) => s + e[1], 0);
+    const numStates = entries.length;
+    const topCode = entries[0]?.[0] || '--';
+    const topName = US_STATE_NAMES[topCode] || topCode;
+    const avg = numStates > 0 ? Math.round(total / numStates) : 0;
+
+    document.getElementById('statTotalOrders').textContent = total.toLocaleString();
+    document.getElementById('statCountries').textContent = numStates;
+    document.getElementById('statTopRegion').textContent = topName;
+    document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
+    document.getElementById('topListTitle').textContent = 'Top States';
+    document.getElementById('metaText').textContent = `Showing US state distribution for ${currentYear}`;
+
+    renderTopList(entries.slice(0, 8), 'state', entries[0]?.[1] || 1);
+  }
+}
+
+function renderTopList(entries, type, max) {
+  const container = document.getElementById('topListItems');
+  container.innerHTML = entries.map(([code, count], i) => {
+    const name = type === 'state' ? (US_STATE_NAMES[code] || code) : (COUNTRY_NAMES[code] || code);
+    const barWidth = Math.round((count / max) * 100);
+    return `
+      <div class="intl-top-item">
+        <div class="intl-top-rank">${i + 1}</div>
+        <div class="intl-top-name">${name}</div>
+        <div class="intl-top-count">${count.toLocaleString()}</div>
+        <div class="intl-top-bar-wrap"><div class="intl-top-bar" style="width:${barWidth}%"></div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchView(view) {
+  currentView = view;
+
+  document.querySelectorAll('.intl-view-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+
+  const worldEl = document.getElementById('worldMapContainer');
+  const usEl = document.getElementById('usMapContainer');
+
+  if (view === 'world') {
+    worldEl.style.display = '';
+    usEl.style.display = 'none';
+    initWorldMap();
+  } else {
+    worldEl.style.display = 'none';
+    usEl.style.display = '';
+    initUSMap();
+  }
+
+  document.getElementById('panelTitle').textContent = 'Overview';
+  document.getElementById('panelSubtitle').textContent = 'Hover over a region for details';
+  updateSummaryStats();
+}
+
+function populateYearSelect() {
+  const select = document.getElementById('yearSelect');
+  const years = Object.keys(ORDERS_DATA).sort((a, b) => b - a);
+  select.innerHTML = years.map(y => `<option value="${y}"${y == currentYear ? ' selected' : ''}>${y}</option>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateYearSelect();
+
+  document.getElementById('yearSelect').addEventListener('change', (e) => {
+    currentYear = parseInt(e.target.value);
+    switchView(currentView);
+  });
+
+  document.querySelectorAll('.intl-view-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(e => console.error('Fullscreen failed:', e));
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  switchView('world');
+});
+
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'RCO_THEME') {
+    document.body.classList.toggle('dark', event.data.theme === 'dark');
+  }
+
+  if (event.data?.type === 'TV_VIEW_STATE') {
+    document.body.classList.toggle('tv-view-active', !!event.data.active);
+  }
+
+  if (event.data?.type === 'TV_ACTION' && event.data.target === 'international') {
+    if (event.data.view === 'world' || event.data.view === 'us') {
+      switchView(event.data.view);
+    }
+  }
+});
+</script>
+
+</body>
+</html>
