@@ -30,6 +30,8 @@
       <div class="intl-meta" id="metaText">Showing worldwide order distribution</div>
     </div>
     <div class="intl-header-right">
+      <button class="intl-view-btn active" data-view="world">World</button>
+      <button class="intl-view-btn" data-view="us">US States</button>
       <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 4H4v5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -43,32 +45,16 @@
 
   <div class="intl-content">
 
-    <div class="intl-maps-column">
-
-      <div class="intl-map-card">
-        <div class="intl-map-section-label">Global Orders</div>
-        <div class="intl-map-wrapper">
-          <div id="worldMapContainer"></div>
-        </div>
-        <div class="intl-legend">
-          <span class="intl-legend-label">Fewer orders</span>
-          <div class="intl-legend-bar"></div>
-          <span class="intl-legend-label">More orders</span>
-        </div>
+    <div class="intl-map-card">
+      <div class="intl-map-wrapper">
+        <div id="worldMapContainer"></div>
+        <div id="usMapContainer" style="display:none;"></div>
       </div>
-
-      <div class="intl-map-card">
-        <div class="intl-map-section-label">United States by State</div>
-        <div class="intl-map-wrapper intl-map-wrapper-us">
-          <div id="usMapContainer"></div>
-        </div>
-        <div class="intl-legend">
-          <span class="intl-legend-label">Fewer orders</span>
-          <div class="intl-legend-bar"></div>
-          <span class="intl-legend-label">More orders</span>
-        </div>
+      <div class="intl-legend">
+        <span class="intl-legend-label">Fewer orders</span>
+        <div class="intl-legend-bar"></div>
+        <span class="intl-legend-label">More orders</span>
       </div>
-
     </div>
 
     <div class="intl-detail-panel">
@@ -83,7 +69,7 @@
           <div class="stat-value" id="statTotalOrders">--</div>
         </div>
         <div class="intl-stat-box">
-          <div class="stat-label">Countries</div>
+          <div class="stat-label" id="statRegionsLabel">Countries</div>
           <div class="stat-value" id="statCountries">--</div>
         </div>
         <div class="intl-stat-box">
@@ -99,11 +85,6 @@
       <div class="intl-top-list">
         <h3 id="topListTitle">Top Countries</h3>
         <div id="topListItems"></div>
-      </div>
-
-      <div class="intl-top-list" style="margin-top: 18px;">
-        <h3>Top States</h3>
-        <div id="topStateItems"></div>
       </div>
     </div>
 
@@ -182,6 +163,7 @@ const US_STATE_NAMES = {
 };
 
 let currentYear = 'all';
+let currentView = 'world';
 let worldMap = null;
 let usMap = null;
 
@@ -404,28 +386,46 @@ function updateSummaryStats() {
   const yearData = getYearData();
   const label = currentYear === 'all' ? 'all time' : `for ${currentYear}`;
 
-  const countryEntries = Object.entries(yearData.countries).sort((a, b) => b[1] - a[1]);
-  const total = countryEntries.reduce((s, e) => s + e[1], 0);
-  const numCountries = countryEntries.length;
-  const topCode = countryEntries[0]?.[0] || '--';
-  const topName = COUNTRY_NAMES[topCode] || topCode;
-  const avg = numCountries > 0 ? Math.round(total / numCountries) : 0;
+  if (currentView === 'world') {
+    const entries = Object.entries(yearData.countries).sort((a, b) => b[1] - a[1]);
+    const total = entries.reduce((s, e) => s + e[1], 0);
+    const numRegions = entries.length;
+    const topCode = entries[0]?.[0] || '--';
+    const topName = COUNTRY_NAMES[topCode] || topCode;
+    const avg = numRegions > 0 ? Math.round(total / numRegions) : 0;
 
-  document.getElementById('statTotalOrders').textContent = total.toLocaleString();
-  document.getElementById('statCountries').textContent = numCountries;
-  document.getElementById('statTopRegion').textContent = topName;
-  document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
-  document.getElementById('metaText').textContent = `Showing worldwide order distribution ${label}`;
+    document.getElementById('statTotalOrders').textContent = total.toLocaleString();
+    document.getElementById('statRegionsLabel').textContent = 'Countries';
+    document.getElementById('statCountries').textContent = numRegions;
+    document.getElementById('statTopRegion').textContent = topName;
+    document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
+    document.getElementById('topListTitle').textContent = 'Top Countries';
+    document.getElementById('metaText').textContent = `Showing worldwide order distribution ${label}`;
 
-  renderTopList('topListItems', countryEntries.slice(0, 8), 'country', countryEntries[0]?.[1] || 1);
+    renderTopList(entries.slice(0, 8), 'country', entries[0]?.[1] || 1);
+  } else {
+    const stateData = yearData.usStates || {};
+    const entries = Object.entries(stateData).sort((a, b) => b[1] - a[1]);
+    const total = entries.reduce((s, e) => s + e[1], 0);
+    const numRegions = entries.length;
+    const topCode = entries[0]?.[0] || '--';
+    const topName = US_STATE_NAMES[topCode] || topCode;
+    const avg = numRegions > 0 ? Math.round(total / numRegions) : 0;
 
-  const stateData = yearData.usStates || {};
-  const stateEntries = Object.entries(stateData).sort((a, b) => b[1] - a[1]);
-  renderTopList('topStateItems', stateEntries.slice(0, 8), 'state', stateEntries[0]?.[1] || 1);
+    document.getElementById('statTotalOrders').textContent = total.toLocaleString();
+    document.getElementById('statRegionsLabel').textContent = 'States';
+    document.getElementById('statCountries').textContent = numRegions;
+    document.getElementById('statTopRegion').textContent = topName;
+    document.getElementById('statAvgOrders').textContent = avg.toLocaleString();
+    document.getElementById('topListTitle').textContent = 'Top States';
+    document.getElementById('metaText').textContent = `Showing US state distribution ${label}`;
+
+    renderTopList(entries.slice(0, 8), 'state', entries[0]?.[1] || 1);
+  }
 }
 
-function renderTopList(containerId, entries, type, max) {
-  const container = document.getElementById(containerId);
+function renderTopList(entries, type, max) {
+  const container = document.getElementById('topListItems');
   const nameMap = type === 'state' ? US_STATE_NAMES : COUNTRY_NAMES;
   container.innerHTML = entries.map(([code, count], i) => {
     const name = nameMap[code] || code;
@@ -441,14 +441,35 @@ function renderTopList(containerId, entries, type, max) {
   }).join('');
 }
 
-function refreshMap() {
+function switchView(view) {
+  currentView = view;
+
+  document.querySelectorAll('.intl-view-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+
+  const worldEl = document.getElementById('worldMapContainer');
+  const usEl = document.getElementById('usMapContainer');
+
+  if (view === 'world') {
+    worldEl.style.display = '';
+    usEl.style.display = 'none';
+  } else {
+    worldEl.style.display = 'none';
+    usEl.style.display = '';
+  }
+
   document.getElementById('panelTitle').textContent = 'Overview';
   document.getElementById('panelSubtitle').textContent = 'Hover over a region for details';
   updateSummaryStats();
+
   requestAnimationFrame(() => {
     setTimeout(() => {
-      initWorldMap();
-      initUSMap();
+      if (view === 'world') {
+        initWorldMap();
+      } else {
+        initUSMap();
+      }
     }, 100);
   });
 }
@@ -466,7 +487,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('yearSelect').addEventListener('change', (e) => {
     currentYear = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
-    refreshMap();
+    switchView(currentView);
+  });
+
+  document.querySelectorAll('.intl-view-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
   });
 
   document.getElementById('fullscreenBtn').addEventListener('click', () => {
@@ -477,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  refreshMap();
+  switchView('world');
 });
 
 window.addEventListener('message', (event) => {
@@ -487,6 +512,12 @@ window.addEventListener('message', (event) => {
 
   if (event.data?.type === 'TV_VIEW_STATE') {
     document.body.classList.toggle('tv-view-active', !!event.data.active);
+  }
+
+  if (event.data?.type === 'TV_ACTION' && event.data.target === 'international') {
+    if (event.data.view === 'world' || event.data.view === 'us') {
+      switchView(event.data.view);
+    }
   }
 });
 </script>
