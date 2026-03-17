@@ -1,0 +1,11 @@
+name = "rco-shopify-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+SHOPIFY_STORE = "rowe-casa.myshopify.com"
+ALLOWED_ORIGIN = "https://your-github-username.github.io"
+
+# Secrets (set via wrangler CLI, never in this file):
+#   npx wrangler secret put SHOPIFY_CLIENT_ID
+#   npx wrangler secret put SHOPIFY_CLIENT_SECRET
